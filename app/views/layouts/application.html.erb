@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title><%= content_for(:title) || "Forge" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,13 +18,86 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+   <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="bg-zinc-950 text-white">
+
+    <div
+      data-controller="sidebar"
+      class="min-h-screen"
+    >
+
+      <nav class="h-16 border-b border-zinc-800 bg-zinc-900 flex items-center justify-between px-6">
+
+        <div class="flex items-center gap-4">
+
+          <button
+            data-action="click->sidebar#toggle"
+            class="text-2xl"
+          >
+            ☰
+          </button>
+
+          <div class="flex items-center gap-3">
+
+            <div class="w-8 h-8 rounded bg-pink-500"></div>
+
+            <span class="font-bold text-lg">
+              Forge
+            </span>
+
+          </div>
+
+        </div>
+
+        <button class="bg-zinc-800 px-4 py-2 rounded-lg">
+          Login
+        </button>
+
+      </nav>
+
+      <div class="flex">
+
+        <aside
+          data-sidebar-target="panel"
+          class="w-64 min-h-[calc(100vh-64px)] border-r border-zinc-800 bg-zinc-900 transition-all duration-300"
+        >
+
+          <div class="p-6">
+
+            <ul class="space-y-4">
+
+              <li>
+                <%= link_to "Home",
+                    root_path,
+                    class: "block hover:text-pink-400" %>
+              </li>
+
+              <li>
+                <%= link_to "Fragments",
+                    fragments_path,
+                    class: "block hover:text-pink-400" %>
+              </li>
+
+            </ul>
+
+          </div>
+
+        </aside>
+
+        <main class="flex-1 p-8">
+          <div class="bg-red-500 text-white p-8">
+            TAILWIND TEST
+          </div>
+
+          <%= yield %>
+        </main>
+
+      </div>
+
+    </div>
+
   </body>
 </html>

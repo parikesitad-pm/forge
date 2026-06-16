@@ -1,10 +1,25 @@
-<h1>Fragments</h1>
+<div class="max-w-3xl mx-auto p-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-4xl font-bold">
+      Fragments
+    </h1>
 
-<%= link_to "New Fragment", new_fragment_path %>
-
-<% @fragments.each do |fragment| %>
-  <div style="margin-top:20px;">
-    <p><%= fragment.content %></p>
-    <small><%= fragment.created_at %></small>
+    <%= link_to "New Fragment",
+      new_fragment_path,
+      class: "bg-black text-white px-4 py-2 rounded-lg" %>
   </div>
-<% end %>
+
+  <div class="space-y-4">
+    <% @fragments.each do |fragment| %>
+      <div class="border rounded-xl p-4 shadow-sm">
+        <p class="text-lg">
+          <%= fragment.content %>
+        </p>
+
+        <p class="text-sm text-gray-500 mt-2">
+          <%= fragment.created_at.strftime("%d %b %Y %H:%M") %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>
