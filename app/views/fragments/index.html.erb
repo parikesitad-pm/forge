@@ -1,22 +1,24 @@
-<div class="max-w-3xl mx-auto p-8">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-4xl font-bold">
-      Fragments
-    </h1>
-
+<div class="max-w-4xl">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold">
+        Fragments
+      </h1>
+      <p class="text-zinc-400 mt-2">
+        Capture first. Understand later.
+      </p>
+    </div>
     <%= link_to "New Fragment",
-      new_fragment_path,
-      class: "bg-black text-white px-4 py-2 rounded-lg" %>
+        new_fragment_path,
+        class: "px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 transition" %>
   </div>
-
   <div class="space-y-4">
     <% @fragments.each do |fragment| %>
-      <div class="border rounded-xl p-4 shadow-sm">
-        <p class="text-lg">
+      <div class="theme-surface border theme-border shadow-sm rounded-xl px-6 py-4">
+        <p class="text-lg font-medium leading-snug">
           <%= fragment.content %>
         </p>
-
-        <p class="text-sm text-gray-500 mt-2">
+        <p class="text-sm text-zinc-400 mt-2">
           <%= fragment.created_at.strftime("%d %b %Y %H:%M") %>
         </p>
       </div>

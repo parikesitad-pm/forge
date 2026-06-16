@@ -1,18 +1,23 @@
-<div class="max-w-3xl mx-auto p-8">
-  <h1 class="text-4xl font-bold mb-8">
+<div class="max-w-3xl">
+
+  <h1 class="text-3xl font-bold mb-8">
     New Fragment
   </h1>
 
   <%= form_with model: @fragment do |form| %>
 
-    <div class="mb-4">
+    <div class="mb-6">
+
       <%= form.text_area :content,
-        rows: 6,
-        class: "w-full border rounded-xl p-4" %>
+          rows: 8,
+          placeholder: "Random kepikiran? Gas lempar...",
+          class: "w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-pink-500" %>
+
     </div>
 
     <%= form.submit "Save Fragment",
-      class: "bg-black text-white px-4 py-2 rounded-lg cursor-pointer" %>
+        class: "px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 cursor-pointer" %>
 
   <% end %>
+
 </div>

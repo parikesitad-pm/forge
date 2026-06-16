@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+:root {
+  --bg: #f4f4f5;
+  --surface: #ffffff;
+  --text: #18181b;
+  --border: #d4d4d8;
+}
+
+[data-theme="dark"] {
+  --bg: #09090b;
+  --surface: #18181b;
+  --text: #fafafa;
+  --border: #27272a;
+}
+
+.theme-body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.theme-surface {
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+.theme-border {
+  border-color: var(--border);
+}
