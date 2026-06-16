@@ -1,0 +1,12 @@
+<h1>New Fragment</h1>
+
+<%= form_with model: @fragment do |form| %>
+  <div>
+    <%= form.label :content %><br>
+    <%= form.text_area :content, rows: 5 %>
+  </div>
+
+  <div>
+    <%= form.submit "Save Fragment" %>
+  </div>
+<% end %>

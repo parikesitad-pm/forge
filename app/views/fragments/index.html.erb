@@ -1,0 +1,10 @@
+<h1>Fragments</h1>
+
+<%= link_to "New Fragment", new_fragment_path %>
+
+<% @fragments.each do |fragment| %>
+  <div style="margin-top:20px;">
+    <p><%= fragment.content %></p>
+    <small><%= fragment.created_at %></small>
+  </div>
+<% end %>
