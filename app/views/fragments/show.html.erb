@@ -1,0 +1,18 @@
+<div class="max-w-4xl">
+  <%= link_to fragments_path,
+      class: "inline-flex items-center gap-2 text-zinc-500 hover:text-pink-500 transition mb-6" do %>
+    <%= lucide_icon "arrow-left", class: "w-4 h-4" %>
+    Back
+  <% end %>
+  <div class="theme-surface text-muted border theme-border rounded-xl p-8">
+    <div class="mb-8">
+      <div class="text-2xl font-semibold leading-relaxed">
+        <%= @fragment.content %>
+      </div>
+    </div>
+    <div class="mt-8 text-sm text-zinc-500">
+      Created:
+      <%= @fragment.created_at.strftime("%d %b %Y • %H:%M") %>
+    </div>
+  </div>
+</div>

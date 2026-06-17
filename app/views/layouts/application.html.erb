@@ -10,9 +10,9 @@
     <%= yield :head %>
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.png">
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -35,7 +35,7 @@
             </svg>
           </button>
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-pink-500"></div>
+            <%= image_tag "icon.png", class: "w-8 h-8" %>
             <span class="font-bold text-lg">Forge</span>
           </div>
         </div>
@@ -74,7 +74,7 @@
         >
           <div class="p-6">
             <nav class="space-y-2">
-              <%= link_to root_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800 transition" do %>
+              <%= link_to root_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg transition #{current_page?(root_path) ? 'bg-pink-500/10 text-pink-400' : 'hover:bg-zinc-800'}" do %>
                 <span>
                   <%= lucide_icon "house"%>
                 </span>
@@ -82,7 +82,7 @@
                   Home
                 </span>
               <% end %>
-              <%= link_to fragments_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800 transition" do %>
+              <%= link_to fragments_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg transition #{controller_name == 'fragments' ? 'bg-pink-500/10 text-pink-400' : 'hover:bg-zinc-800'}" do %>
                 <span>
                   <%= lucide_icon "puzzle", class: "w-5 h-5" %>
                 </span>

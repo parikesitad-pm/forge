@@ -3,6 +3,10 @@ class FragmentsController < ApplicationController
     @fragments = Fragment.order(created_at: :desc)
   end
 
+  def show
+    @fragment = Fragment.find(params[:id])
+  end
+
   def new
     @fragment = Fragment.new
   end
