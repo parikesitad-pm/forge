@@ -1,22 +1,24 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['panel', 'label', 'iconMenu', 'iconClose'];
+  static targets = ['panel', 'label', 'logoText', 'logoImage', 'iconMenu'];
+
+  connect() {
+    this.collapsed = false;
+  }
 
   toggle() {
-    const isExpanded = this.panelTarget.classList.contains('w-64');
+    this.collapsed = !this.collapsed;
 
-    // toggle width
-    this.panelTarget.classList.toggle('w-64', !isExpanded);
-    this.panelTarget.classList.toggle('w-16', isExpanded);
+    this.panelTarget.classList.toggle('w-64', !this.collapsed);
+    this.panelTarget.classList.toggle('w-16', this.collapsed);
 
-    // toggle labels
-    this.labelTargets.forEach((label) =>
-      label.classList.toggle('hidden', isExpanded)
-    );
+    this.labelTargets.forEach((label) => {
+      label.classList.toggle('hidden', this.collapsed);
+    });
 
-    // toggle icons
-    this.iconMenuTarget.classList.toggle('hidden', isExpanded);
-    this.iconCloseTarget.classList.toggle('hidden', !isExpanded);
+    if (this.hasLogoTextTarget) {
+      this.logoTextTarget.classList.toggle('hidden', this.collapsed);
+    }
   }
 }

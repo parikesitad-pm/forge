@@ -1,0 +1,66 @@
+<aside
+  data-sidebar-target="panel"
+  class="
+    w-64
+    theme-surface
+    border-r
+    theme-border
+    min-h-[calc(100vh-64px)]
+    flex
+    flex-col
+    transition-all
+    duration-300
+  "
+>
+  <div class="p-6 flex-1">
+    <div class="flex items-center gap-3 mb-8">
+      <%= image_tag "icon.png",
+          class: "w-8 h-8" %>
+      <span
+        data-sidebar-target="logoText"
+        class="font-bold"
+      >
+        Forge
+      </span>
+    </div>
+    <nav class="space-y-2">
+      <%= link_to root_path,
+          class: "
+            flex
+            items-center
+            gap-3
+            px-4
+            py-3
+            rounded-lg
+            hover:bg-zinc-800
+          " do %>
+        <%= lucide_icon "house",
+            class: "w-5 h-5" %>
+        <span data-sidebar-target="label">
+          Home
+        </span>
+      <% end %>
+      <% if current_user %>
+        <%= link_to fragments_path,
+            class: "
+              flex
+              items-center
+              gap-3
+              px-4
+              py-3
+              rounded-lg
+              hover:bg-zinc-800
+            " do %>
+          <%= lucide_icon "puzzle",
+              class: "w-5 h-5" %>
+          <span data-sidebar-target="label">
+            Fragments
+          </span>
+        <% end %>
+      <% end %>
+    </nav>
+  </div>
+  <%=
+    render "shared/profile_menu"
+  %>
+</aside>

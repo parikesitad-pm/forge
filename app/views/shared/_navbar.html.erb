@@ -1,0 +1,50 @@
+<nav
+  class="
+    h-16
+    theme-surface
+    border-b
+    theme-border
+    flex
+    items-center
+    justify-between
+    px-6
+  "
+>
+  <div class="flex items-center gap-4">
+    <button
+      data-action="click->sidebar#toggle"
+      class="text-zinc-400 hover:text-zinc-200"
+      >
+      <%= lucide_icon "panel-left-close",
+          class: "w-5 h-5" %>
+    </button>
+    <%= render "shared/breadcrumb" %>
+  </div>
+  <div class="flex items-center gap-3">
+    <button
+      class="
+        px-4
+        py-2
+        rounded-lg
+        border
+        theme-border
+        hover:bg-zinc-800
+      "
+    >
+      Share
+    </button>
+    <button
+      data-action="click->theme#toggle"
+      class="
+      px-3
+      py-2
+      rounded-lg
+      border
+      theme-border
+      "
+      >
+      <%= lucide_icon "moon",
+          class: "w-4 h-4" %>
+    </button>
+  </div>
+</nav>

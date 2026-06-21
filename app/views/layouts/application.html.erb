@@ -3,13 +3,11 @@
   <head>
     <title><%= content_for(:title) || "Forge" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= yield :head %>
     <%= favicon_link_tag asset_path("icon.png") %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind",
+        "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
   <body
@@ -17,167 +15,13 @@
     class="theme-body transition-all duration-300"
   >
     <div data-controller="sidebar" class="min-h-screen">
-      <!-- Navbar -->
-      <nav class="h-16 theme-surface border-b theme-border flex items-center justify-between px-6">
-        <div class="flex items-center gap-4">
-          <button
-            data-action="click->sidebar#toggle"
-            data-sidebar-target="menuBtn"
-            class="text-zinc-400 hover:text-zinc-200 transition-colors duration-200"
-            >
-            <!-- Menu -->
-            <svg
-              data-sidebar-target="iconMenu"
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="transition-all duration-300"
-            >
-              <line x1="4" y1="6" x2="20" y2="6"/>
-              <line x1="4" y1="12" x2="20" y2="12"/>
-              <line x1="4" y1="18" x2="20" y2="18"/>
-            </svg>
-            <!-- Close -->
-            <svg
-              data-sidebar-target="iconClose"
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="hidden transition-all duration-300"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
-          <div class="flex items-center gap-3">
-            <%= image_tag "icon.png", class: "w-8 h-8" %>
-            <span class="font-bold text-lg">
-              Forge
-            </span>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <!-- Theme Toggle -->
-          <button
-            data-action="click->theme#toggle"
-            data-theme-target="themeBtn"
-            class="px-3 py-2 rounded-lg border theme-border text-zinc-400 hover:text-zinc-200 transition-colors duration-200"
-            >
-            <!-- Moon -->
-            <svg
-              data-theme-target="iconMoon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-            <!-- Sun -->
-            <svg
-              data-theme-target="iconSun"
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="hidden"
-            >
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/>
-              <line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/>
-              <line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          </button>
-          <% if current_user %>
-            <%= button_to "Logout",
-                logout_path,
-                method: :delete,
-                class: "px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-700 transition-colors duration-200 cursor-pointer" %>
-          <% else %>
-            <%= link_to "Sign In",
-                login_path,
-                class: "px-4 py-2 rounded-lg border theme-border hover:bg-zinc-800 transition-colors duration-200" %>
-            <%= link_to "Sign Up",
-                register_path,
-                class: "px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-700 transition-colors duration-200" %>
-          <% end %>
-        </div>
-      </nav>
+      <%= render "shared/navbar" %>
       <div class="flex">
-        <!-- Sidebar -->
-        <aside
-          data-sidebar-target="panel"
-          class="
-            w-64
-            theme-surface
-            border-r
-            theme-border
-            min-h-[calc(100vh-64px)]
-            transition-all
-            duration-300
-          "
-        >
-          <div class="p-6">
-            <nav class="space-y-2">
-              <%= link_to root_path,
-                  class: "flex items-center gap-3 px-4 py-3 rounded-lg transition #{current_page?(root_path) ? 'bg-zinc-800 text-white' : 'hover:bg-zinc-800'}" do %>
-                <%= lucide_icon "house", class: "w-5 h-5" %>
-                <span data-sidebar-target="label">
-                  Home
-                </span>
-              <% end %>
-              <% if current_user %>
-                <%= link_to fragments_path,
-                    class: "flex items-center gap-3 px-4 py-3 rounded-lg transition #{controller_name == 'fragments' ? 'bg-zinc-800 text-white' : 'hover:bg-zinc-800'}" do %>
-                  <%= lucide_icon "puzzle", class: "w-5 h-5" %>
-                  <span data-sidebar-target="label">
-                    Fragments
-                  </span>
-                <% end %>
-              <% end %>
-            </nav>
-          </div>
-        </aside>
-        <!-- Main -->
+        <%= render "shared/sidebar" %>
         <main class="flex-1 p-8">
-          <% if flash[:notice] %>
-            <div class="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-emerald-400">
-              <%= flash[:notice] %>
-            </div>
-          <% end %>
-          <% if flash[:alert] %>
-            <div class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-400">
-              <%= flash[:alert] %>
-            </div>
-          <% end %>
+          <%= render "shared/flash" %>
           <%= yield %>
+          <%= render "shared/footer" %>
         </main>
       </div>
     </div>

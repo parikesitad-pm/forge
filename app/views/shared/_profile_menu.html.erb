@@ -1,0 +1,42 @@
+<% if current_user %>
+  <div
+  data-controller="profile-menu"
+  class="border-t theme-border p-4"
+>
+    <button
+    data-action="click->profile-menu#toggle"
+      class="
+      w-full
+      flex
+      items-center
+      gap-3
+      p-2
+      rounded-xl
+      hover:bg-zinc-800
+      "
+      >
+      <div
+      class="
+        w-10
+        h-10
+        rounded-full
+        bg-pink-500
+        text-white
+        flex
+        items-center
+        justify-center
+      "
+    >
+        <%= current_user.username.first.upcase %>
+      </div>
+      <div data-sidebar-target="label">
+        <div class="text-sm">
+          <%= current_user.username %>
+        </div>
+        <div class="text-xs text-zinc-500">
+          Account
+        </div>
+      </div>
+    </button>
+  </div>
+<% end %>

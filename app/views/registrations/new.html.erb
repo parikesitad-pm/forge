@@ -65,70 +65,85 @@
         <% end %>
       </div>
       <!-- Password -->
-      <div
-  class="mb-5"
+      <<div
   data-controller="password"
+  class="mb-8"
 >
-        <%= form.label :password,
-      class: "block text-sm font-medium mb-2" %>
-        <%= form.password_field :password,
-      data: {
-        password_target: "input",
-        action: "input->password#validate"
-      },
-      class: "
-        w-full
-        rounded-xl
-        bg-transparent
-        px-4
-        py-3
-        border
-        theme-border
-      "
-  %>
-        <div class="mt-4 space-y-2 text-sm">
-          <div
-      data-password-target="length"
-      class="text-red-400"
-    >
-            <span class="status">○</span>
-            At least 8 characters
-          </div>
-          <div
-      data-password-target="uppercase"
-      class="text-red-400"
-    >
-            <span class="status">○</span>
-            One uppercase letter
-          </div>
-          <div
-      data-password-target="lowercase"
-      class="text-red-400"
-    >
-            <span class="status">○</span>
-            One lowercase letter
-          </div>
-          <div
-      data-password-target="number"
-      class="text-red-400"
-    >
-            <span class="status">○</span>
-            One number
-          </div>
-          <div
-      data-password-target="symbol"
-      class="text-red-400"
-    >
-            <span class="status">○</span>
-            One symbol
-          </div>
-        </div>
-      </div>
-      <!-- Password Confirmation -->
-      <div class="mb-8">
-        <%= form.label :password_confirmation,
+        <!-- Password -->
+        <div class="mb-5">
+          <%= form.label :password,
             class: "block text-sm font-medium mb-2" %>
-        <%= form.password_field :password_confirmation,
+          <%= form.password_field :password,
+            data: {
+              password_target: "input",
+              action: "input->password#validate"
+            },
+            class: "
+              w-full
+              rounded-xl
+              bg-transparent
+              px-4
+              py-3
+              border
+              theme-border
+            "
+          %>
+          <div class="mt-4 space-y-2 text-sm">
+            <div
+              data-password-target="length"
+              class="text-red-400"
+            >
+              <span class="status">○</span>
+              At least 8 characters
+            </div>
+            <div
+              data-password-target="uppercase"
+              class="text-red-400"
+            >
+              <span class="status">○</span>
+              At least one uppercase letter
+            </div>
+            <div
+              data-password-target="lowercase"
+              class="text-red-400"
+            >
+              <span class="status">○</span>
+              At least one lowercase letter
+            </div>
+            <div
+              data-password-target="number"
+              class="text-red-400"
+            >
+              <span class="status">○</span>
+              At least one number
+            </div>
+            <div
+              data-password-target="symbol"
+              class="text-red-400"
+            >
+              <span class="status">○</span>
+              At least one symbol
+            </div>
+          </div>
+          <% if @user.errors[:password].any? %>
+            <div class="mt-3 flex items-center gap-2 text-sm text-red-400">
+              <%= lucide_icon "circle-alert",
+              class: "w-4 h-4 shrink-0" %>
+              <span>
+                <%= @user.errors[:password].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+        <!-- Password Confirmation -->
+        <div>
+          <%= form.label :password_confirmation,
+            class: "block text-sm font-medium mb-2" %>
+          <%= form.password_field :password_confirmation,
+            data: {
+              password_target: "confirmation",
+              action: "input->password#validate"
+            },
             class: "
               w-full
               rounded-xl
@@ -139,7 +154,27 @@
               theme-border
               transition
               focus:border-pink-500
-            " %>
+            "
+          %>
+          <div
+            data-password-target="match"
+            class="mt-3 flex items-center gap-2 text-sm text-zinc-500"
+          >
+            <span class="status">○</span>
+            <span data-password-target="matchText">
+              Waiting for confirmation
+            </span>
+          </div>
+          <% if @user.errors[:password_confirmation].any? %>
+            <div class="mt-3 flex items-center gap-2 text-sm text-red-400">
+              <%= lucide_icon "circle-alert",
+            class: "w-4 h-4 shrink-0" %>
+              <span>
+                <%= @user.errors[:password_confirmation].first %>
+              </span>
+            </div>
+          <% end %>
+        </div>
       </div>
       <button
         type="submit"
