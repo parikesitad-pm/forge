@@ -1,13 +1,13 @@
-import { application } from './application';
+import { application } from 'controllers/application';
 
-import HelloController from './hello_controller';
+import HelloController from 'controllers/hello_controller';
 application.register('hello', HelloController);
 
-import PasswordController from './password_controller';
+import PasswordController from 'controllers/password_controller';
 application.register('password', PasswordController);
 
-import SidebarController from './sidebar_controller';
+import SidebarController from 'controllers/sidebar_controller';
 application.register('sidebar', SidebarController);
 
-import ThemeController from './theme_controller';
+import ThemeController from 'controllers/theme_controller';
 application.register('theme', ThemeController);
