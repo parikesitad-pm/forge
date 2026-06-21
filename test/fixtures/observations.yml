@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fragment: one
+  role: 1
+  content: MyText
+  pinned: false
+
+two:
+  fragment: two
+  role: 1
+  content: MyText
+  pinned: false

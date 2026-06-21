@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_16_071506) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_20_224931) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,5 +18,36 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_16_071506) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_fragments_on_user_id"
   end
+
+  create_table "observations", force: :cascade do |t|
+    t.bigint "fragment_id", null: false
+    t.integer "role"
+    t.text "content"
+    t.boolean "pinned"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fragment_id"], name: "index_observations_on_fragment_id"
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.string "user_name"
+    t.string "owl_name"
+    t.string "owl_style"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "username"
+  end
+
+  add_foreign_key "fragments", "users"
+  add_foreign_key "observations", "fragments"
 end

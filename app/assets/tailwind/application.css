@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --bg: #f4f4f5;
@@ -9,7 +9,7 @@
   --border: #d4d4d8;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --bg: #09090b;
   --surface: #18181b;
   --text: #fafafa;
@@ -19,7 +19,7 @@
 .theme-body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: "Ubuntu", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
 
 .theme-surface {
@@ -29,4 +29,16 @@
 
 .theme-border {
   border-color: var(--border);
+}
+
+[data-theme='dark'] .theme-input {
+  background: #111827;
+  color: white;
+  border-color: #ec4899;
+}
+
+[data-theme='light'] .theme-input {
+  background: white;
+  color: #18181b;
+  border-color: #d4d4d8;
 }

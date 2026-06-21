@@ -1,5 +1,21 @@
 Rails.application.routes.draw do
-  root "fragments#index"
+  get "home/index"
+  root "home#index"
 
-  resources :fragments
+  get "/register", to: "registrations#new"
+  post "/register", to: "registrations#create"
+
+  get "/login", to: "sessions#new"
+  post "/login", to: "sessions#create"
+
+  delete "/logout", to: "sessions#destroy"
+
+  resources :fragments do
+    resources :observations, only: [ :create ] do
+      member do
+        patch :pin
+        patch :unpin
+      end
+    end
+  end
 end

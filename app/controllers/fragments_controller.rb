@@ -1,10 +1,11 @@
 class FragmentsController < ApplicationController
+  before_action :require_login
   def index
-    @fragments = Fragment.order(created_at: :desc)
+    @fragments = current_user.fragments.order(created_at: :desc)
   end
 
   def show
-    @fragment = Fragment.find(params[:id])
+    @fragment = current_user.fragments.find(params[:id])
   end
 
   def new
@@ -12,10 +13,21 @@ class FragmentsController < ApplicationController
   end
 
   def create
-    @fragment = Fragment.new(fragment_params)
+    @fragment = current_user.fragments.build(fragment_params)
 
     if @fragment.save
-      redirect_to fragments_path
+
+      ai_response = GeminiService.new(
+        fragment: @fragment,
+        message: @fragment.content
+      ).call
+
+      @fragment.observations.create!(
+        role: :ai,
+        content: ai_response
+      )
+
+      redirect_to @fragment
     else
       render :new, status: :unprocessable_entity
     end
