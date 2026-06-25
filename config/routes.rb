@@ -18,4 +18,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resource :settings, only: [ :show, :update ] do
+    patch :password
+  end
 end

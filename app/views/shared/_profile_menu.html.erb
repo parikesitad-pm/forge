@@ -1,7 +1,7 @@
 <% if current_user %>
   <div
   data-controller="profile-menu"
-  class="p-4"
+  class="relative p-4"
 >
     <button
     data-action="click->profile-menu#toggle"
@@ -38,9 +38,87 @@
           <%= current_user.username %>
         </div>
         <div class="text-xs text-zinc-500">
-          Account
+          <%= current_user.email %>
         </div>
       </div>
     </button>
+    <!-- Dropdown -->
+    <div
+    data-profile-menu-target="menu"
+    class="
+      hidden
+      absolute
+      bottom-20
+      left-4
+      w-64
+      rounded-2xl
+      theme-surface
+      border
+      theme-border
+      shadow-2xl
+      overflow-hidden
+      z-50
+    "
+  >
+      <div class="p-4 flex items-center gap-3">
+        <div
+        class="
+          w-10
+          h-10
+          rounded-full
+          bg-pink-500
+          text-white
+          flex
+          items-center
+          justify-center
+        "
+      >
+          <%= current_user.username.first.upcase %>
+        </div>
+        <div>
+          <div class="font-medium">
+            <%= current_user.username %>
+          </div>
+          <div class="text-xs text-zinc-500">
+            <%= current_user.email %>
+          </div>
+        </div>
+      </div>
+      <div class="border-t theme-border">
+        <%= link_to "#",
+        class: "flex items-center gap-3 px-4 py-3 hover:bg-zinc-800 transition" do %>
+          <%= lucide_icon "user", class: "w-4 h-4" %>
+          Profile
+        <% end %>
+        <%= link_to "#",
+        class: "flex items-center gap-3 px-4 py-3 hover:bg-zinc-800 transition" do %>
+          <%= lucide_icon "bell", class: "w-4 h-4" %>
+          Notifications
+        <% end %>
+        <%= link_to "#",
+        class: "flex items-center gap-3 px-4 py-3 hover:bg-zinc-800 transition" do %>
+          <%= lucide_icon "settings", class: "w-4 h-4" %>
+          Settings
+        <% end %>
+      </div>
+      <div class="border-t theme-border">
+        <%= button_to logout_path,
+        method: :delete,
+        class: "
+          w-full
+          flex
+          items-center
+          gap-3
+          px-4
+          py-3
+          hover:bg-zinc-800
+          transition
+          cursor-pointer
+        " do %>
+          <%= lucide_icon "log-out", class: "w-4 h-4" %>
+          Logout
+        <% end %>
+      </div>
+    </div>
   </div>
 <% end %>
