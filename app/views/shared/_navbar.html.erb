@@ -11,13 +11,6 @@
   "
 >
   <div class="flex items-center gap-4">
-    <button
-      data-action="click->sidebar#toggle"
-      class="text-zinc-400 hover:text-zinc-200"
-      >
-      <%= lucide_icon "panel-left-close",
-          class: "w-5 h-5" %>
-    </button>
     <%= render "shared/breadcrumb" %>
   </div>
   <div class="flex items-center gap-3">
@@ -41,10 +34,19 @@
       rounded-lg
       border
       theme-border
+      hover:bg-zinc-800
+      transition
       "
       >
-      <%= lucide_icon "moon",
-          class: "w-4 h-4" %>
+      <span data-theme-target="iconMoon">
+        <%= lucide_icon "moon", class: "w-4 h-4" %>
+      </span>
+      <span
+          data-theme-target="iconSun"
+          class="hidden"
+        >
+        <%= lucide_icon "sun", class: "w-4 h-4" %>
+      </span>
     </button>
   </div>
 </nav>

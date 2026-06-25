@@ -1,24 +1,33 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['panel', 'label', 'logoText', 'logoImage', 'iconMenu'];
-
-  connect() {
-    this.collapsed = false;
-  }
+  static targets = ['panel', 'label'];
 
   toggle() {
-    this.collapsed = !this.collapsed;
+    const collapsed = this.panelTarget.classList.contains('w-16');
 
-    this.panelTarget.classList.toggle('w-64', !this.collapsed);
-    this.panelTarget.classList.toggle('w-16', this.collapsed);
+    if (collapsed) {
+      this.panelTarget.classList.remove('w-16');
+      this.panelTarget.classList.add('w-64');
 
-    this.labelTargets.forEach((label) => {
-      label.classList.toggle('hidden', this.collapsed);
-    });
+      this.labelTargets.forEach((label) => {
+        label.classList.remove('hidden');
+      });
+    } else {
+      this.panelTarget.classList.remove('w-64');
+      this.panelTarget.classList.add('w-16');
 
-    if (this.hasLogoTextTarget) {
-      this.logoTextTarget.classList.toggle('hidden', this.collapsed);
+      this.labelTargets.forEach((label) => {
+        label.classList.add('hidden');
+      });
+    }
+
+    const profile = this.element.querySelector(
+      "[data-controller='profile-menu'] button"
+    );
+
+    if (profile) {
+      profile.classList.toggle('justify-center', !collapsed);
     }
   }
 }

@@ -12,30 +12,77 @@
     duration-300
   "
 >
-  <div class="p-6 flex-1">
-    <div class="flex items-center gap-3 mb-8">
-      <%= image_tag "icon.png",
-          class: "w-8 h-8" %>
-      <span
-        data-sidebar-target="logoText"
-        class="font-bold"
+  <!-- Header -->
+  <div
+    class="
+      h-16
+      px-4
+      border-b
+      theme-border
+      flex
+      items-center
+      shrink-0
+      group
+    "
+  >
+    <button
+      data-action="click->sidebar#toggle"
+      class="
+      relative
+      w-8
+      h-8
+      shrink-0
+      "
       >
-        Forge
+      <%= image_tag "icon.png",
+        class: "
+          absolute
+          inset-0
+          w-8
+          h-8
+          transition-opacity
+          duration-200
+          group-hover:opacity-0
+        " %>
+      <span
+        class="
+          absolute
+          inset-0
+          flex
+          items-center
+          justify-center
+          opacity-0
+          group-hover:opacity-100
+          transition-opacity
+          duration-200
+        "
+      >
+        <%= lucide_icon "panel-left-close", class: "w-5 h-5" %>
       </span>
-    </div>
+    </button>
+    <span
+      data-sidebar-target="label"
+      class="ml-3 font-bold text-lg whitespace-nowrap"
+    >
+      Forge
+    </span>
+  </div>
+  <!-- Navigation -->
+  <div class="flex-1 p-4">
     <nav class="space-y-2">
       <%= link_to root_path,
           class: "
             flex
             items-center
             gap-3
-            px-4
+            px-3
             py-3
-            rounded-lg
+            rounded-xl
             hover:bg-zinc-800
+            transition
           " do %>
         <%= lucide_icon "house",
-            class: "w-5 h-5" %>
+            class: "w-5 h-5 shrink-0" %>
         <span data-sidebar-target="label">
           Home
         </span>
@@ -46,13 +93,14 @@
               flex
               items-center
               gap-3
-              px-4
+              px-3
               py-3
-              rounded-lg
+              rounded-xl
               hover:bg-zinc-800
+              transition
             " do %>
           <%= lucide_icon "puzzle",
-              class: "w-5 h-5" %>
+              class: "w-5 h-5 shrink-0" %>
           <span data-sidebar-target="label">
             Fragments
           </span>
@@ -60,7 +108,55 @@
       <% end %>
     </nav>
   </div>
-  <%=
-    render "shared/profile_menu"
-  %>
+  <!-- Profile -->
+  <% if current_user %>
+    <div
+      class="
+        border-t
+        theme-border
+        p-4
+        shrink-0
+        flex
+        justify-center
+      "
+    >
+      <button
+        data-action="click->profile-menu#toggle"
+        class="
+        w-full
+        flex
+        items-center
+        gap-3
+        rounded-xl
+        hover:bg-zinc-800
+        p-2
+        transition
+        "
+        >
+        <div
+          class="
+            w-10
+            h-10
+            rounded-full
+            bg-pink-500
+            text-white
+            flex
+            items-center
+            justify-center
+            shrink-0
+          "
+        >
+          <%= current_user.username.first.upcase %>
+        </div>
+        <div data-sidebar-target="label">
+          <div class="text-sm font-medium">
+            <%= current_user.username %>
+          </div>
+          <div class="text-xs text-zinc-500">
+            Account
+          </div>
+        </div>
+      </button>
+    </div>
+  <% end %>
 </aside>

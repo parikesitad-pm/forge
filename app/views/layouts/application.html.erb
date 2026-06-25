@@ -15,14 +15,16 @@
     class="theme-body transition-all duration-300"
   >
     <div data-controller="sidebar" class="min-h-screen">
-      <%= render "shared/navbar" %>
-      <div class="flex">
+      <div class="flex min-h-screen">
         <%= render "shared/sidebar" %>
-        <main class="flex-1 p-8">
-          <%= render "shared/flash" %>
-          <%= yield %>
+        <div class="flex-1 flex flex-col">
+          <%= render "shared/navbar" %>
+          <main class="flex-1 p-8">
+            <%= render "shared/flash" %>
+            <%= yield %>
+          </main>
           <%= render "shared/footer" %>
-        </main>
+        </div>
       </div>
     </div>
   </body>
