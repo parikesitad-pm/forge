@@ -36,3 +36,7 @@ application.register('copy', CopyController);
 // === Toast =====
 import ToastController from 'controllers/toast_controller';
 application.register('toast', ToastController);
+
+// === Sparks =====
+import SparksController from 'controllers/sparks_controller';
+application.register('sparks', SparksController);

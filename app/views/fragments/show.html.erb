@@ -1,13 +1,60 @@
-<div class="max-w-5xl mx-auto">
+<div
+  class="
+    h-full
+    min-h-0
+    flex
+    flex-col
+  "
+>
   <%= render "fragments/show/header" %>
   <%= render "fragments/show/seed",
       fragment: @fragment %>
   <%= render "fragments/show/sparks",
       fragment: @fragment %>
-  <div class="theme-surface border theme-border rounded-2xl p-6">
-    <%= render "fragments/show/conversation",
-        fragment: @fragment %>
-    <%= render "fragments/show/composer",
-        fragment: @fragment %>
+  <div
+    class="
+      flex-1
+      min-h-0
+
+      grid
+      grid-rows-[1fr_auto]
+
+      theme-surface
+      border
+      theme-border
+
+      rounded-3xl
+
+      overflow-hidden
+    "
+  >
+    <div
+      class="
+        min-h-0
+        overflow-y-auto
+
+        px-6
+        pt-6
+        pb-8
+      "
+    >
+      <%= render "fragments/show/conversation",
+          fragment: @fragment %>
+    </div>
+    <div
+      class="
+        border-t
+        theme-border
+
+        theme-surface
+
+        p-6
+
+        z-10
+      "
+    >
+      <%= render "fragments/show/composer",
+          fragment: @fragment %>
+    </div>
   </div>
 </div>

@@ -1,0 +1,8 @@
+<div class="border-l-2 border-amber-400 pl-4">
+  <div class="text-xs uppercase tracking-wider text-zinc-500 mb-2">
+    <%= observation.role == "ai" ? "Owl" : "You" %>
+  </div>
+  <div class="text-sm leading-relaxed">
+    <%= simple_format(observation.content) %>
+  </div>
+</div>

@@ -1,43 +1,79 @@
 <%
-pinned = fragment.observations
-  .where(pinned: true)
-  .order(created_at: :desc)
+  pinned = fragment.observations
+                   .where(pinned: true)
+                   .order(created_at: :desc)
 %>
 <% if pinned.any? %>
   <div
+  data-controller="sparks"
   class="
     theme-surface
     border
     theme-border
     rounded-2xl
-    p-6
-    mb-8
+    mb-6
+    overflow-hidden
   "
 >
-    <div
-    class="
+    <button
+    data-action="click->sparks#toggle"
+      class="
+      w-full
       flex
       items-center
-      gap-2
-      mb-4
+      justify-between
+      px-6
+      py-4
+      hover:bg-zinc-800/30
+      transition
+      "
+      >
+      <div
+      class="
+        flex
+        items-center
+        gap-2
+      "
+    >
+        <%= lucide_icon "sparkles",
+          class: "w-4 h-4 text-amber-400" %>
+        <span
+        class="
+          text-sm
+          font-medium
+        "
+      >
+          Sparks (<%= pinned.count %>)
+        </span>
+      </div>
+      <%= lucide_icon "chevron-down",
+        data: {
+          sparks_target: "icon"
+        },
+        class: "
+          w-4
+          h-4
+          transition-transform
+          duration-200
+        " %>
+    </button>
+    <div
+    data-sparks-target="content"
+    class="
+      hidden
+
+      border-t
+      theme-border
+
+      px-6
+      py-5
+
+      space-y-5
     "
   >
-      <%= lucide_icon "sparkles",
-        class:"w-4 h-4 text-amber-400" %>
-      <h2 class="font-semibold">
-        Sparks
-      </h2>
-    </div>
-    <div class="space-y-4">
       <% pinned.each do |observation| %>
-        <div class="border-l-2 border-amber-400 pl-4">
-          <div class="text-xs uppercase tracking-wider text-zinc-500 mb-2">
-            <%= observation.role == "ai" ? "OWL" : "YOU" %>
-          </div>
-          <div class="leading-relaxed">
-            <%= simple_format(observation.content) %>
-          </div>
-        </div>
+        <%= render "fragments/show/spark",
+          observation: observation %>
       <% end %>
     </div>
   </div>

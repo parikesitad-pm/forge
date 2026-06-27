@@ -4,8 +4,9 @@
     border
     theme-border
     rounded-2xl
-    p-8
-    mb-8
+    px-6
+    py-5
+    mb-6
   "
 >
   <div
@@ -13,7 +14,8 @@
       flex
       items-center
       justify-between
-      mb-4
+
+      mb-3
     "
   >
     <div
@@ -21,20 +23,38 @@
         flex
         items-center
         gap-2
-        text-sm
-        font-medium
-        text-zinc-400
+
+        text-xs
+        uppercase
+        tracking-wider
+
+        text-zinc-500
       "
     >
       <%= lucide_icon "sprout",
-          class:"w-4 h-4" %>
+          class: "w-4 h-4" %>
       Seed
     </div>
-    <div class="text-xs text-zinc-500">
-      <%= fragment.created_at.strftime("%d %b %Y • %H:%M") %>
+    <div
+      class="
+        text-xs
+        text-zinc-500
+      "
+    >
+      <%= conversation_timestamp(fragment.created_at) %>
     </div>
   </div>
-  <div class="text-3xl font-bold leading-relaxed">
+  <h1
+    class="
+      text-xs
+      md:text-sm
+
+      font-semibold
+
+      leading-snug
+      tracking-tight
+    "
+  >
     <%= fragment.content %>
-  </div>
+  </h1>
 </div>
