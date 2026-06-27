@@ -24,10 +24,11 @@ export default class extends Controller {
   }
 
   syncIcon(theme) {
+    if (!this.hasIconMoonTarget || !this.hasIconSunTarget) return;
+
     const isDark = theme === 'dark';
 
     this.iconMoonTarget.classList.toggle('hidden', isDark);
-
     this.iconSunTarget.classList.toggle('hidden', !isDark);
   }
 }

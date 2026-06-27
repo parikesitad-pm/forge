@@ -1,6 +1,20 @@
-<div class="max-w-md mx-auto">
-  <%= render "auth/shared/auth_card" do %>
-    <%= render "registrations/new/header" %>
-    <%= render "registrations/new/form" %>
-  <% end %>
+<div
+  class="
+    min-h-[calc(100vh-140px)]
+
+    flex
+
+    items-center
+    justify-center
+
+    px-6
+    mt-auto
+  "
+>
+  <div class="w-full max-w-md">
+    <%= render "auth/shared/auth_card" do %>
+      <%= render "registrations/new/header" %>
+      <%= render "registrations/new/form" %>
+    <% end %>
+  </div>
 </div>
