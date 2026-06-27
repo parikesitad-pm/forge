@@ -27,11 +27,14 @@ export default class extends Controller {
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
 
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
 
         radius: 1 + Math.random() * 2,
         alpha: 0.2 + Math.random() * 0.5,
+
+        phase: Math.random() * Math.PI * 2,
+        life: Math.random(),
       });
     }
 
@@ -69,12 +72,45 @@ export default class extends Controller {
     this.moveNodes();
     this.drawLines();
     this.drawNodes();
+
+    if (Math.random() < 0.002 && this.nodes.length < 70) {
+      this.nodes.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+
+        radius: 2,
+
+        alpha: 0.3,
+
+        phase: Math.random() * Math.PI * 2,
+
+        life: 0,
+      });
+    }
   };
 
   moveNodes() {
-    const padding = 40;
+    const time = performance.now() * 0.0002;
 
     this.nodes.forEach((node) => {
+      node.phase += 0.01;
+
+      node.vx += Math.cos(time + node.phase) * 0.003;
+      node.vy += Math.sin(time + node.phase) * 0.003;
+
+      node.vx *= 0.995;
+      node.vy *= 0.995;
+
+      const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+
+      if (speed > 0.35) {
+        node.vx *= 0.9;
+        node.vy *= 0.9;
+      }
+
       const dx = node.x - this.mouse.x;
       const dy = node.y - this.mouse.y;
 
@@ -83,33 +119,40 @@ export default class extends Controller {
       if (distance > 0 && distance < 140) {
         const force = (140 - distance) / 140;
 
-        node.x += (dx / distance) * force * 1.6;
-        node.y += (dy / distance) * force * 1.6;
+        node.vx += (dx / distance) * force * 0.08;
+        node.vy += (dy / distance) * force * 0.08;
       }
 
       node.x += node.vx;
       node.y += node.vy;
 
-      if (node.x < padding || node.x > this.canvas.width - padding) {
-        node.vx *= -1;
-      }
+      if (node.x < -30) node.x = this.canvas.width + 30;
+      if (node.x > this.canvas.width + 30) node.x = -30;
 
-      if (node.y < padding || node.y > this.canvas.height - padding) {
-        node.vy *= -1;
-      }
+      if (node.y < -30) node.y = this.canvas.height + 30;
+      if (node.y > this.canvas.height + 30) node.y = -30;
+
+      node.life += 0.01;
     });
   }
 
   drawNodes() {
     this.nodes.forEach((node) => {
+      const pulse = 1 + Math.sin(node.phase * 2) * 0.2;
+
       this.ctx.beginPath();
+
+      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = '#ec4899';
 
       this.ctx.fillStyle = `rgba(236,72,153,${node.alpha})`;
 
-      this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+      this.ctx.arc(node.x, node.y, node.radius * pulse, 0, Math.PI * 2);
 
       this.ctx.fill();
     });
+
+    this.ctx.shadowBlur = 0;
   }
 
   drawLines() {
@@ -123,14 +166,19 @@ export default class extends Controller {
 
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 150) {
-          const alpha = ((150 - distance) / 150) * 0.15;
+        if (distance < 170) {
+          const alpha = Math.pow((170 - distance) / 170, 2) * 0.2;
 
           this.ctx.strokeStyle = `rgba(236,72,153,${alpha})`;
 
+          this.ctx.lineWidth = 1;
+
           this.ctx.beginPath();
+
           this.ctx.moveTo(a.x, a.y);
+
           this.ctx.lineTo(b.x, b.y);
+
           this.ctx.stroke();
         }
       }
