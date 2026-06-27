@@ -12,20 +12,36 @@
   </head>
   <body
     data-controller="theme"
-    class="theme-body transition-all duration-300"
+    class="
+      theme-body
+      h-screen
+      overflow-hidden
+      transition-all
+      duration-300
+    "
   >
-    <div data-controller="sidebar" class="min-h-screen">
-      <div class="flex min-h-screen">
-        <%= render "shared/sidebar" %>
-        <div class="flex-1 flex flex-col">
-          <%= render "shared/navbar" %>
-          <main class="flex-1 p-8">
-            <%= render "shared/flash" %>
-            <%= yield %>
-          </main>
-          <%= render "shared/footer" %>
-        </div>
+    <div
+      data-controller="sidebar confirm-modal"
+      class="flex h-screen"
+    >
+      <%= render "shared/sidebar" %>
+      <div class="flex-1 flex flex-col min-w-0">
+        <%= render "shared/navbar" %>
+        <main
+          class="
+            flex-1
+            overflow-y-auto
+            overflow-x-hidden
+            p-8
+          "
+        >
+          <%= render "shared/flash" %>
+          <%= yield %>
+        </main>
+        <%= render "shared/footer" %>
       </div>
+      <%= render "shared/confirm_modal" if current_user %>
+      <%= render "shared/toast" %>
     </div>
   </body>
 </html>

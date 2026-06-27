@@ -1,10 +1,18 @@
-<% if flash[:notice] %>
-  <div class="...">
-    <%= flash[:notice] %>
-  </div>
-<% end %>
-<% if flash[:alert] %>
-  <div class="...">
-    <%= flash[:alert] %>
-  </div>
+<% flash.each do |type, message| %>
+  <script>
+    document.addEventListener("turbo:load", () => {
+
+      document.dispatchEvent(
+        new CustomEvent("forge:toast", {
+
+          detail: {
+            type: "<%= type %>",
+            message: "<%= j(message) %>"
+          }
+
+        })
+      );
+
+    });
+  </script>
 <% end %>

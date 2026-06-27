@@ -1,0 +1,136 @@
+<div
+  data-confirm-modal-target="backdrop"
+  data-action="click->confirm-modal#backdrop"
+  class="
+  hidden
+  opacity-0
+  fixed
+  inset-0
+  z-[999]
+  bg-black/50
+  backdrop-blur-sm
+  transition-opacity
+  duration-200
+  flex
+  items-center
+  justify-center
+  p-6
+  "
+  >
+  <div
+    data-confirm-modal-target="modal"
+    class="
+      hidden
+      opacity-0
+      scale-95
+      w-full
+      max-w-md
+      rounded-3xl
+      border
+      theme-border
+      theme-surface
+      shadow-2xl
+      transition-all
+      duration-200
+    "
+  >
+    <div class="p-8">
+      <!-- Icon -->
+      <div
+        class="
+          w-16
+          h-16
+          rounded-full
+          bg-red-500/10
+          flex
+          items-center
+          justify-center
+          mx-auto
+          mb-6
+        "
+      >
+        <div
+          data-confirm-modal-target="icon"
+        >
+          <%= lucide_icon "log-out",
+              class: "
+                w-8
+                h-8
+                text-red-400
+              " %>
+        </div>
+      </div>
+      <!-- Title -->
+      <h2
+        data-confirm-modal-target="title"
+        class="
+          text-2xl
+          font-bold
+          text-center
+          mb-3
+        "
+      >
+        Logout
+      </h2>
+      <!-- Message -->
+      <p
+        data-confirm-modal-target="message"
+        class="
+          text-center
+          text-zinc-400
+          leading-relaxed
+          mb-8
+        "
+      >
+        You'll need to sign in again
+        to continue your thinking.
+      </p>
+      <!-- Actions -->
+      <div class="flex gap-3">
+        <button
+          type="button"
+          data-action="click->confirm-modal#close"
+          class="
+          flex-1
+          py-3
+          rounded-xl
+          border
+          theme-border
+          hover:bg-zinc-800
+          transition
+          "
+          >
+          Cancel
+        </button>
+        <form
+          data-confirm-modal-target="confirmForm"
+          method="post"
+          class="flex-1"
+        >
+          <%= hidden_field_tag :authenticity_token,
+              form_authenticity_token %>
+          <input
+            type="hidden"
+            name="_method"
+            value="delete"
+          >
+            <button
+            data-confirm-modal-target="confirmButton"
+            class="
+              w-full
+              py-3
+              rounded-xl
+              bg-red-500
+              hover:bg-red-600
+              text-white
+              font-medium
+              transition
+            "
+          >
+              Logout
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

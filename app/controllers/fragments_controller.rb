@@ -13,25 +13,28 @@ class FragmentsController < ApplicationController
   end
 
   def create
-    @fragment = current_user.fragments.build(fragment_params)
+  @fragment = current_user.fragments.build(fragment_params)
 
-    if @fragment.save
+  if @fragment.save
 
-      ai_response = GeminiService.new(
-        fragment: @fragment,
-        message: @fragment.content
-      ).call
+    ai_response = GeminiService.new(
+      fragment: @fragment,
+      message: @fragment.content
+    ).call
 
-      @fragment.observations.create!(
-        role: :ai,
-        content: ai_response
-      )
+    @fragment.observations.create!(
+      role: :ai,
+      content: ai_response
+    )
 
-      redirect_to @fragment
-    else
-      render :new, status: :unprocessable_entity
-    end
+    redirect_to @fragment,
+      notice: "Fragment created."
+
+  else
+    render :new,
+      status: :unprocessable_entity
   end
+end
 
   private
 

@@ -1,21 +1,5 @@
 <div class="max-w-4xl mx-auto py-24">
-  <div class="text-center">
-    <h1 class="text-6xl font-bold mb-6">
-      Forge
-    </h1>
-    <p class="text-xl text-zinc-500 mb-4">
-      A place for unfinished thoughts.
-    </p>
-    <p class="text-zinc-500 mb-12">
-      Plant a seed. Explore possibilities. Keep thinking.
-    </p>
-    <div class="flex justify-center gap-4">
-      <%= link_to "Sign Up",
-          register_path,
-          class: "px-6 py-3 rounded-xl bg-zinc-100 text-zinc-900 hover:bg-white transition" %>
-      <%= link_to "Sign In",
-          login_path,
-          class: "px-6 py-3 rounded-xl border theme-border hover:bg-zinc-900 transition" %>
-    </div>
-  </div>
+  <%= render "home/index/hero" %>
+  <%= render "home/index/cta" %>
+  <%= render "home/index/features" %>
 </div>

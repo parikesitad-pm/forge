@@ -1,0 +1,113 @@
+<%= form_with(
+      model: [fragment, Observation.new],
+      data: {
+        controller: "composer"
+      }
+    ) do |form| %>
+  <div
+    class="
+        mt-8
+        rounded-3xl
+        border
+        theme-border
+        theme-surface
+        overflow-hidden
+        transition
+        focus-within:border-pink-500
+        focus-within:ring-1
+        focus-within:ring-pink-500/40
+    "
+    >
+    <%= form.text_area :content,
+        data: {
+            composer_target: "textarea",
+            action: "
+            input->composer#resize
+            keydown->composer#submit
+            "
+        },
+        rows: 1,
+        placeholder: "Continue thinking...",
+        class: "
+            w-full
+            bg-transparent
+            resize-none
+            border-0
+            outline-none
+            focus:ring-0
+            p-6
+            text-base
+            leading-relaxed
+        " %>
+    <div
+        class="
+        border-t
+        theme-border
+
+        px-4
+        py-3
+
+        flex
+        items-center
+        justify-between
+        "
+    >
+      <button
+        type="button"
+        class="
+            w-9
+            h-9
+
+            rounded-full
+
+            hover:bg-zinc-800
+
+            transition
+
+            flex
+            items-center
+            justify-center
+        "
+        >
+        <%= lucide_icon "plus", class:"w-5 h-5" %>
+      </button>
+      <div
+      class="
+        flex
+        items-center
+        gap-3
+      "
+    >
+        <span
+        class="
+          text-xs
+          text-zinc-500
+        "
+      >
+          Shift + Enter
+        </span>
+        <button
+        type="submit"
+        class="
+          w-10
+          h-10
+
+          rounded-full
+
+          bg-pink-500
+          hover:bg-pink-600
+
+          transition
+
+          flex
+          items-center
+          justify-center
+        "
+      >
+          <%= lucide_icon "arrow-up",
+            class:"w-5 h-5 text-white" %>
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>

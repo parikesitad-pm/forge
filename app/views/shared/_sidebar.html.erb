@@ -5,7 +5,7 @@
     theme-surface
     border-r
     theme-border
-    min-h-[calc(100vh-64px)]
+    
     flex
     flex-col
     transition-all
@@ -125,54 +125,5 @@
     </nav>
   </div>
   <!-- Profile -->
-  <% if current_user %>
-    <div
-      class="
-        border-t
-        theme-border
-        p-4
-        shrink-0
-        flex
-        justify-center
-      "
-    >
-      <button
-        data-action="click->profile-menu#toggle"
-        class="
-        w-full
-        flex
-        items-center
-        gap-3
-        rounded-xl
-        hover:bg-zinc-800
-        p-2
-        transition
-        "
-        >
-        <div
-          class="
-            w-10
-            h-10
-            rounded-full
-            bg-pink-500
-            text-white
-            flex
-            items-center
-            justify-center
-            shrink-0
-          "
-        >
-          <%= current_user.username.first.upcase %>
-        </div>
-        <div data-sidebar-target="label">
-          <div class="text-sm font-medium">
-            <%= current_user.username %>
-          </div>
-          <div class="text-xs text-zinc-500">
-            Account
-          </div>
-        </div>
-      </button>
-    </div>
-  <% end %>
+  <%= render "shared/profile_menu" if current_user %>
 </aside>

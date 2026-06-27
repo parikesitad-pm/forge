@@ -21,19 +21,25 @@ class ObservationsController < ApplicationController
   end
 
   def pin
-    observation = Observation.find(params[:id])
+    @fragment = current_user.fragments.find(params[:fragment_id])
 
-    observation.update!(pinned: true)
+    @observation = @fragment.observations.find(params[:id])
 
-    redirect_to observation.fragment
+    @observation.update!(pinned: true)
+
+    redirect_to @fragment,
+      notice: "Spark created."
   end
 
   def unpin
-    observation = Observation.find(params[:id])
+    @fragment = current_user.fragments.find(params[:fragment_id])
 
-    observation.update!(pinned: false)
+    @observation = @fragment.observations.find(params[:id])
 
-    redirect_to observation.fragment
+    @observation.update!(pinned: false)
+
+    redirect_to @fragment,
+      notice: "Spark removed."
   end
 
   private

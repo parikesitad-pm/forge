@@ -1,0 +1,46 @@
+<div
+  data-controller="toast"
+>
+  <div
+    data-toast-target="container"
+    class="
+      fixed
+      right-6
+      bottom-6
+      z-9999
+      opacity-0
+      translate-y-4
+      pointer-events-none
+      transition-all
+      duration-300
+    "
+  >
+    <div
+      class="
+        flex
+        items-center
+        gap-3
+        rounded-2xl
+        px-5
+        py-4
+        theme-surface
+        border
+        theme-border
+        shadow-2xl
+      "
+    >
+      <%= lucide_icon "circle-check",
+          class: "
+            w-5
+            h-5
+            text-green-400
+          " %>
+      <span
+        data-toast-target="message"
+        class="text-sm"
+      >
+        Success
+      </span>
+    </div>
+  </div>
+</div>
