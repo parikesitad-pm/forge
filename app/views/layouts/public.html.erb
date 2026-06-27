@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Forge" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= favicon_link_tag asset_path("icon.png") %>
+    <%= stylesheet_link_tag "tailwind",
+        "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body
+    data-controller="theme"
+    class="
+      theme-body
+
+      min-h-screen
+
+      overflow-hidden
+
+      transition-all
+      duration-300
+    "
+  >
+    <%= render "shared/neural_background" %>
+    <%= yield %>
+  </body>
+</html>

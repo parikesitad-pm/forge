@@ -2,13 +2,13 @@ Rails.application.routes.draw do
   get "home/index"
   root "home#index"
 
-  get "/register", to: "registrations#new"
-  post "/register", to: "registrations#create"
+  get "/signup", to: "registrations#new"
+  post "/signup", to: "registrations#create"
 
-  get "/login", to: "sessions#new"
-  post "/login", to: "sessions#create"
+  get "/signin", to: "sessions#new"
+  post "/signin", to: "sessions#create"
 
-  delete "/logout", to: "sessions#destroy"
+  delete "/signout", to: "sessions#destroy"
 
   resources :fragments do
     resources :observations, only: [ :create ] do

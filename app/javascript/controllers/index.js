@@ -40,3 +40,7 @@ application.register('toast', ToastController);
 // === Sparks =====
 import SparksController from 'controllers/sparks_controller';
 application.register('sparks', SparksController);
+
+// === Neural =====
+import NeuralController from 'controllers/neural_controller';
+application.register('neural', NeuralController);

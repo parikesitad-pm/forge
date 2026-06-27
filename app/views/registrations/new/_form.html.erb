@@ -1,4 +1,4 @@
-<%= form_with model: @user, url: register_path do |form| %> <!-- Username -->
+<%= form_with model: @user, url: signup_path do |form| %> <!-- Username -->
   <div class="mb-5"> <%= form.label :username, class: "block text-sm font-medium mb-2" %> <%= form.text_field :username, class: " w-full rounded-xl bg-transparent px-4 py-3 border transition #{@user.errors[:username].any? ? 'border-red-500 focus:border-red-500' : 'theme-border focus:border-pink-500'} " %> <% if @user.errors[:username].any? %>
       <div class="mt-2 flex items-center gap-2 text-sm text-red-400"> <%= lucide_icon "circle-alert", class: "w-4 h-4 shrink-0" %> <span> <%= @user.errors[:username].first %> </span> </div>
     <% end %> </div>
@@ -27,5 +27,5 @@
       <% end %> </div>
   </div>
   <button type="submit" class=" w-full px-4 py-3 rounded-xl bg-pink-500 hover:bg-pink-600 text-white font-medium transition " > Create Account </button>
-  <div class="mt-6 text-center text-sm text-zinc-500"> Already have an account? <%= link_to "Sign In", login_path, class: "text-pink-400 hover:text-pink-300 ml-1" %> </div>
+  <div class="mt-6 text-center text-sm text-zinc-500"> Already have an account? <%= link_to "Sign In", signin_path, class: "text-pink-400 hover:text-pink-300 ml-1" %> </div>
 <% end %>

@@ -1,6 +1,6 @@
-class FragmentsController < ApplicationController
+class FragmentsController < WorkspaceController
   before_action :require_login
-  layout :layout_for_action
+
   def index
     @fragments = current_user.fragments.order(created_at: :desc)
   end
@@ -39,9 +39,7 @@ class FragmentsController < ApplicationController
 
   private
 
-  def layout_for_action
-    action_name == "show" ? "workspace" : "application"
-  end
+
 
   def fragment_params
     params.require(:fragment).permit(:content)

@@ -1,7 +1,7 @@
-class HomeController < ApplicationController
+class HomeController < PublicController
   def index
-    if current_user
-      redirect_to fragments_path
-    end
+    redirect_to fragments_path if current_user
   end
+
+  private
 end

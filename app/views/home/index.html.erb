@@ -1,5 +1,37 @@
-<div class="max-w-4xl mx-auto py-24">
-  <%= render "home/index/hero" %>
-  <%= render "home/index/cta" %>
-  <%= render "home/index/features" %>
+<div
+  class="
+    relative
+
+    min-h-screen
+
+    overflow-hidden
+  "
+>
+  <div
+    id="neural-background"
+    class="
+      absolute
+      inset-0
+      -z-10
+    "
+  ></div>
+  <div
+    class="
+      max-w-5xl
+
+      mx-auto
+
+      min-h-screen
+
+      flex
+      flex-col
+      justify-center
+
+      px-6
+    "
+  >
+    <%= render "home/index/hero" %>
+    <%= render "home/index/cta" %>
+  </div>
+  <%= render "shared/footer" %>
 </div>
