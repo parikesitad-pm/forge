@@ -2,12 +2,14 @@
   class="
     group
     flex
+    pr-8
+    px-3
     <%= observation.role == "user" ? "justify-end" : "justify-start" %>
   "
 >
   <div
     class="
-      max-w-3xl
+      max-w-184 
       flex
       flex-col
     "
@@ -42,9 +44,7 @@
         text-xs
         text-zinc-500
 
-        <%= observation.role == "user" ?
-          "text-right" :
-          "text-left" %>
+        <%= observation.role == "user" ? "justify-end" : "justify-start" %>
       "
     >
       <%= conversation_timestamp(observation.created_at) %>
