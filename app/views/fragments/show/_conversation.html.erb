@@ -1,0 +1,16 @@
+<div class="flex items-center gap-2 mb-8">
+  <%= lucide_icon "messages-square",
+      class:"w-4 h-4 text-zinc-400" %>
+  <h2 class="font-semibold">
+    Let's do a bit of brainstorming.
+  </h2>
+</div>
+<% if fragment.observations.any? %>
+  <div class="space-y-2 mb-8">
+    <% fragment.observations.order(:created_at).each do |observation| %>
+      <%= render "fragments/show/message",
+        fragment: fragment,
+        observation: observation %>
+    <% end %>
+  </div>
+<% end %>

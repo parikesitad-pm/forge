@@ -1,53 +1,9 @@
 <div class="max-w-4xl">
-  <div class="flex items-center justify-between mb-8">
-    <div>
-      <h1 class="text-3xl font-bold">
-        Fragments
-      </h1>
-      <p class="text-zinc-400 mt-2">
-        Capture first. Understand later.
-      </p>
-    </div>
-    <%= link_to "New Fragment",
-        new_fragment_path,
-        class: "px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 transition" %>
-  </div>
-  <div class="space-y-4">
-    <% @fragments.each do |fragment| %>
-      <%= link_to fragment_path(fragment),
-      class: "block group mb-4" do %>
-        <div
-      class="
-        border-l-4
-        border-pink-500
-        pl-4
-        py-3
-        hover:bg-zinc-800/20
-        rounded-r-lg
-        transition
-      "
-    >
-          <h3
-          class="
-            text-base
-            font-medium
-            group-hover:text-pink-400
-            transition
-          "
-          >
-            <%= fragment.content %>
-          </h3>
-          <p
-        class="
-          text-xs
-          text-zinc-500
-          mt-1
-        "
-          >
-            <%= fragment.created_at.strftime("%d %b %Y • %H:%M") %>
-          </p>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
+  <%= render "fragments/index/header" %>
+  <% if @fragments.any? %>
+    <%= render "fragments/index/list",
+        fragments: @fragments %>
+  <% else %>
+    <%= render "fragments/index/empty" %>
+  <% end %>
 </div>

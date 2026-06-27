@@ -1,0 +1,44 @@
+<%
+pinned = fragment.observations
+  .where(pinned: true)
+  .order(created_at: :desc)
+%>
+<% if pinned.any? %>
+  <div
+  class="
+    theme-surface
+    border
+    theme-border
+    rounded-2xl
+    p-6
+    mb-8
+  "
+>
+    <div
+    class="
+      flex
+      items-center
+      gap-2
+      mb-4
+    "
+  >
+      <%= lucide_icon "sparkles",
+        class:"w-4 h-4 text-amber-400" %>
+      <h2 class="font-semibold">
+        Sparks
+      </h2>
+    </div>
+    <div class="space-y-4">
+      <% pinned.each do |observation| %>
+        <div class="border-l-2 border-amber-400 pl-4">
+          <div class="text-xs uppercase tracking-wider text-zinc-500 mb-2">
+            <%= observation.role == "ai" ? "OWL" : "YOU" %>
+          </div>
+          <div class="leading-relaxed">
+            <%= simple_format(observation.content) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

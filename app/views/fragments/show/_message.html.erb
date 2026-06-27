@@ -1,0 +1,36 @@
+<div class="flex <%= observation.role == 'user' ? 'justify-end' : 'justify-start' %>">
+  <div class="max-w-3xl">
+    <div class="text-xs uppercase tracking-wider text-zinc-500 mb-2 <%= observation.role == 'user' ? 'text-right' : '' %>">
+      <%= observation.role == "user" ? "YOU" : "OWL" %>
+    </div>
+    <div
+      class="
+        rounded-2xl
+        px-5
+        py-4
+        border
+        <%= observation.role == "user" ? "bg-zinc-800 border-zinc-700 text-zinc-100" : "bg-zinc-900 border-zinc-800 text-zinc-200" %>
+      "
+    >
+      <%= simple_format(observation.content) %>
+    </div>
+    <div class="flex <%= observation.role == 'user' ? 'justify-end' : 'justify-start' %> mt-2">
+      <% if observation.pinned? %>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-amber-400">
+            ⭐ Spark
+          </span>
+          <%= button_to "Unpin",
+              unpin_fragment_observation_path(fragment, observation),
+              method: :patch,
+              class:"text-xs text-zinc-500 hover:text-zinc-300 bg-transparent border-0 p-0 cursor-pointer" %>
+        </div>
+      <% else %>
+        <%= button_to "📌 Pin Spark",
+            pin_fragment_observation_path(fragment, observation),
+            method: :patch,
+            class:"text-xs text-zinc-500 hover:text-amber-400 bg-transparent border-0 p-0 cursor-pointer" %>
+      <% end %>
+    </div>
+  </div>
+</div>

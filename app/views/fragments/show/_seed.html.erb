@@ -1,0 +1,40 @@
+<div
+  class="
+    theme-surface
+    border
+    theme-border
+    rounded-2xl
+    p-8
+    mb-8
+  "
+>
+  <div
+    class="
+      flex
+      items-center
+      justify-between
+      mb-4
+    "
+  >
+    <div
+      class="
+        flex
+        items-center
+        gap-2
+        text-sm
+        font-medium
+        text-zinc-400
+      "
+    >
+      <%= lucide_icon "sprout",
+          class:"w-4 h-4" %>
+      Seed
+    </div>
+    <div class="text-xs text-zinc-500">
+      <%= fragment.created_at.strftime("%d %b %Y • %H:%M") %>
+    </div>
+  </div>
+  <div class="text-3xl font-bold leading-relaxed">
+    <%= fragment.content %>
+  </div>
+</div>

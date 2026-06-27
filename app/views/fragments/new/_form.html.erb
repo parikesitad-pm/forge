@@ -1,0 +1,49 @@
+<%= form_with model: fragment do |form| %>
+  <div class="mb-6">
+    <%= form.text_area :content,
+        rows: 12,
+        placeholder: "Random kepikiran?\n\nLempar aja dulu.\nRapihin belakangan.",
+        class: "
+          w-full
+          rounded-2xl
+          border-2
+          border-zinc-200
+          dark:border-zinc-800
+          bg-white
+          dark:bg-zinc-900
+          text-zinc-900
+          dark:text-zinc-100
+          p-6
+          text-lg
+          leading-relaxed
+          resize-y
+          transition-colors
+          focus:outline-none
+          focus:border-pink-500
+          focus:ring-0
+        " %>
+  </div>
+  <div class="flex items-center gap-4">
+    <%= form.submit "Save Fragment",
+        class: "
+          px-6
+          py-3
+          rounded-xl
+          bg-pink-500
+          hover:bg-pink-600
+          text-white
+          font-medium
+          transition-colors
+          cursor-pointer
+        " %>
+    <span
+      class="
+        text-sm
+        text-zinc-500
+        dark:text-zinc-400
+      "
+    >
+      The first entry becomes the seed automatically.
+    </span>
+  </div>
+<% end %>
