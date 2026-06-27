@@ -14,10 +14,6 @@ Forge is designed for people who constantly collect ideas but struggle to organi
 
 https://forge-production-bbfc.up.railway.app/
 
-**Source Code**
-
-https://github.com/parikesitad-pm/forge
-
 ---
 
 # Why Forge?
