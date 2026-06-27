@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static targets = [
+    'requirements',
     'input',
     'confirmation',
     'match',
@@ -19,6 +20,15 @@ export default class extends Controller {
 
   validate() {
     const password = this.inputTarget.value;
+    const confirmation = this.confirmationTarget.value;
+
+    if (password.length === 0) {
+      this.requirementsTarget.classList.add('hidden');
+      this.matchTarget.classList.add('hidden');
+      return;
+    }
+
+    this.requirementsTarget.classList.remove('hidden');
 
     this.toggle(this.lengthTarget, password.length >= 8);
     this.toggle(this.uppercaseTarget, /[A-Z]/.test(password));
@@ -26,23 +36,18 @@ export default class extends Controller {
     this.toggle(this.numberTarget, /\d/.test(password));
     this.toggle(this.symbolTarget, /[!@#$%^&*(),.?":{}|<>]/.test(password));
 
+    if (confirmation.length === 0) {
+      this.matchTarget.classList.add('hidden');
+    } else {
+      this.matchTarget.classList.remove('hidden');
+    }
+
     this.validateConfirmation();
   }
 
   validateConfirmation() {
     const password = this.inputTarget.value;
     const confirmation = this.confirmationTarget.value;
-
-    if (confirmation.length === 0) {
-      this.matchTarget.classList.remove('text-emerald-400', 'text-red-400');
-
-      this.matchTarget.classList.add('text-zinc-500');
-
-      this.matchTarget.querySelector('.status').textContent = '○';
-      this.matchTextTarget.textContent = 'Waiting for confirmation';
-
-      return;
-    }
 
     const matched = password === confirmation;
 

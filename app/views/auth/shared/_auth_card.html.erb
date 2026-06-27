@@ -5,37 +5,30 @@
     w-full
 
     overflow-hidden
-
-    rounded-[32px]
+    z-10
+    rounded-4xl
 
     border
-    border-white/5
+    border-white/10
 
-    bg-white/[0.04]
+    bg-white/3
 
-    backdrop-blur-3xl
+    backdrop-blur-2xl
+    backdrop-saturate-150
 
-    shadow-[0_0_80px_rgba(0,0,0,.35)]
+    shadow-[0_10px_40px_rgba(0,0,0,.18)]
+
+    before:absolute
+    before:inset-0
+    before:bg-linear-to-br
+    before:from-white/3
+    before:via-transparent
+  before:to-pink-500/1.5
+    before:pointer-events-none
+    supports-backdrop-filter:bg-white/5
 
     p-10
   "
 >
-  <div
-    class="
-      absolute
-      inset-0
-
-      rounded-[32px]
-
-      bg-gradient-to-br
-      from-white/[0.05]
-      via-transparent
-      to-pink-500/[0.02]
-
-      pointer-events-none
-    "
-  ></div>
-  <div class="relative z-10">
-    <%= yield %>
-  </div>
+  <%= yield %>
 </div>
