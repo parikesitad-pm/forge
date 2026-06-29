@@ -41,7 +41,8 @@ class SettingsController < ApplicationController
       :fullname,
       :username,
       :email,
-      :bio
+      :bio,
+      :avatar
     )
   end
 end

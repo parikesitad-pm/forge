@@ -21,13 +21,5 @@ export default class extends Controller {
         label.classList.add('hidden');
       });
     }
-
-    const profile = this.element.querySelector(
-      "[data-controller='profile-menu'] button"
-    );
-
-    if (profile) {
-      profile.classList.toggle('justify-center', !collapsed);
-    }
   }
 }

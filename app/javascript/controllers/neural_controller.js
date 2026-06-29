@@ -6,7 +6,6 @@ export default class extends Controller {
   connect() {
     this.canvas = this.canvasTarget;
     this.ctx = this.canvas.getContext('2d');
-
     this.mouse = {
       x: -9999,
       y: -9999,
@@ -36,6 +35,7 @@ export default class extends Controller {
         phase: Math.random() * Math.PI * 2,
         life: Math.random(),
       });
+      this.heroPull = 1;
     }
 
     this.animate();
@@ -90,6 +90,7 @@ export default class extends Controller {
         life: 0,
       });
     }
+    this.heroPull *= 0.992;
   };
 
   moveNodes() {
@@ -113,6 +114,22 @@ export default class extends Controller {
 
       const dx = node.x - this.mouse.x;
       const dy = node.y - this.mouse.y;
+
+      const heroX = parseFloat(document.body.dataset.heroX);
+      const heroY = parseFloat(document.body.dataset.heroY);
+
+      if (!Number.isNaN(heroX) && this.heroPull > 0.02) {
+        const hx = heroX - node.x;
+        const hy = heroY - node.y;
+
+        const d = Math.sqrt(hx * hx + hy * hy);
+
+        if (d > 0) {
+          node.vx += (hx / d) * 0.012 * this.heroPull;
+
+          node.vy += (hy / d) * 0.012 * this.heroPull;
+        }
+      }
 
       const distance = Math.sqrt(dx * dx + dy * dy);
 

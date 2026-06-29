@@ -44,3 +44,19 @@ application.register('sparks', SparksController);
 // === Neural =====
 import NeuralController from 'controllers/neural_controller';
 application.register('neural', NeuralController);
+
+// === Hero =====
+import HeroController from 'controllers/hero_controller';
+application.register('hero', HeroController);
+
+// === Loading skeleton =====
+import LoadingController from 'controllers/loading_controller';
+application.register('loading', LoadingController);
+
+// === Chat =====
+import ChatController from 'controllers/chat_controller';
+application.register('chat', ChatController);
+
+// === avatar preview ====
+import AvatarController from 'controllers/avatar_controller';
+application.register('avatar', AvatarController);

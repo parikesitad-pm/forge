@@ -1,4 +1,5 @@
 <div
+  data-controller="chat"
   class="
     h-full
     min-h-0
@@ -22,6 +23,7 @@
     "
   >
     <div
+      data-chat-target="messages"
       class="
         flex-1
         min-h-0
@@ -34,6 +36,7 @@
           fragment: @fragment %>
     </div>
     <div
+      data-chat-target="composer"
       class="
         pt-0
       "

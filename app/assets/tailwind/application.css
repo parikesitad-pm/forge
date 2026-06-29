@@ -42,3 +42,54 @@
   color: #18181b;
   border-color: #d4d4d8;
 }
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.hero-glow {
+  filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.35))
+    drop-shadow(0 0 30px rgba(236, 72, 153, 0.18));
+}
+
+/* ================= Skeleton ================= */
+
+@keyframes skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.09) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+
+  background-size: 200% 100%;
+
+  animation: skeleton 1.3s linear infinite;
+
+  border-radius: 999px;
+}
+
+.skeleton-card {
+  @apply theme-surface border theme-border rounded-2xl;
+}

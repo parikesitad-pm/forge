@@ -1,10 +1,12 @@
 <% if current_user %>
   <div
   data-controller="profile-menu"
+  data-profile-menu-target="wrapper"
   class="relative p-4"
 >
     <button
     data-action="click->profile-menu#toggle"
+      data-profile-menu-target="button"
       class="
       w-full
       flex
@@ -16,19 +18,35 @@
       "
       >
       <div
-      class="
-        w-10
-        h-10
-        rounded-full
-        bg-pink-500
-        text-white
-        flex
-        items-center
-        justify-center
-        shrink-0
-      "
-    >
-        <%= current_user.username.first.upcase %>
+        class="
+          w-10
+          h-10
+          rounded-full
+          overflow-hidden
+          bg-pink-500
+          shrink-0
+          flex
+          items-center
+          justify-center
+        "
+      >
+        <% if current_user.avatar.attached? %>
+          <%= image_tag current_user.avatar,
+            class: "
+              w-full
+              h-full
+              object-cover
+            " %>
+        <% else %>
+          <span
+            class="
+              text-white
+              font-semibold
+            "
+          >
+            <%= current_user.username.first.upcase %>
+          </span>
+        <% end %>
       </div>
       <div
       data-sidebar-target="label"
@@ -45,23 +63,28 @@
         class:"w-4 h-4 text-zinc-500" %>
     </button>
     <div
-    data-profile-menu-target="menu"
-    class="
+      data-profile-menu-target="menu"
+      class="
       hidden
-      absolute
-      bottom-full
-      left-4
-      right-4
-      mb-2
-      rounded-xl
+
+      fixed
+
+      w-72
+
+      rounded-2xl
+
       border
       theme-border
+
       theme-surface
-      shadow-xl
+
+      shadow-2xl
+
+      z-9999
+
       overflow-hidden
-      z-50
-    "
-  >
+      "
+    >
       <%= link_to settings_path,
         class:"
           flex
@@ -79,7 +102,7 @@
       <button class=" w-full flex items-center gap-3 px-4
         py-3 hover:bg-red-900/20 transition text-left"
         data-action="click->confirm-modal#open"
-        data-confirm-title="Logout"
+        data-confirm-title="Sign Out"
         data-confirm-message="You'll need to sign in again to continue your thinking."
         data-confirm-button="Sign Out"
         data-confirm-url="<%= signout_path %>"

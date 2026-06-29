@@ -9,7 +9,8 @@
     </p>
   </div>
   <!-- Account -->
-  <div class="theme-surface rounded-2xl border theme-border p-8">
+  <div
+    class="theme-surface rounded-2xl border theme-border p-8">
     <div class="flex items-center gap-3 mb-8">
       <%= lucide_icon "user-round",
           class: "w-6 h-6 text-pink-500" %>
@@ -21,12 +22,15 @@
                   url: settings_path,
                   method: :patch do |form| %>
       <!-- Avatar -->
-      <div class="flex items-center gap-6 mb-8">
+      <div
+        data-controller="avatar"
+        class="flex items-center gap-6 mb-8">
         <div
           class="
             w-24
             h-24
             rounded-full
+            overflow-hidden
             bg-pink-500
             text-white
             text-3xl
@@ -36,32 +40,63 @@
             justify-center
           "
         >
-          <%= @user.username.first.upcase %>
-        </div>
-        <div>
-          <button
-            type="button"
+          <img
+            data-avatar-target="preview"
+            src="<%= @user.avatar.attached? ? url_for(@user.avatar) : "" %>"
             class="
-              px-4
-              py-2
-              rounded-xl
-              border
-              theme-border
-              hover:bg-zinc-800
+              w-full
+              h-full
+              object-cover
+              <%= @user.avatar.attached? ? "" : "hidden" %>
             "
           >
-            Upload Avatar
-          </button>
-          <p class="text-xs text-zinc-500 mt-2">
-            Avatar upload coming soon.
-          </p>
+            <div
+              data-avatar-target="fallback"
+              class="
+                text-white
+                text-3xl
+                font-bold
+                <%= @user.avatar.attached? ? "hidden" : "" %>
+              "
+            >
+              <%= @user.username.first.upcase %>
+            </div>
+          </div>
+          <div>
+            <label
+                class="
+                  inline-flex
+                  cursor-pointer
+                  px-4
+                  py-2
+                  rounded-xl
+                  border
+                  theme-border
+                  hover:bg-zinc-800
+                "
+              >
+              Upload Avatar
+              <%= form.file_field :avatar,
+
+                    accept: "image/*",
+
+                    data: {
+                      avatar_target: "input",
+                      action: "change->avatar#preview"
+                    },
+
+                    class: "hidden" %>
+            </label>
+            <p class="text-xs text-zinc-500 mt-2">
+              Avatar upload coming soon.
+            </p>
+          </div>
         </div>
-      </div>
-      <!-- Fullname -->
-      <div class="mb-6">
-        <%= form.label :fullname,
+        <!-- Fullname -->
+        <div class="mb-6">
+          <%= form.label :fullname,
             class:"block text-sm font-medium mb-2" %>
-        <%= form.text_field :fullname,
+          <%= form.text_field :fullname,
             class:"
               w-full
               rounded-xl
@@ -71,12 +106,12 @@
               px-4
               py-3
             " %>
-      </div>
-      <!-- Username -->
-      <div class="mb-6">
-        <%= form.label :username,
+        </div>
+        <!-- Username -->
+        <div class="mb-6">
+          <%= form.label :username,
             class:"block text-sm font-medium mb-2" %>
-        <%= form.text_field :username,
+          <%= form.text_field :username,
             class:"
               w-full
               rounded-xl
@@ -86,12 +121,12 @@
               px-4
               py-3
             " %>
-      </div>
-      <!-- Email -->
-      <div class="mb-6">
-        <%= form.label :email,
+        </div>
+        <!-- Email -->
+        <div class="mb-6">
+          <%= form.label :email,
             class:"block text-sm font-medium mb-2" %>
-        <%= form.email_field :email,
+          <%= form.email_field :email,
             class:"
               w-full
               rounded-xl
@@ -101,12 +136,12 @@
               px-4
               py-3
             " %>
-      </div>
-      <!-- Bio -->
-      <div class="mb-8">
-        <%= form.label :bio,
+        </div>
+        <!-- Bio -->
+        <div class="mb-8">
+          <%= form.label :bio,
             class:"block text-sm font-medium mb-2" %>
-        <%= form.text_area :bio,
+          <%= form.text_area :bio,
             rows:5,
             class:"
               w-full
@@ -117,9 +152,9 @@
               px-4
               py-3
             " %>
-      </div>
-      <div class="flex justify-end">
-        <button
+        </div>
+        <div class="flex justify-end">
+          <button
           class="
             px-6
             py-3
@@ -129,26 +164,26 @@
             text-white
           "
         >
-          Save Changes
-        </button>
-      </div>
-    <% end %>
-  </div>
-  <!-- Security -->
-  <div class="theme-surface rounded-2xl border theme-border p-8">
-    <div class="flex items-center gap-3 mb-8">
-      <%= lucide_icon "shield",
-          class:"w-6 h-6 text-pink-500" %>
-      <h2 class="text-xl font-semibold">
-        Security
-      </h2>
+            Save Changes
+          </button>
+        </div>
+      <% end %>
     </div>
-    <%= form_with url: password_settings_path,
+    <!-- Security -->
+    <div class="theme-surface rounded-2xl border theme-border p-8">
+      <div class="flex items-center gap-3 mb-8">
+        <%= lucide_icon "shield",
+          class:"w-6 h-6 text-pink-500" %>
+        <h2 class="text-xl font-semibold">
+          Security
+        </h2>
+      </div>
+      <%= form_with url: password_settings_path,
                   method: :patch do |form| %>
-      <div class="mb-6">
-        <%= form.label :current_password,
+        <div class="mb-6">
+          <%= form.label :current_password,
             class:"block text-sm font-medium mb-2" %>
-        <%= form.password_field :current_password,
+          <%= form.password_field :current_password,
             class:"
               w-full
               rounded-xl
@@ -158,12 +193,12 @@
               px-4
               py-3
             " %>
-      </div>
-      <div class="mb-6">
-        <%= form.label :password,
+        </div>
+        <div class="mb-6">
+          <%= form.label :password,
             "New Password",
             class:"block text-sm font-medium mb-2" %>
-        <%= form.password_field :password,
+          <%= form.password_field :password,
             class:"
               w-full
               rounded-xl
@@ -173,11 +208,11 @@
               px-4
               py-3
             " %>
-      </div>
-      <div class="mb-8">
-        <%= form.label :password_confirmation,
+        </div>
+        <div class="mb-8">
+          <%= form.label :password_confirmation,
             class:"block text-sm font-medium mb-2" %>
-        <%= form.password_field :password_confirmation,
+          <%= form.password_field :password_confirmation,
             class:"
               w-full
               rounded-xl
@@ -187,9 +222,9 @@
               px-4
               py-3
             " %>
-      </div>
-      <div class="flex justify-end">
-        <button
+        </div>
+        <div class="flex justify-end">
+          <button
           class="
             px-6
             py-3
@@ -199,13 +234,13 @@
             text-white
           "
         >
-          Update Password
-        </button>
-      </div>
-    <% end %>
-  </div>
-  <!-- Danger Zone -->
-  <div
+            Update Password
+          </button>
+        </div>
+      <% end %>
+    </div>
+    <!-- Danger Zone -->
+    <div
     class="
       rounded-2xl
       border
@@ -213,17 +248,17 @@
       p-8
     "
   >
-    <div class="flex items-center gap-3 mb-4">
-      <%= lucide_icon "triangle-alert",
+      <div class="flex items-center gap-3 mb-4">
+        <%= lucide_icon "triangle-alert",
           class:"w-6 h-6 text-red-500" %>
-      <h2 class="text-xl font-semibold text-red-500">
-        Danger Zone
-      </h2>
-    </div>
-    <p class="text-zinc-500 mb-6">
-      Permanently delete your Forge account and all fragments.
-    </p>
-    <%= button_to "Delete Account",
+        <h2 class="text-xl font-semibold text-red-500">
+          Danger Zone
+        </h2>
+      </div>
+      <p class="text-zinc-500 mb-6">
+        Permanently delete your Forge account and all fragments.
+      </p>
+      <%= button_to "Delete Account",
         "#",
         class:"
           px-6
@@ -233,5 +268,5 @@
           hover:bg-red-600
           text-white
         " %>
+    </div>
   </div>
-</div>

@@ -1,11 +1,110 @@
-<div class="text-center">
-  <h1 class="text-6xl font-bold mb-6">
+<section
+  data-controller="hero"
+  class="
+    relative
+    z-10
+
+    min-h-[70vh]
+
+    flex
+    flex-col
+    items-center
+    justify-center
+
+    text-center
+
+    px-6
+  "
+>
+  <div
+    data-hero-target="logo"
+    class="
+      transition-all
+      duration-700
+    "
+  >
+    <%= image_tag "icon.png",
+      class:"w-20 h-20 mx-auto animate-float hero-glow" %>
+  </div>
+  <h1
+    data-hero-target="title"
+    class="
+      mt-8
+
+      text-6xl
+
+      font-bold
+
+      tracking-tight
+
+      transition-all
+      duration-700
+    "
+  >
     Forge
   </h1>
-  <p class="text-xl text-zinc-500 mb-4">
-    A place for unfinished thoughts.
+  <p
+    data-hero-target="subtitle"
+    class="
+      mt-6
+
+      max-w-2xl
+
+      text-lg
+
+      text-zinc-400
+
+      leading-relaxed
+
+      transition-all
+      duration-700
+    "
+  >
+    Transform scattered thoughts into structured knowledge.
   </p>
-  <p class="text-zinc-500 mb-12">
-    Plant a seed. Explore possibilities. Keep thinking.
-  </p>
-</div>
+  <div
+    data-hero-target="actions"
+    class="
+      mt-10
+
+      flex
+
+      gap-4
+
+      transition-all
+      duration-700
+    "
+  >
+    <%= link_to "Sign Up",
+      signup_path,
+      class:"
+        px-6
+        py-3
+        rounded-full
+
+        bg-pink-500
+        hover:bg-pink-600
+
+        text-white
+
+        transition
+      " %>
+    <%= link_to "Sign In",
+      signin_path,
+      class:"
+        px-6
+        py-3
+        rounded-full
+
+        border
+        border-white/10
+
+        bg-white/5
+        hover:bg-white/10
+
+        backdrop-blur-xl
+
+        transition
+      " %>
+  </div>
+</section>

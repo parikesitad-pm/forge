@@ -1,9 +1,13 @@
 <div class="max-w-4xl">
   <%= render "fragments/index/header" %>
-  <% if @fragments.any? %>
-    <%= render "fragments/index/list",
-        fragments: @fragments %>
+  <% if @loading %>
+    <%= render "shared/skeleton_fragment" %>
   <% else %>
-    <%= render "fragments/index/empty" %>
+    <% if @fragments.any? %>
+      <%= render "fragments/index/list",
+        fragments: @fragments %>
+    <% else %>
+      <%= render "fragments/index/empty" %>
+    <% end %>
   <% end %>
 </div>
