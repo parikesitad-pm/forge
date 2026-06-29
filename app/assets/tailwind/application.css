@@ -91,5 +91,11 @@
 }
 
 .skeleton-card {
-  @apply theme-surface border theme-border rounded-2xl;
+  background-color: var(--surface);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+
+  padding: 1.5rem;
 }
