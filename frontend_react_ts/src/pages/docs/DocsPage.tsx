@@ -31,16 +31,24 @@ export const DocsPage: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollHeight > 0
-        ? Math.min(100, Math.max(0, Math.round((scrollY / scrollHeight) * 100)))
-        : 0;
+      const scrollHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const progress =
+        scrollHeight > 0
+          ? Math.min(
+              100,
+              Math.max(0, Math.round((scrollY / scrollHeight) * 100))
+            )
+          : 0;
 
       setReadingProgress(progress);
       setIsScrolled(scrollY > 20);
 
       // If user reaches near the bottom of document, activate the last section
-      if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 60) {
+      if (
+        window.innerHeight + scrollY >=
+        document.documentElement.scrollHeight - 60
+      ) {
         if (docsSections.length > 0) {
           setActiveSection(docsSections[docsSections.length - 1].id);
         }

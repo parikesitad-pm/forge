@@ -42,7 +42,9 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
               <span>Reading Progress</span>
             </span>
-            <span className="text-pink-400 font-semibold">{readingProgress}%</span>
+            <span className="text-pink-400 font-semibold">
+              {readingProgress}%
+            </span>
           </div>
           <div className="w-full bg-zinc-800/80 rounded-full h-1.5 overflow-hidden">
             <div
@@ -52,7 +54,8 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
           </div>
           <div className="mt-1.5 text-[10px] font-mono text-zinc-400 flex items-center justify-between">
             <span>
-              Section {activeSectionIndex >= 0 ? activeSectionIndex + 1 : 1} of {sections.length}
+              Section {activeSectionIndex >= 0 ? activeSectionIndex + 1 : 1} of{' '}
+              {sections.length}
             </span>
             <span className="text-zinc-400 truncate max-w-[110px]">
               {sections[activeSectionIndex]?.title || 'Overview'}
@@ -71,7 +74,9 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
               .filter((s) => s.category === cat)
               .map((section) => {
                 const isActive = activeSection === section.id;
-                const sectionIdx = sections.findIndex((s) => s.id === section.id);
+                const sectionIdx = sections.findIndex(
+                  (s) => s.id === section.id
+                );
                 const isPassed = activeSectionIndex > sectionIdx;
 
                 return (
@@ -83,15 +88,17 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
                         isActive
                           ? 'bg-pink-500/15 text-pink-300 font-semibold border-l-2 -ml-[9px] border-pink-400 pl-3'
                           : isPassed
-                          ? 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
-                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                            ? 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                       }`}
                     >
                       <span className="truncate">{section.title}</span>
                       {isActive ? (
                         <span className="w-1.5 h-1.5 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.8)] shrink-0 ml-1.5" />
                       ) : isPassed ? (
-                        <span className="text-[10px] text-zinc-600 font-mono shrink-0 ml-1.5">✓</span>
+                        <span className="text-[10px] text-zinc-600 font-mono shrink-0 ml-1.5">
+                          ✓
+                        </span>
                       ) : null}
                     </button>
                   </div>
