@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Widened `/app/settings` container to `max-w-4xl` for spacious profile management.
 - Fixed landing footer and Swagger HTML typo `&nearr;` with clean unicode `↗`.
 - Fixed `/app` logout bug and unauthorized toasts by gating TanStack Query calls and invalidating session cookies.
+- Fixed `/docs` sticky header and sidebar by switching from `overflow-x: hidden` to `overflow-x: clip`, adding linear reading progress bar, auto-scrolling active items, and bottom boundary detection.
 
 ### Removed
 

@@ -13,6 +13,7 @@ export const DocsPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [readingProgress, setReadingProgress] = useState(0);
 
   // Handle hash scrolling on mount or hash change
   useEffect(() => {
@@ -20,25 +21,39 @@ export const DocsPage: React.FC = () => {
     if (hash && docsSections.some((s) => s.id === hash)) {
       setActiveSection(hash);
       const el = document.getElementById(hash);
-      if (el) {
+      if (el && typeof el.scrollIntoView === 'function') {
         el.scrollIntoView({ behavior: 'smooth' });
       }
     }
   }, [location]);
 
-  // Robust ScrollSpy and animated header scroll tracking
+  // Robust ScrollSpy and reading progress tracking
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollHeight > 0
+        ? Math.min(100, Math.max(0, Math.round((scrollY / scrollHeight) * 100)))
+        : 0;
+
+      setReadingProgress(progress);
       setIsScrolled(scrollY > 20);
 
-      // Find current reading section
+      // If user reaches near the bottom of document, activate the last section
+      if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 60) {
+        if (docsSections.length > 0) {
+          setActiveSection(docsSections[docsSections.length - 1].id);
+        }
+        return;
+      }
+
+      // Find current reading section by top boundary threshold
       let currentId = docsSections[0]?.id || 'overview';
       for (const section of docsSections) {
         const el = document.getElementById(section.id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 140) {
+          if (rect.top <= 160) {
             currentId = section.id;
           }
         }
@@ -57,7 +72,7 @@ export const DocsPage: React.FC = () => {
     setMobileMenuOpen(false);
     window.location.hash = id;
     const el = document.getElementById(id);
-    if (el) {
+    if (el && typeof el.scrollIntoView === 'function') {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
@@ -67,16 +82,16 @@ export const DocsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
-      {/* Animated Shrinking Static / Fixed Header with Breadcrumb */}
+      {/* Sticky Top Header with Breadcrumb and Reading Progress Bar */}
       <header
-        className={`sticky top-0 z-40 w-full backdrop-blur-md transition-all duration-300 ease-out ${
+        className={`sticky top-0 z-40 w-full backdrop-blur-md border-b border-zinc-900/80 transition-all duration-300 ease-out ${
           isScrolled
             ? 'h-12 bg-zinc-950/95 shadow-lg shadow-black/40'
             : 'h-16 bg-zinc-950/80'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-          {/* Breadcrumb: [logo] docs / [yang lagi dibaca] */}
+          {/* Breadcrumb: [logo] docs / [section title] · [progress %] */}
           <div className="flex items-center gap-2.5 min-w-0">
             <BrandLogo size="sm" showSubBrand={false} href="/" />
             <span className="text-zinc-600">/</span>
@@ -91,6 +106,9 @@ export const DocsPage: React.FC = () => {
                 <span className="text-zinc-600">/</span>
                 <span className="text-xs font-mono text-pink-400 font-medium truncate max-w-[140px] sm:max-w-xs transition-all">
                   {activeDoc.title}
+                </span>
+                <span className="text-[10px] font-mono text-zinc-400 bg-zinc-900/90 px-1.5 py-0.5 rounded border border-zinc-800/80 hidden sm:inline shrink-0">
+                  {readingProgress}%
                 </span>
               </>
             )}
@@ -137,6 +155,14 @@ export const DocsPage: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Linear Reading Progress Bar directly beneath sticky header */}
+        <div className="w-full h-[2px] bg-zinc-900/60 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-pink-500 via-rose-400 to-pink-500 transition-all duration-150"
+            style={{ width: `${readingProgress}%` }}
+          />
+        </div>
       </header>
 
       {/* Mobile Drawer */}
@@ -146,18 +172,20 @@ export const DocsPage: React.FC = () => {
             sections={docsSections}
             activeSection={activeSection}
             onSelectSection={handleSelectSection}
+            readingProgress={readingProgress}
           />
         </div>
       )}
 
-      {/* Documentation Layout with Pinned Static Desktop Sidebar */}
+      {/* Documentation Layout with Sticky Desktop Sidebar */}
       <div className="max-w-7xl w-full mx-auto px-6 py-8 flex-1 flex gap-12">
-        {/* Static Desktop Sidebar (pinned to top, does not scroll away with page) */}
-        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-16 self-start h-[calc(100vh-5rem)] overflow-y-auto pr-4 scrollbar-thin">
+        {/* Sticky Desktop Sidebar: pinned to top below header, scrolls internally with scrollbar */}
+        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-3 scrollbar-thin">
           <DocsSidebar
             sections={docsSections}
             activeSection={activeSection}
             onSelectSection={handleSelectSection}
+            readingProgress={readingProgress}
           />
         </aside>
 
