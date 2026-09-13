@@ -6,6 +6,8 @@ import { RegisterPage } from '@/pages/public/RegisterPage'
 import { AppWorkspacePage } from '@/pages/app/AppWorkspacePage'
 import { FragmentDetailPage } from '@/pages/app/FragmentDetailPage'
 import { SettingsPage } from '@/pages/app/SettingsPage'
+import { ContinueThinkingPage } from '@/pages/app/ContinueThinkingPage'
+import { DocsPage } from '@/pages/docs/DocsPage'
 import { useAuth } from './providers/AuthProvider'
 import { Spinner } from '@/components/atoms/Spinner'
 
@@ -48,6 +50,10 @@ export const router = createBrowserRouter([
     element: <LandingPage />,
   },
   {
+    path: '/docs',
+    element: <DocsPage />,
+  },
+  {
     path: '/login',
     element: (
       <PublicAuthRoute>
@@ -68,6 +74,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <AppWorkspacePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/app/continue',
+    element: (
+      <ProtectedRoute>
+        <ContinueThinkingPage />
       </ProtectedRoute>
     ),
   },

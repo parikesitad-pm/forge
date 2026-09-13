@@ -4,8 +4,11 @@
 
 # Environment files
 .env*
+!.env.example
 backend_rails/.env*
+!backend_rails/.env.example
 frontend_react_ts/.env*
+!frontend_react_ts/.env.example
 
 # Logs & temp
 log/*

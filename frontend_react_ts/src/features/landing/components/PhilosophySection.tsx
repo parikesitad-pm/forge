@@ -2,8 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 export const PhilosophySection: React.FC = () => {
+  const { authStatus } = useAuth()
+
   const pillars = [
     {
       title: 'A thought doesn’t need to be complete to be worth capturing.',
@@ -55,17 +58,32 @@ export const PhilosophySection: React.FC = () => {
         <p className="mt-3 text-sm text-zinc-400">
           Plant your seed today. No pressure to make sense right away.
         </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <Link to="/register">
-            <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/25">
-              Capture your first thought <ArrowRight className="w-4 h-4 ml-1.5" />
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button variant="ghost" size="lg">
-              Log In
-            </Button>
-          </Link>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 min-h-[44px]">
+          {authStatus === 'unknown' ? (
+            <div
+              data-testid="auth-skeleton-philosophy"
+              className="h-11 w-52 rounded-xl bg-zinc-900/80 border border-zinc-800 animate-pulse"
+            />
+          ) : authStatus === 'authenticated' ? (
+            <Link to="/app/continue">
+              <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/25">
+                Continue thinking <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/register">
+                <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/25">
+                  Capture your first thought <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="ghost" size="lg">
+                  Log In
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </section>

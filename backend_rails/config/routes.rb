@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   # Healthcheck
   get "/up", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
 
+  # API Documentation & OpenAPI Specification
+  get "/api/docs", to: "api/docs#index", as: :api_docs
+  get "/api/openapi.json", to: "api/docs#openapi", as: :api_openapi
+
   # API v1 namespace for modern frontend / clients
   namespace :api do
     namespace :v1 do

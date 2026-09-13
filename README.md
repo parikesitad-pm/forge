@@ -20,6 +20,13 @@
 
 ---
 
+## 📚 Documentation & API Reference
+
+- **Comprehensive Documentation:** Reachable in the app at [`/docs`](http://localhost:5173/docs) covering architecture, setup, testing, deployment (Vercel + Railway + PostgreSQL), environment variables, and troubleshooting.
+- **OpenAPI 3.0 / Swagger UI:** Interactive explorer available at [`/api/docs`](http://localhost:3000/api/docs) with raw spec at [`/api/openapi.json`](http://localhost:3000/api/openapi.json).
+
+---
+
 ## 🚀 Running Locally
 
 ### 1. Prerequisites

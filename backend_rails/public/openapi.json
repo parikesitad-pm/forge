@@ -1,0 +1,698 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Forge API",
+    "description": "API documentation for Forge by Modula Project — A Thinking Companion. Built with Ruby on Rails 8 and PostgreSQL.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "parikesitad-pm",
+      "url": "https://github.com/parikesitad-pm/forge"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Current API v1 server"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register a new thinker account",
+        "description": "Creates a new user profile and establishes an authenticated session cookie.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Sign in to an existing account",
+        "description": "Authenticates credentials and sets an HTTP-only session cookie.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "tags": ["Authentication"],
+        "summary": "Sign out of current session",
+        "description": "Clears the server-side session and cookie.",
+        "responses": {
+          "200": {
+            "description": "Signed out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Signed out successfully." }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/check-username": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Check username availability",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Availability status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "available": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": ["Authentication", "Users"],
+        "summary": "Get current authenticated user profile",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Active thinker details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fragments": {
+      "get": {
+        "tags": ["Fragments"],
+        "summary": "List all fragments for the current thinker",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Array of fragments ordered by recent activity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Fragment"
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/UnauthorizedError" }
+        }
+      },
+      "post": {
+        "tags": ["Fragments"],
+        "summary": "Capture a new fragment (seed)",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFragmentPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fragment captured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fragment"
+                }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/ValidationError" }
+        }
+      }
+    },
+    "/fragments/{id}": {
+      "get": {
+        "tags": ["Fragments"],
+        "summary": "Get a fragment with its thoughts and observations",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fragment details with observations list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FragmentDetail"
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFoundError" }
+        }
+      },
+      "delete": {
+        "tags": ["Fragments"],
+        "summary": "Delete a fragment",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fragment deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFoundError" }
+        }
+      }
+    },
+    "/fragments/{fragment_id}/entries": {
+      "post": {
+        "tags": ["Observations"],
+        "summary": "Append a new thought entry to a fragment",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "fragment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["content"],
+                "properties": {
+                  "content": { "type": "string", "example": "A follow-up thought unfolding..." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Thought entry added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/ValidationError" }
+        }
+      }
+    },
+    "/fragments/{fragment_id}/owl/observe": {
+      "post": {
+        "tags": ["Owl"],
+        "summary": "Request an observation from Owl AI",
+        "description": "Triggers Owl reflection using Gemini. Owl observes patterns and surfaces gentle questions without giving prescriptive advice.",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "fragment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Owl observation created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Owl observation failed or AI provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fragments/{fragment_id}/sparks": {
+      "get": {
+        "tags": ["Sparks"],
+        "summary": "List all pinned sparks for a fragment",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "fragment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of pinned sparks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Observation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/observations/{id}/spark": {
+      "post": {
+        "tags": ["Sparks"],
+        "summary": "Pin an observation or thought as a spark",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observation pinned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Sparks"],
+        "summary": "Unpin a spark",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Observation unpinned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fragments/{fragment_id}/growth": {
+      "get": {
+        "tags": ["Growth"],
+        "summary": "Synthesize growth metrics and philosophical milestones for a fragment",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "fragment_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Growth synthesis data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrowthData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/profile": {
+      "patch": {
+        "tags": ["Settings"],
+        "summary": "Update thinker profile",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "name": { "type": "string" },
+                  "bio": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settings/password": {
+      "patch": {
+        "tags": ["Settings"],
+        "summary": "Update account password",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["current_password", "password", "password_confirmation"],
+                "properties": {
+                  "current_password": { "type": "string" },
+                  "password": { "type": "string" },
+                  "password_confirmation": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "422": { "$ref": "#/components/responses/ValidationError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "_forge_session",
+        "description": "Rails encrypted session cookie automatically maintained on requests with credentials."
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Authentication required",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "NotFoundError": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "RegisterPayload": {
+        "type": "object",
+        "required": ["username", "email", "password", "password_confirmation"],
+        "properties": {
+          "username": { "type": "string", "example": "thinker12" },
+          "email": { "type": "string", "format": "email", "example": "thinker@example.com" },
+          "password": { "type": "string", "format": "password", "example": "Secret123!" },
+          "password_confirmation": { "type": "string", "format": "password", "example": "Secret123!" }
+        }
+      },
+      "LoginPayload": {
+        "type": "object",
+        "required": ["login", "password"],
+        "properties": {
+          "login": { "type": "string", "example": "thinker12" },
+          "password": { "type": "string", "format": "password", "example": "Secret123!" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "username": { "type": "string", "example": "thinker12" },
+          "email": { "type": "string", "format": "email", "example": "thinker@example.com" },
+          "name": { "type": "string", "nullable": true, "example": "Creative Thinker" },
+          "bio": { "type": "string", "nullable": true, "example": "Capturing raw ideas before they make sense." },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "CreateFragmentPayload": {
+        "type": "object",
+        "required": ["seed_thought"],
+        "properties": {
+          "title": { "type": "string", "nullable": true, "example": "Creative synthesis" },
+          "seed_thought": { "type": "string", "example": "What if code was organized by thoughts rather than directories?" }
+        }
+      },
+      "Fragment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "title": { "type": "string", "example": "Creative synthesis" },
+          "seed_thought": { "type": "string", "example": "What if code was organized by thoughts rather than directories?" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "observations_count": { "type": "integer", "example": 4 },
+          "sparks_count": { "type": "integer", "example": 1 }
+        }
+      },
+      "FragmentDetail": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Fragment" },
+          {
+            "type": "object",
+            "properties": {
+              "observations": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/Observation" }
+              }
+            }
+          }
+        ]
+      },
+      "Observation": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 10 },
+          "fragment_id": { "type": "integer", "example": 1 },
+          "content": { "type": "string", "example": "Notice the tension between speed and coherence." },
+          "author_type": { "type": "string", "enum": ["user", "owl"], "example": "owl" },
+          "is_spark": { "type": "boolean", "example": false },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "GrowthData": {
+        "type": "object",
+        "properties": {
+          "fragment_id": { "type": "integer", "example": 1 },
+          "total_entries": { "type": "integer", "example": 6 },
+          "user_entries_count": { "type": "integer", "example": 4 },
+          "owl_observations_count": { "type": "integer", "example": 2 },
+          "sparks_count": { "type": "integer", "example": 2 },
+          "status": { "type": "string", "example": "unfolding" },
+          "maturity_stage": { "type": "string", "example": "seedling" },
+          "summary": { "type": "string", "example": "This fragment has blossomed through 4 thoughts and 2 reflections." }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "example": "Invalid credentials or resource not found." },
+          "errors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -4,8 +4,11 @@ import { motion } from 'motion/react'
 import { ArrowRight, Compass } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 export const LandingHero: React.FC = () => {
+  const { authStatus } = useAuth()
+
   return (
     <section className="relative z-10 pt-24 pb-20 md:pt-32 md:pb-28 px-6 text-center max-w-4xl mx-auto flex flex-col items-center">
       <motion.div
@@ -43,18 +46,40 @@ export const LandingHero: React.FC = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="mt-10 flex flex-wrap items-center justify-center gap-4"
+        className="mt-10 flex flex-wrap items-center justify-center gap-4 min-h-[44px]"
       >
-        <Link to="/register">
-          <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/20">
-            Start Thinking <ArrowRight className="w-4 h-4 ml-1" />
-          </Button>
-        </Link>
-        <a href="#how-it-works">
-          <Button variant="secondary" size="lg" className="px-6">
-            <Compass className="w-4 h-4 mr-1 text-zinc-400" /> See how Forge works
-          </Button>
-        </a>
+        {authStatus === 'unknown' ? (
+          <div
+            data-testid="auth-skeleton-hero"
+            className="h-11 w-44 rounded-xl bg-zinc-900/80 border border-zinc-800 animate-pulse"
+          />
+        ) : authStatus === 'authenticated' ? (
+          <>
+            <Link to="/app/continue">
+              <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/20">
+                Continue thinking <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+            <a href="#how-it-works">
+              <Button variant="secondary" size="lg" className="px-6">
+                <Compass className="w-4 h-4 mr-1 text-zinc-400" /> See how Forge works
+              </Button>
+            </a>
+          </>
+        ) : (
+          <>
+            <Link to="/register">
+              <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/20">
+                Start Thinking <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+            <a href="#how-it-works">
+              <Button variant="secondary" size="lg" className="px-6">
+                <Compass className="w-4 h-4 mr-1 text-zinc-400" /> See how Forge works
+              </Button>
+            </a>
+          </>
+        )}
       </motion.div>
 
       <motion.p

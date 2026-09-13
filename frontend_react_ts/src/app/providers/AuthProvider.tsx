@@ -1,11 +1,16 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { authApi } from '@/services/api/authApi'
+import { queryKeys } from '@/constants/queryKeys'
 import type { LoginPayload, RegisterPayload, User } from '@/types/auth.types'
+
+export type AuthStatus = 'unknown' | 'authenticated' | 'unauthenticated'
 
 interface AuthContextType {
   user: User | null
   isLoading: boolean
   isAuthenticated: boolean
+  authStatus: AuthStatus
   login: (payload: LoginPayload) => Promise<User>
   register: (payload: RegisterPayload) => Promise<User>
   logout: () => Promise<void>
@@ -15,33 +20,40 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const queryClient = useQueryClient()
 
-  const fetchCurrentUser = async () => {
-    try {
-      const userData = await authApi.me()
-      setUser(userData)
-    } catch {
-      setUser(null)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const {
+    data: user = null,
+    isLoading,
+    refetch,
+  } = useQuery<User | null>({
+    queryKey: queryKeys.auth.me,
+    queryFn: async () => {
+      try {
+        return await authApi.me()
+      } catch {
+        return null
+      }
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+  })
 
-  useEffect(() => {
-    fetchCurrentUser()
-  }, [])
+  const authStatus: AuthStatus = isLoading
+    ? 'unknown'
+    : user
+      ? 'authenticated'
+      : 'unauthenticated'
 
   const login = async (payload: LoginPayload) => {
     const userData = await authApi.login(payload)
-    setUser(userData)
+    queryClient.setQueryData(queryKeys.auth.me, userData)
     return userData
   }
 
   const register = async (payload: RegisterPayload) => {
     const userData = await authApi.register(payload)
-    setUser(userData)
+    queryClient.setQueryData(queryKeys.auth.me, userData)
     return userData
   }
 
@@ -49,12 +61,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await authApi.logout()
     } finally {
-      setUser(null)
+      queryClient.clear()
+      queryClient.setQueryData(queryKeys.auth.me, null)
     }
   }
 
   const refetchUser = async () => {
-    await fetchCurrentUser()
+    await refetch()
   }
 
   return (
@@ -62,7 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         isLoading,
-        isAuthenticated: !!user,
+        isAuthenticated: authStatus === 'authenticated',
+        authStatus,
         login,
         register,
         logout,
