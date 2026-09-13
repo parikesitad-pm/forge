@@ -1,51 +1,56 @@
-import React, { useState } from 'react'
-import { Sparkles, ArrowRight, ArrowLeft } from 'lucide-react'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { useToast } from '@/app/providers/ToastProvider'
-import { settingsApi } from '@/services/api/settingsApi'
-import { Button } from '@/components/atoms/Button'
-import { Input } from '@/components/atoms/Input'
+import React, { useState } from 'react';
+import { Sparkles, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useToast } from '@/app/providers/ToastProvider';
+import { settingsApi } from '@/services/api/settingsApi';
+import { Button } from '@/components/atoms/Button';
+import { Input } from '@/components/atoms/Input';
 
 interface OnboardingModalProps {
-  isOpen: boolean
-  onComplete: () => void
+  isOpen: boolean;
+  onComplete: () => void;
 }
 
-export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComplete }) => {
-  const { user, refetchUser } = useAuth()
-  const { toast } = useToast()
+export const OnboardingModal: React.FC<OnboardingModalProps> = ({
+  isOpen,
+  onComplete,
+}) => {
+  const { user, refetchUser } = useAuth();
+  const { toast } = useToast();
 
-  const [step, setStep] = useState<1 | 2>(1)
-  const [displayName, setDisplayName] = useState(user?.fullname || user?.username || '')
-  const [interests, setInterests] = useState(user?.bio || '')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [step, setStep] = useState<1 | 2>(1);
+  const [displayName, setDisplayName] = useState(
+    user?.fullname || user?.username || ''
+  );
+  const [interests, setInterests] = useState(user?.bio || '');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleNextStep = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!displayName.trim()) return
-    setStep(2)
-  }
+    e.preventDefault();
+    if (!displayName.trim()) return;
+    setStep(2);
+  };
 
   const handleFinish = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
     try {
       await settingsApi.updateProfile({
         fullname: displayName.trim(),
         bio: interests.trim(),
-      })
-      await refetchUser()
-      sessionStorage.removeItem('forge_show_onboarding')
-      toast('Ruang berpikirmu siap. Selamat datang di Forge.', 'success')
-      onComplete()
+      });
+      await refetchUser();
+      sessionStorage.removeItem('forge_show_onboarding');
+      toast('Ruang berpikirmu siap. Selamat datang di Forge.', 'success');
+      onComplete();
     } catch {
-      toast('Gagal menyimpan profil onboarding', 'error')
+      toast('Gagal menyimpan profil onboarding', 'error');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div
@@ -65,20 +70,36 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComp
             <span>Forge Welcome</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className={step === 1 ? 'text-zinc-200 font-semibold' : 'text-zinc-500'}>1</span>
+            <span
+              className={
+                step === 1 ? 'text-zinc-200 font-semibold' : 'text-zinc-500'
+              }
+            >
+              1
+            </span>
             <span>/</span>
-            <span className={step === 2 ? 'text-zinc-200 font-semibold' : 'text-zinc-500'}>2</span>
+            <span
+              className={
+                step === 2 ? 'text-zinc-200 font-semibold' : 'text-zinc-500'
+              }
+            >
+              2
+            </span>
           </div>
         </div>
 
         {step === 1 ? (
           <form onSubmit={handleNextStep} className="space-y-6">
             <div className="space-y-2">
-              <h2 id="onboarding-modal-title" className="text-xl sm:text-2xl font-serif text-zinc-100 font-medium">
+              <h2
+                id="onboarding-modal-title"
+                className="text-xl sm:text-2xl font-serif text-zinc-100 font-medium"
+              >
                 Mau dipanggil siapa?
               </h2>
               <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-                Pilih nama panggilan atau alias yang nyaman untuk ruang berpikir pribadimu.
+                Pilih nama panggilan atau alias yang nyaman untuk ruang berpikir
+                pribadimu.
               </p>
             </div>
 
@@ -105,11 +126,15 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComp
         ) : (
           <form onSubmit={handleFinish} className="space-y-6">
             <div className="space-y-2">
-              <h2 id="onboarding-modal-title" className="text-xl sm:text-2xl font-serif text-zinc-100 font-medium">
+              <h2
+                id="onboarding-modal-title"
+                className="text-xl sm:text-2xl font-serif text-zinc-100 font-medium"
+              >
                 Interest atau topik apa yang lagi kamu pikirin?
               </h2>
               <p className="text-xs text-zinc-400 font-sans leading-relaxed">
-                Owl akan memperhatikan caramu menyusun ide di sekitar topik-topik ini.
+                Owl akan memperhatikan caramu menyusun ide di sekitar
+                topik-topik ini.
               </p>
             </div>
 
@@ -148,5 +173,5 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComp
         )}
       </div>
     </div>
-  )
-}
+  );
+};

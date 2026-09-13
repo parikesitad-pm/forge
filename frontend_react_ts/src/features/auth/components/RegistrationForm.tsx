@@ -127,7 +127,7 @@ export const RegistrationForm: React.FC = () => {
       // Flag for new registration onboarding modal
       sessionStorage.setItem('forge_show_onboarding', 'true')
       toast('Welcome to Forge. Your thinking space is ready.', 'success')
-      navigate('/app')
+      navigate('/app', { replace: true })
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Registration failed'
       setServerError(msg)

@@ -30,7 +30,7 @@ export const LoginForm: React.FC = () => {
     try {
       await login(data)
       toast('Welcome back to your thinking space.', 'success')
-      navigate('/app')
+      navigate('/app', { replace: true })
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Invalid credentials'
       setServerError(msg)

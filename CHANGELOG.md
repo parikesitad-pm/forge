@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Vite proxy configuration for `/rails` to deliver Active Storage avatar assets directly in development.
+- Slim ChatGPT-style thought bubbles with hover-triggered actions (Keep as Spark, Copy to clipboard, and timestamp).
+- Animated shrinking header on scroll across `/app`, fragment workspace, and `/docs`.
+- Modal `MoveToFragmentModal` allowing thinkers to move and link thoughts between existing fragments.
+- Sidebar Archive view for managing archived thought fragments.
 - Debounced email availability check endpoint (`/api/v1/auth/check-email`) and fullname input field in `/register`.
 - Sequential 2-step post-registration onboarding modal ("Mau dipanggil siapa?" and creative interests).
 - Collapsible ChatGPT-style workspace sidebar (`AppSidebar`) with hoverable logo, New Fragment button, recent thought list, and thinker profile card.
@@ -19,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Resolved login and register navigation race conditions via synchronous `sessionUser` state in `AuthProvider`.
+- Replaced generic "Thinker" and "Observer" labels with user's custom nickname and clean "Owl" branding.
+- Temporarily disabled "Observation" and "Growth" sidebar navigation items with a "Soon" badge.
 - Re-architected `/app` workspace into ChatGPT-style layout with scrollable thought stream and bottom-fixed auto-expanding composer.
 - Attached compact micro-footer (`Forge · A Thinking Companion`) right below the chat composer.
 - Widened `/app/settings` container to `max-w-4xl` for spacious profile management.

@@ -1,8 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-export const FragmentListSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
+export const FragmentListSkeleton: React.FC<{ count?: number }> = ({
+  count = 3,
+}) => {
   return (
-    <div className="w-full space-y-3 animate-pulse" data-testid="fragment-skeleton">
+    <div
+      className="w-full space-y-3 animate-pulse"
+      data-testid="fragment-skeleton"
+    >
       <div className="flex items-center justify-between pb-2 border-b border-zinc-800/60">
         <div className="h-3 w-28 bg-zinc-800/60 rounded" />
         <div className="h-3 w-16 bg-zinc-800/60 rounded" />
@@ -26,12 +31,15 @@ export const FragmentListSkeleton: React.FC<{ count?: number }> = ({ count = 3 }
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
 export const ThoughtDetailSkeleton: React.FC = () => {
   return (
-    <div className="w-full space-y-6 animate-pulse" data-testid="thought-detail-skeleton">
+    <div
+      className="w-full space-y-6 animate-pulse"
+      data-testid="thought-detail-skeleton"
+    >
       <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
         <div className="h-3 w-20 bg-pink-500/30 rounded" />
         <div className="h-6 bg-zinc-800 rounded w-3/4" />
@@ -50,5 +58,5 @@ export const ThoughtDetailSkeleton: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

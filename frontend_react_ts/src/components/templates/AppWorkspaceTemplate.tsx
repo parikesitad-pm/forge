@@ -11,9 +11,10 @@ import {
   LogOut,
 } from 'lucide-react'
 import { AppSidebar } from '@/components/organisms/AppSidebar'
+import { MoveToFragmentModal } from '@/components/organisms/MoveToFragmentModal'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useToast } from '@/app/providers/ToastProvider'
-import { useDeleteFragment } from '@/features/fragments/hooks/useFragments'
+import { useFragments, useDeleteFragment } from '@/features/fragments/hooks/useFragments'
 
 interface AppWorkspaceTemplateProps {
   children: React.ReactNode
@@ -38,12 +39,16 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
   const { toast } = useToast()
   const navigate = useNavigate()
   const location = useLocation()
+  const { data: allFragments } = useFragments()
   const { mutateAsync: deleteFragmentMutate } = useDeleteFragment()
 
   // Sidebar collapse state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
     return localStorage.getItem('forge_sidebar_collapsed') === 'true'
   })
+
+  // Scroll state for header shrink animation
+  const [isScrolled, setIsScrolled] = useState(false)
 
   // 3-dots action menu state
   const [isActionsOpen, setIsActionsOpen] = useState(false)
@@ -52,6 +57,12 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
   // Account menu state
   const [isAccountOpen, setIsAccountOpen] = useState(false)
   const accountRef = useRef<HTMLDivElement>(null)
+
+  // Move to fragment modal state
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false)
+
+  // Archive view toggle
+  const [isArchiveView, setIsArchiveView] = useState(false)
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed((prev) => {
@@ -109,21 +120,45 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
     setIsActionsOpen(false)
     if (onArchive) {
       onArchive()
+      return
+    }
+
+    if (fragmentId) {
+      try {
+        const existing: number[] = JSON.parse(
+          localStorage.getItem('forge_archived_fragment_ids') || '[]'
+        )
+        const numericId = Number(fragmentId)
+        if (!existing.includes(numericId)) {
+          existing.push(numericId)
+          localStorage.setItem('forge_archived_fragment_ids', JSON.stringify(existing))
+        }
+        toast('Fragment dipindahkan ke Archive.', 'success')
+        navigate('/app')
+      } catch {
+        toast('Gagal mengarsipkan fragment', 'error')
+      }
     } else {
-      toast('Fragment diarsipkan ke arsip pemikiran.', 'success')
+      toast('Fragment diarsipkan.', 'success')
     }
   }
 
-  const handleMoveFragment = () => {
+  const handleOpenMove = () => {
     setIsActionsOpen(false)
     if (onMove) {
       onMove()
-    } else {
-      toast('Fragment dipindahkan ke topik pilihan.', 'success')
+      return
     }
+    setIsMoveModalOpen(true)
   }
 
-  // Determine active breadcrumb info
+  // Check if there are other fragments to move to
+  const otherFragments = (allFragments || []).filter(
+    (f) => String(f.id) !== String(fragmentId)
+  )
+  const canMoveFragment = fragmentId && otherFragments.length > 0
+
+  // Breadcrumb display
   const isSettingsPage = location.pathname.startsWith('/app/settings')
   const defaultTitle = isSettingsPage ? 'Thinker Profile' : undefined
   const displayTitle = breadcrumbTitle || defaultTitle
@@ -132,16 +167,31 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
 
   return (
     <div className="h-screen w-screen bg-zinc-950 text-zinc-100 flex overflow-hidden font-sans">
+      {/* Move To Fragment Modal */}
+      <MoveToFragmentModal
+        isOpen={isMoveModalOpen}
+        currentFragmentId={fragmentId}
+        onClose={() => setIsMoveModalOpen(false)}
+      />
+
       {/* ChatGPT-style Collapsible Sidebar */}
       <AppSidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={toggleSidebar}
+        isArchiveView={isArchiveView}
+        onToggleArchiveView={(active) => setIsArchiveView(active)}
       />
 
-      {/* Main Thinking Area */}
+      {/* Main Workspace Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
-        {/* Top Navbar Header */}
-        <header className="h-14 shrink-0 px-4 sm:px-6 flex items-center justify-between border-b border-zinc-900/90 bg-zinc-950/80 backdrop-blur-md z-30">
+        {/* Animated Shrinking Top Header (No Harsh Lines) */}
+        <header
+          className={`sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between transition-all duration-300 ease-out backdrop-blur-md ${
+            isScrolled
+              ? 'h-11 bg-zinc-950/95 shadow-lg shadow-black/40'
+              : 'h-14 bg-zinc-950/80'
+          }`}
+        >
           <div className="flex items-center gap-3 min-w-0">
             {/* Sidebar toggle button when collapsed */}
             {isSidebarCollapsed && (
@@ -166,7 +216,7 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
               {displayTitle && (
                 <>
                   <ChevronRight className="w-3 h-3 text-zinc-600 shrink-0" />
-                  <span className="text-zinc-200 font-medium truncate max-w-[200px] sm:max-w-md font-serif text-[13px]">
+                  <span className="text-zinc-200 font-medium truncate max-w-[180px] sm:max-w-md font-serif text-[13px]">
                     {displayTitle}
                   </span>
                 </>
@@ -174,14 +224,14 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
             </nav>
           </div>
 
-          {/* Right Header Actions: 3-dots menu & Profile Popover */}
+          {/* Right Header Actions: 3-dots Menu & Profile Popover */}
           <div className="flex items-center gap-2 shrink-0">
             {/* 3-dots Menu for Fragment Actions */}
             <div className="relative" ref={actionsRef}>
               <button
                 onClick={() => setIsActionsOpen((prev) => !prev)}
-                className="p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 rounded-xl transition-colors cursor-pointer border border-zinc-850"
-                aria-label="Fragment actions"
+                className="p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 rounded-xl transition-colors cursor-pointer"
+                aria-label="Fragment options"
                 title="Options"
               >
                 <MoreHorizontal className="w-4 h-4" />
@@ -189,7 +239,7 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
 
               {isActionsOpen && (
                 <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl py-1.5 z-50 animate-in fade-in slide-in-from-top-1">
-                  <div className="px-3 py-1.5 border-b border-zinc-800/80 mb-1">
+                  <div className="px-3 py-1.5 mb-1">
                     <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
                       Fragment Actions
                     </p>
@@ -203,15 +253,18 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
                     <span>Arsipkan Fragment</span>
                   </button>
 
-                  <button
-                    onClick={handleMoveFragment}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors text-left cursor-pointer"
-                  >
-                    <FolderInput className="w-4 h-4 text-zinc-400" />
-                    <span>Move to Fragment</span>
-                  </button>
+                  {/* Move to Fragment: Shown only when there are other fragments available */}
+                  {canMoveFragment && (
+                    <button
+                      onClick={handleOpenMove}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors text-left cursor-pointer"
+                    >
+                      <FolderInput className="w-4 h-4 text-zinc-400" />
+                      <span>Move to Fragment</span>
+                    </button>
+                  )}
 
-                  <div className="my-1 border-t border-zinc-800" />
+                  <div className="my-1 border-t border-zinc-800/60" />
 
                   <button
                     onClick={handleDeleteFragment}
@@ -228,19 +281,24 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
             <div className="relative" ref={accountRef}>
               <button
                 onClick={() => setIsAccountOpen((prev) => !prev)}
-                className="flex items-center gap-2 p-1 pl-2 pr-1 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-900 transition-colors text-xs font-mono cursor-pointer border border-zinc-850"
+                className="flex items-center gap-2 p-1 pl-2 pr-1 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-900 transition-colors text-xs font-mono cursor-pointer"
                 aria-label="User menu"
               >
-                <span className="hidden sm:inline truncate max-w-[100px]">{user?.fullname || user?.username}</span>
+                <span className="hidden sm:inline truncate max-w-[100px]">
+                  {user?.fullname || user?.username || 'Thinker'}
+                </span>
                 {user?.avatar_url ? (
                   <img
                     src={user.avatar_url}
                     alt="Avatar"
-                    className="w-6 h-6 rounded-full object-cover border border-zinc-700"
+                    className="w-6 h-6 rounded-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
                   />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-pink-950/80 border border-pink-700/50 flex items-center justify-center text-[10px] font-mono text-pink-300">
-                    {(user?.fullname || user?.username || 'T').charAt(0).toUpperCase()}
+                  <div className="w-6 h-6 rounded-full bg-pink-950/80 flex items-center justify-center text-[10px] font-mono text-pink-300">
+                    {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
                   </div>
                 )}
               </button>
@@ -248,7 +306,9 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
               {isAccountOpen && (
                 <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl py-1.5 z-50 animate-in fade-in slide-in-from-top-1">
                   <div className="px-3 py-2 border-b border-zinc-800/80 mb-1">
-                    <p className="text-xs font-medium text-zinc-200 truncate">{user?.fullname || user?.username}</p>
+                    <p className="text-xs font-medium text-zinc-200 truncate">
+                      {user?.fullname || user?.username}
+                    </p>
                     <p className="text-[10px] font-mono text-zinc-400 truncate">{user?.email}</p>
                   </div>
 
@@ -276,8 +336,13 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
           </div>
         </header>
 
-        {/* Scrollable Main Content Area (ChatGPT Style) */}
-        <div className="flex-1 overflow-y-auto flex flex-col">
+        {/* Scrollable Main Content Area with scroll detection */}
+        <div
+          onScroll={(e) => {
+            setIsScrolled(e.currentTarget.scrollTop > 20)
+          }}
+          className="flex-1 overflow-y-auto flex flex-col scrollbar-thin"
+        >
           {children}
         </div>
       </div>

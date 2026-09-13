@@ -26,6 +26,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/rails': {
+        target: process.env.VITE_API_BASE_URL || 'http://127.0.0.1:3000',
+        changeOrigin: true,
+        secure: false,
+      },
       '/up': {
         target: process.env.VITE_API_BASE_URL || 'http://127.0.0.1:3000',
         changeOrigin: true,

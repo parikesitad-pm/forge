@@ -23,6 +23,8 @@ export const SettingsView: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isSavingPassword, setIsSavingPassword] = useState(false)
 
+  const [imgError, setImgError] = useState(false)
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -35,6 +37,7 @@ export const SettingsView: React.FC = () => {
     setAvatarFile(file)
     const previewUrl = URL.createObjectURL(file)
     setAvatarPreview(previewUrl)
+    setImgError(false)
   }
 
   const handleRemoveAvatarPreview = () => {
@@ -43,6 +46,7 @@ export const SettingsView: React.FC = () => {
       URL.revokeObjectURL(avatarPreview)
       setAvatarPreview(null)
     }
+    setImgError(false)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -65,6 +69,7 @@ export const SettingsView: React.FC = () => {
       await refetchUser()
       toast('Profile updated successfully.', 'success')
       setAvatarFile(null)
+      setImgError(false)
       if (avatarPreview) {
         URL.revokeObjectURL(avatarPreview)
         setAvatarPreview(null)
@@ -125,10 +130,11 @@ export const SettingsView: React.FC = () => {
           {/* Avatar Upload Block */}
           <div className="flex items-center gap-5 p-4 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
             <div className="relative group">
-              {displayAvatarSrc ? (
+              {displayAvatarSrc && !imgError ? (
                 <img
                   src={displayAvatarSrc}
                   alt="Thinker Avatar"
+                  onError={() => setImgError(true)}
                   className="w-16 h-16 rounded-full object-cover border-2 border-zinc-700 shadow-md"
                 />
               ) : (

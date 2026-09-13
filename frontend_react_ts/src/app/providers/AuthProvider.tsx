@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { authApi } from '@/services/api/authApi'
 import { queryKeys } from '@/constants/queryKeys'
@@ -21,17 +21,21 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient()
+  const [sessionUser, setSessionUser] = useState<User | null>(null)
 
   const {
-    data: user = null,
+    data: queryUser = null,
     isLoading,
     refetch,
   } = useQuery<User | null>({
     queryKey: queryKeys.auth.me,
     queryFn: async () => {
       try {
-        return await authApi.me()
+        const u = await authApi.me()
+        setSessionUser(u)
+        return u
       } catch {
+        setSessionUser(null)
         return null
       }
     },
@@ -39,7 +43,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     retry: false,
   })
 
-  const authStatus: AuthStatus = isLoading
+  const user = sessionUser || queryUser
+
+  const authStatus: AuthStatus = isLoading && !user
     ? 'unknown'
     : user
       ? 'authenticated'
@@ -47,29 +53,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (payload: LoginPayload) => {
     const userData = await authApi.login(payload)
+    setSessionUser(userData)
     queryClient.setQueryData(queryKeys.auth.me, userData)
     return userData
   }
 
   const register = async (payload: RegisterPayload) => {
     const userData = await authApi.register(payload)
+    setSessionUser(userData)
     queryClient.setQueryData(queryKeys.auth.me, userData)
     return userData
   }
 
   const logout = async () => {
+    setSessionUser(null)
     queryClient.setQueryData(queryKeys.auth.me, null)
     queryClient.removeQueries({ queryKey: ['fragments'] })
     try {
       await authApi.logout()
     } finally {
       queryClient.clear()
+      setSessionUser(null)
       queryClient.setQueryData(queryKeys.auth.me, null)
     }
   }
 
   const refetchUser = async () => {
-    await refetch()
+    const res = await refetch()
+    if (res.data) {
+      setSessionUser(res.data)
+    }
   }
 
   return (

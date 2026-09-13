@@ -12,6 +12,7 @@ export const DocsPage: React.FC = () => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Handle hash scrolling on mount or hash change
   useEffect(() => {
@@ -25,32 +26,30 @@ export const DocsPage: React.FC = () => {
     }
   }, [location]);
 
-  // ScrollSpy to track and highlight what is currently being read
+  // Robust ScrollSpy and animated header scroll tracking
   useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') {
-      return;
-    }
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 20);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+      // Find current reading section
+      let currentId = docsSections[0]?.id || 'overview';
+      for (const section of docsSections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 140) {
+            currentId = section.id;
           }
-        });
-      },
-      {
-        rootMargin: '-80px 0px -65% 0px',
-        threshold: 0,
+        }
       }
-    );
+      setActiveSection(currentId);
+    };
 
-    docsSections.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
-    return () => observer.disconnect();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleSelectSection = (id: string) => {
@@ -63,13 +62,20 @@ export const DocsPage: React.FC = () => {
     }
   };
 
-  const activeDoc = docsSections.find((s) => s.id === activeSection) || docsSections[0];
+  const activeDoc =
+    docsSections.find((s) => s.id === activeSection) || docsSections[0];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
-      {/* Static / Fixed Header with Breadcrumb */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-zinc-950/90 border-b border-zinc-800/80">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      {/* Animated Shrinking Static / Fixed Header with Breadcrumb */}
+      <header
+        className={`sticky top-0 z-40 w-full backdrop-blur-md transition-all duration-300 ease-out ${
+          isScrolled
+            ? 'h-12 bg-zinc-950/95 shadow-lg shadow-black/40'
+            : 'h-16 bg-zinc-950/80'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
           {/* Breadcrumb: [logo] docs / [yang lagi dibaca] */}
           <div className="flex items-center gap-2.5 min-w-0">
             <BrandLogo size="sm" showSubBrand={false} href="/" />
@@ -83,7 +89,7 @@ export const DocsPage: React.FC = () => {
             {activeDoc && (
               <>
                 <span className="text-zinc-600">/</span>
-                <span className="text-xs font-mono text-pink-400 font-medium truncate max-w-[140px] sm:max-w-xs">
+                <span className="text-xs font-mono text-pink-400 font-medium truncate max-w-[140px] sm:max-w-xs transition-all">
                   {activeDoc.title}
                 </span>
               </>
@@ -144,10 +150,10 @@ export const DocsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Documentation Layout with Static Desktop Sidebar */}
+      {/* Documentation Layout with Pinned Static Desktop Sidebar */}
       <div className="max-w-7xl w-full mx-auto px-6 py-8 flex-1 flex gap-12">
-        {/* Static Desktop Sidebar (pinned to top, does not scroll with document) */}
-        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-20 self-start h-[calc(100vh-6rem)] overflow-y-auto pr-4 scrollbar-thin">
+        {/* Static Desktop Sidebar (pinned to top, does not scroll away with page) */}
+        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-16 self-start h-[calc(100vh-5rem)] overflow-y-auto pr-4 scrollbar-thin">
           <DocsSidebar
             sections={docsSections}
             activeSection={activeSection}
