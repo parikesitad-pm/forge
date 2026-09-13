@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, ArrowUpRight } from 'lucide-react'
-import { BrandLogo } from '@/components/atoms/BrandLogo'
-import { Button } from '@/components/atoms/Button'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { docsSections } from '@/features/docs/data/docsContent'
-import { DocsSidebar } from '@/features/docs/components/DocsSidebar'
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { BrandLogo } from '@/components/atoms/BrandLogo';
+import { Button } from '@/components/atoms/Button';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { docsSections } from '@/features/docs/data/docsContent';
+import { DocsSidebar } from '@/features/docs/components/DocsSidebar';
 
 export const DocsPage: React.FC = () => {
-  const { authStatus } = useAuth()
-  const location = useLocation()
-  const [activeSection, setActiveSection] = useState('overview')
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { authStatus } = useAuth();
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState('overview');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Handle hash scrolling on mount or hash change
   useEffect(() => {
-    const hash = window.location.hash.replace('#', '')
+    const hash = window.location.hash.replace('#', '');
     if (hash && docsSections.some((s) => s.id === hash)) {
-      setActiveSection(hash)
-      const el = document.getElementById(hash)
+      setActiveSection(hash);
+      const el = document.getElementById(hash);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth' })
+        el.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [location])
+  }, [location]);
 
   const handleSelectSection = (id: string) => {
-    setActiveSection(id)
-    setMobileMenuOpen(false)
-    window.location.hash = id
-    const el = document.getElementById(id)
+    setActiveSection(id);
+    setMobileMenuOpen(false);
+    window.location.hash = id;
+    const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+      el.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
@@ -43,7 +43,9 @@ export const DocsPage: React.FC = () => {
           <div className="flex items-center gap-4">
             <BrandLogo size="sm" showSubBrand href="/" />
             <span className="hidden sm:inline text-zinc-600">/</span>
-            <span className="hidden sm:inline text-xs font-mono text-pink-400 font-medium">Docs</span>
+            <span className="hidden sm:inline text-xs font-mono text-pink-400 font-medium">
+              Docs
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -79,7 +81,11 @@ export const DocsPage: React.FC = () => {
               className="md:hidden p-2 text-zinc-400 hover:text-zinc-200 rounded-lg hover:bg-zinc-800/60 transition-colors"
               aria-label="Toggle docs navigation"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
             </button>
           </div>
         </div>
@@ -125,9 +131,10 @@ export const DocsPage: React.FC = () => {
       <footer className="border-t border-zinc-900 py-8 px-6 text-center text-xs text-zinc-500 font-mono">
         <p>Forge Documentation &middot; A Thinking Companion</p>
         <p className="mt-1 text-[11px] text-zinc-400">
-          crafted with &lt;3 by parikesitad-pm &copy; 2026 MODULA Project &middot; MIT License
+          crafted with &lt;3 by parikesitad-pm &copy; 2026 MODULA Project
+          &middot; MIT License
         </p>
       </footer>
     </div>
-  )
-}
+  );
+};

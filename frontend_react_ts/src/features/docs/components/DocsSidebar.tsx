@@ -1,10 +1,10 @@
-import React from 'react'
-import type { DocSection } from '../data/docsContent'
+import React from 'react';
+import type { DocSection } from '../data/docsContent';
 
 interface DocsSidebarProps {
-  sections: DocSection[]
-  activeSection: string
-  onSelectSection: (id: string) => void
+  sections: DocSection[];
+  activeSection: string;
+  onSelectSection: (id: string) => void;
 }
 
 export const DocsSidebar: React.FC<DocsSidebarProps> = ({
@@ -13,7 +13,7 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
   onSelectSection,
 }) => {
   // Group sections by category
-  const categories = Array.from(new Set(sections.map((s) => s.category)))
+  const categories = Array.from(new Set(sections.map((s) => s.category)));
 
   return (
     <nav className="w-full space-y-6">
@@ -26,7 +26,7 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
             {sections
               .filter((s) => s.category === cat)
               .map((section) => {
-                const isActive = activeSection === section.id
+                const isActive = activeSection === section.id;
                 return (
                   <li key={section.id}>
                     <button
@@ -38,14 +38,16 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
                       }`}
                     >
                       <span>{section.title}</span>
-                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-pink-400" />}
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-pink-400" />
+                      )}
                     </button>
                   </li>
-                )
+                );
               })}
           </ul>
         </div>
       ))}
     </nav>
-  )
-}
+  );
+};

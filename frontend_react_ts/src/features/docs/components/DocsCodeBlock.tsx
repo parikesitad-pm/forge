@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
-import { Check, Copy } from 'lucide-react'
+import React, { useState } from 'react';
+import { Check, Copy } from 'lucide-react';
 
 interface DocsCodeBlockProps {
-  code: string
-  language?: string
-  title?: string
+  code: string;
+  language?: string;
+  title?: string;
 }
 
-export const DocsCodeBlock: React.FC<DocsCodeBlockProps> = ({ code, language = 'bash', title }) => {
-  const [copied, setCopied] = useState(false)
+export const DocsCodeBlock: React.FC<DocsCodeBlockProps> = ({
+  code,
+  language = 'bash',
+  title,
+}) => {
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="my-4 rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden font-mono text-xs">
@@ -44,5 +48,5 @@ export const DocsCodeBlock: React.FC<DocsCodeBlockProps> = ({ code, language = '
         {code}
       </div>
     </div>
-  )
-}
+  );
+};
