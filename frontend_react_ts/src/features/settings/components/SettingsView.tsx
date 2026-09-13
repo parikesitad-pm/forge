@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react'
-import { Camera, Upload, X } from 'lucide-react'
+import { Camera, Upload, X, Moon, Sun, Monitor, Check } from 'lucide-react'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useToast } from '@/app/providers/ToastProvider'
+import { useTheme, type Theme } from '@/app/providers/ThemeProvider'
 import { settingsApi } from '@/services/api/settingsApi'
 import { Button } from '@/components/atoms/Button'
 import { Input } from '@/components/atoms/Input'
@@ -9,6 +10,7 @@ import { Input } from '@/components/atoms/Input'
 export const SettingsView: React.FC = () => {
   const { user, refetchUser } = useAuth()
   const { toast } = useToast()
+  const { theme, setTheme } = useTheme()
 
   const [fullname, setFullname] = useState(user?.fullname || '')
   const [username, setUsername] = useState(user?.username || '')
@@ -277,6 +279,76 @@ export const SettingsView: React.FC = () => {
             Update Password
           </Button>
         </form>
+      </div>
+
+      {/* Theme / Appearance Selection */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800 space-y-4">
+        <div className="border-b border-zinc-800/80 pb-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-200">
+            Tampilan / Tema
+          </h2>
+          <p className="text-xs text-zinc-500 mt-0.5">
+            Pilih tema tampilan yang paling nyaman untuk ruang berpikirmu.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          {[
+            {
+              value: 'dark' as Theme,
+              label: 'Dark Mode',
+              desc: 'Deep charcoal aesthetic for focused thinking',
+              icon: <Moon className="w-4 h-4 text-pink-400" />,
+            },
+            {
+              value: 'light' as Theme,
+              label: 'Light Mode',
+              desc: 'Crisp clean surface with bright high contrast',
+              icon: <Sun className="w-4 h-4 text-amber-400" />,
+            },
+            {
+              value: 'system' as Theme,
+              label: 'Ikuti Device (System)',
+              desc: 'Otomatis berganti menyesuaikan tema OS/device kamu',
+              icon: <Monitor className="w-4 h-4 text-zinc-400" />,
+            },
+          ].map((opt) => {
+            const isSelected = theme === opt.value
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  setTheme(opt.value)
+                  toast(`Tema diubah ke ${opt.label}`, 'info')
+                }}
+                className={`p-4 rounded-xl text-left border transition-all cursor-pointer flex flex-col justify-between gap-3 ${
+                  isSelected
+                    ? 'bg-pink-500/10 border-pink-500/60 shadow-sm'
+                    : 'bg-zinc-950/60 border-zinc-800/80 hover:border-zinc-700'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800">
+                    {opt.icon}
+                  </div>
+                  {isSelected && (
+                    <span className="w-5 h-5 rounded-full bg-pink-500 flex items-center justify-center text-white">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-xs font-semibold text-zinc-200">{opt.label}</h3>
+                  <p className="text-[11px] text-zinc-500 font-sans mt-0.5 leading-snug">
+                    {opt.desc}
+                  </p>
+                </div>
+              </button>
+            )
+          })}
+        </div>
       </div>
     </div>
   </div>
