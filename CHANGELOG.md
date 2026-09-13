@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Comprehensive documentation across root `README.md`, `backend_rails/README.md`, and `frontend_react_ts/README.md` with live production deployment badges and links.
 - Multi-theme support (Dark, Light, and System device preference) with settings picker and persistent storage.
 - Vite proxy configuration for `/rails` to deliver Active Storage avatar assets directly in development.
 - Slim ChatGPT-style thought bubbles with hover-triggered actions (Keep as Spark, Copy to clipboard, and timestamp).

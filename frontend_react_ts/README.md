@@ -1,32 +1,48 @@
-# React + TypeScript + Vite
+# Forge Frontend (React 19 + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Client interface for **Forge — A Thinking Companion**, built with React 19, TypeScript, Tailwind CSS v4, and Motion.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Stack & Architecture
 
-## React Compiler
+- **Framework:** React 19 + TypeScript 5.9
+- **Bundler & Tooling:** Vite + Oxlint
+- **Styling:** Tailwind CSS v4 + Motion
+- **State & Data Fetching:** TanStack Query v5 + Context API
+- **Form & Validation:** React Hook Form + Zod
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 🚀 Running Locally
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+```bash
+# 1. Install dependencies
+npm install
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# 2. Start Vite development server
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The application runs on `http://localhost:5173`. Vite proxies `/api` and `/rails` to the Rails backend at `http://localhost:3000`.
+
+---
+
+## 🧪 Testing & Build
+
+```bash
+npm test
+npm run build
+```
+
+---
+
+## 🚢 Deployment
+
+Configured for deployment on Vercel with SPA routing rewrite rules in `vercel.json`.
+
+---
+
+## 📄 License
+
+MIT License &copy; 2026 parikesitad-pm
