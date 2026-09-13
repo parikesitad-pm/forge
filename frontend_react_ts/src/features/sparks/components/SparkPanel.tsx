@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { Sparkles, ChevronDown, ChevronUp, Star } from 'lucide-react'
-import type { ObservationEntry } from '@/types/fragment.types'
+import React, { useState } from 'react';
+import { Sparkles, ChevronDown, ChevronUp, Star } from 'lucide-react';
+import type { ObservationEntry } from '@/types/fragment.types';
 
 interface SparkPanelProps {
-  sparks: ObservationEntry[]
+  sparks: ObservationEntry[];
 }
 
 export const SparkPanel: React.FC<SparkPanelProps> = ({ sparks }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  if (sparks.length === 0) return null
+  if (sparks.length === 0) return null;
 
   return (
     <div className="rounded-2xl bg-zinc-900/40 border border-amber-500/20 mb-6 overflow-hidden transition-all">
@@ -23,14 +23,21 @@ export const SparkPanel: React.FC<SparkPanelProps> = ({ sparks }) => {
           <span>Sparks kept ({sparks.length})</span>
         </div>
         <div className="text-zinc-500 hover:text-zinc-300">
-          {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
         </div>
       </button>
 
       {isOpen && (
         <div className="p-5 border-t border-zinc-800/80 space-y-4 bg-zinc-950/40">
           {sparks.map((spark) => (
-            <div key={spark.id} className="border-l-2 border-amber-400/80 pl-4 py-1">
+            <div
+              key={spark.id}
+              className="border-l-2 border-amber-400/80 pl-4 py-1"
+            >
               <div className="flex items-center gap-1.5 text-[10px] font-mono text-amber-400/80 uppercase tracking-wider mb-1">
                 <Star className="w-3 h-3 fill-amber-400" />
                 Spark
@@ -43,5 +50,5 @@ export const SparkPanel: React.FC<SparkPanelProps> = ({ sparks }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

@@ -1,30 +1,35 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
-import { Sprout, Sparkles } from 'lucide-react'
-import { Badge } from '@/components/atoms/Badge'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Sprout, Sparkles } from 'lucide-react';
+import { Badge } from '@/components/atoms/Badge';
 
 export const CaptureDemo: React.FC = () => {
-  const [step, setStep] = useState<0 | 1 | 2>(0)
+  const [step, setStep] = useState<0 | 1 | 2>(0);
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setStep(1), 3000)
-    const timer2 = setTimeout(() => setStep(2), 6500)
-    const timer3 = setTimeout(() => setStep(0), 12000)
+    const timer1 = setTimeout(() => setStep(1), 3000);
+    const timer2 = setTimeout(() => setStep(2), 6500);
+    const timer3 = setTimeout(() => setStep(0), 12000);
 
     return () => {
-      clearTimeout(timer1)
-      clearTimeout(timer2)
-      clearTimeout(timer3)
-    }
-  }, [step])
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [step]);
 
   return (
-    <section id="how-it-works" className="relative z-10 py-16 px-6 max-w-3xl mx-auto">
+    <section
+      id="how-it-works"
+      className="relative z-10 py-16 px-6 max-w-3xl mx-auto"
+    >
       <div className="text-center mb-8">
         <p className="text-xs uppercase tracking-widest text-zinc-500 font-mono mb-2">
           Interactive Thought Capture
         </p>
-        <h2 className="text-2xl font-medium text-zinc-200">How thoughts enter Forge</h2>
+        <h2 className="text-2xl font-medium text-zinc-200">
+          How thoughts enter Forge
+        </h2>
       </div>
 
       <div className="relative rounded-2xl bg-zinc-900/80 border border-zinc-800 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
@@ -33,7 +38,9 @@ export const CaptureDemo: React.FC = () => {
             <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
             <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
             <span className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-            <span className="ml-2 font-mono text-[11px] text-zinc-400">fragment.workspace</span>
+            <span className="ml-2 font-mono text-[11px] text-zinc-400">
+              fragment.workspace
+            </span>
           </div>
           <div className="flex items-center gap-2">
             {step === 0 && <Badge variant="default">Raw Input</Badge>}
@@ -53,9 +60,13 @@ export const CaptureDemo: React.FC = () => {
                 transition={{ duration: 0.3 }}
                 className="text-left"
               >
-                <p className="text-xs font-mono text-zinc-500 mb-2">Raw Thought Stream:</p>
+                <p className="text-xs font-mono text-zinc-500 mb-2">
+                  Raw Thought Stream:
+                </p>
                 <p className="text-lg sm:text-xl text-zinc-200 font-serif italic">
-                  &ldquo;Maybe I&rsquo;m not struggling with focus... maybe I&rsquo;m struggling with choosing what deserves my attention.&rdquo;
+                  &ldquo;Maybe I&rsquo;m not struggling with focus... maybe
+                  I&rsquo;m struggling with choosing what deserves my
+                  attention.&rdquo;
                 </p>
                 <span className="inline-block w-1.5 h-4 bg-pink-500 ml-1 animate-pulse" />
               </motion.div>
@@ -75,10 +86,13 @@ export const CaptureDemo: React.FC = () => {
                   Seed Planted
                 </div>
                 <p className="text-base sm:text-lg text-zinc-100 font-serif leading-relaxed">
-                  &ldquo;Maybe I&rsquo;m not struggling with focus... maybe I&rsquo;m struggling with choosing what deserves my attention.&rdquo;
+                  &ldquo;Maybe I&rsquo;m not struggling with focus... maybe
+                  I&rsquo;m struggling with choosing what deserves my
+                  attention.&rdquo;
                 </p>
                 <p className="mt-3 text-xs text-zinc-500">
-                  This thought becomes the anchor. No tags, no folder, no premature categorization.
+                  This thought becomes the anchor. No tags, no folder, no
+                  premature categorization.
                 </p>
               </motion.div>
             )}
@@ -95,7 +109,9 @@ export const CaptureDemo: React.FC = () => {
                 <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-800/80">
                   <p className="text-xs font-mono text-zinc-500 mb-1">Seed:</p>
                   <p className="text-sm text-zinc-300 font-serif italic">
-                    &ldquo;Maybe I&rsquo;m not struggling with focus... maybe I&rsquo;m struggling with choosing what deserves my attention.&rdquo;
+                    &ldquo;Maybe I&rsquo;m not struggling with focus... maybe
+                    I&rsquo;m struggling with choosing what deserves my
+                    attention.&rdquo;
                   </p>
                 </div>
 
@@ -104,16 +120,22 @@ export const CaptureDemo: React.FC = () => {
                     <span className="flex items-center gap-1.5 font-medium">
                       <Sparkles className="w-3.5 h-3.5" /> Owl Observation
                     </span>
-                    <span className="text-[11px] text-zinc-500">Curious inquiry</span>
+                    <span className="text-[11px] text-zinc-500">
+                      Curious inquiry
+                    </span>
                   </div>
                   <p className="text-sm text-zinc-200 leading-relaxed font-sans">
-                    You seem to draw a boundary between the capacity to focus and the permission to decide. What would it feel like if choosing meant letting go of other possibilities?
+                    You seem to draw a boundary between the capacity to focus
+                    and the permission to decide. What would it feel like if
+                    choosing meant letting go of other possibilities?
                   </p>
                   <div className="mt-3 flex items-center gap-2">
                     <button className="text-[11px] px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center gap-1 hover:bg-amber-500/20 transition-colors">
                       ✦ Keep as Spark
                     </button>
-                    <span className="text-[11px] text-zinc-500">You decide if this matters.</span>
+                    <span className="text-[11px] text-zinc-500">
+                      You decide if this matters.
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -140,5 +162,5 @@ export const CaptureDemo: React.FC = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

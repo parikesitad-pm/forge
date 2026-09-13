@@ -1,38 +1,39 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowUp } from 'lucide-react'
-import { useCreateFragment } from '../hooks/useFragments'
-import { useToast } from '@/app/providers/ToastProvider'
-import { Button } from '@/components/atoms/Button'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowUp } from 'lucide-react';
+import { useCreateFragment } from '../hooks/useFragments';
+import { useToast } from '@/app/providers/ToastProvider';
+import { Button } from '@/components/atoms/Button';
 
 export const CaptureHero: React.FC = () => {
-  const [content, setContent] = useState('')
-  const { mutateAsync: createFragment, isPending } = useCreateFragment()
-  const { toast } = useToast()
-  const navigate = useNavigate()
+  const [content, setContent] = useState('');
+  const { mutateAsync: createFragment, isPending } = useCreateFragment();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleCapture = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const trimmed = content.trim()
-    if (!trimmed) return
+    e.preventDefault();
+    const trimmed = content.trim();
+    if (!trimmed) return;
 
     try {
-      const fragment = await createFragment({ content: trimmed })
-      toast('Seed planted. Owl is observing.', 'success')
-      setContent('')
-      navigate(`/app/fragments/${fragment.id}`)
+      const fragment = await createFragment({ content: trimmed });
+      toast('Seed planted. Owl is observing.', 'success');
+      setContent('');
+      navigate(`/app/fragments/${fragment.id}`);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Could not capture thought'
-      toast(msg, 'error')
+      const msg =
+        err instanceof Error ? err.message : 'Could not capture thought';
+      toast(msg, 'error');
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleCapture(e)
+      e.preventDefault();
+      handleCapture(e);
     }
-  }
+  };
 
   return (
     <section className="py-12 max-w-2xl mx-auto text-center">
@@ -74,5 +75,5 @@ export const CaptureHero: React.FC = () => {
         </div>
       </form>
     </section>
-  )
-}
+  );
+};

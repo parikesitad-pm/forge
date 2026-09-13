@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
-import { Compass, RefreshCw, X } from 'lucide-react'
-import { useGrowth } from '../hooks/useGrowth'
-import { Button } from '@/components/atoms/Button'
-import { Spinner } from '@/components/atoms/Spinner'
+import React, { useState } from 'react';
+import { Compass, RefreshCw, X } from 'lucide-react';
+import { useGrowth } from '../hooks/useGrowth';
+import { Button } from '@/components/atoms/Button';
+import { Spinner } from '@/components/atoms/Spinner';
 
 interface GrowthPanelProps {
-  fragmentId: number | string
+  fragmentId: number | string;
 }
 
 export const GrowthPanel: React.FC<GrowthPanelProps> = ({ fragmentId }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { data: growth, isLoading, isError, refetch, isFetching } = useGrowth(isOpen ? fragmentId : undefined)
+  const [isOpen, setIsOpen] = useState(false);
+  const {
+    data: growth,
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useGrowth(isOpen ? fragmentId : undefined);
 
   return (
     <>
@@ -39,7 +45,9 @@ export const GrowthPanel: React.FC<GrowthPanelProps> = ({ fragmentId }) => {
                   className="p-1.5 text-zinc-400 hover:text-zinc-200 transition-colors rounded-lg hover:bg-zinc-800"
                   title="Refresh Synthesis"
                 >
-                  <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`}
+                  />
                 </button>
                 <button
                   type="button"
@@ -56,11 +64,14 @@ export const GrowthPanel: React.FC<GrowthPanelProps> = ({ fragmentId }) => {
               {isLoading || isFetching ? (
                 <div className="py-12 flex flex-col items-center justify-center gap-3 text-zinc-400">
                   <Spinner size="md" />
-                  <p className="text-xs font-mono">Owl is reflecting on your seed and sparks...</p>
+                  <p className="text-xs font-mono">
+                    Owl is reflecting on your seed and sparks...
+                  </p>
                 </div>
               ) : isError || !growth ? (
                 <div className="py-8 text-center text-xs text-rose-400">
-                  Unable to synthesize growth at this moment. Add more thoughts or sparks first.
+                  Unable to synthesize growth at this moment. Add more thoughts
+                  or sparks first.
                 </div>
               ) : (
                 <div className="space-y-6">
@@ -110,7 +121,11 @@ export const GrowthPanel: React.FC<GrowthPanelProps> = ({ fragmentId }) => {
             </div>
 
             <div className="pt-4 border-t border-zinc-800 text-right">
-              <Button variant="secondary" size="sm" onClick={() => setIsOpen(false)}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsOpen(false)}
+              >
                 Return to Workspace
               </Button>
             </div>
@@ -118,5 +133,5 @@ export const GrowthPanel: React.FC<GrowthPanelProps> = ({ fragmentId }) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};

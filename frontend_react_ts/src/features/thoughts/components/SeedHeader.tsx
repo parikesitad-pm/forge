@@ -1,9 +1,9 @@
-import React from 'react'
-import { Sprout } from 'lucide-react'
+import React from 'react';
+import { Sprout } from 'lucide-react';
 
 interface SeedHeaderProps {
-  seed: string
-  createdAt: string
+  seed: string;
+  createdAt: string;
 }
 
 export const SeedHeader: React.FC<SeedHeaderProps> = ({ seed, createdAt }) => {
@@ -32,5 +32,5 @@ export const SeedHeader: React.FC<SeedHeaderProps> = ({ seed, createdAt }) => {
         This is what you are exploring. Thoughts below unfold from this seed.
       </p>
     </div>
-  )
-}
+  );
+};

@@ -1,6 +1,6 @@
-import React from 'react'
-import { LoginForm } from '@/features/auth/components/LoginForm'
-import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas'
+import React from 'react';
+import { LoginForm } from '@/features/auth/components/LoginForm';
+import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas';
 
 export const LoginPage: React.FC = () => {
   return (
@@ -10,5 +10,5 @@ export const LoginPage: React.FC = () => {
         <LoginForm />
       </div>
     </div>
-  )
-}
+  );
+};

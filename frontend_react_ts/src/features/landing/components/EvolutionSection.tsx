@@ -1,5 +1,5 @@
-import React from 'react'
-import { Sprout, Eye, Sparkles, Compass, Feather } from 'lucide-react'
+import React from 'react';
+import { Sprout, Eye, Sparkles, Compass, Feather } from 'lucide-react';
 
 export const EvolutionSection: React.FC = () => {
   const stages = [
@@ -38,7 +38,7 @@ export const EvolutionSection: React.FC = () => {
       desc: 'Reflects on Seed + Sparks. Surfaces recurring tensions and creative connections while always preserving uncertainty.',
       badge: 'Synthesis',
     },
-  ]
+  ];
 
   return (
     <section className="relative z-10 py-20 px-6 max-w-6xl mx-auto">
@@ -50,14 +50,14 @@ export const EvolutionSection: React.FC = () => {
           How thinking unfolds in Forge
         </h2>
         <p className="mt-4 text-sm text-zinc-400 leading-relaxed">
-          This is not a rigid linear funnel. It describes how an unformed intuition gathers
-          clarity through quiet reflection.
+          This is not a rigid linear funnel. It describes how an unformed
+          intuition gathers clarity through quiet reflection.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {stages.map((stage, idx) => {
-          const Icon = stage.icon
+          const Icon = stage.icon;
           return (
             <div
               key={stage.title}
@@ -70,9 +70,15 @@ export const EvolutionSection: React.FC = () => {
                 <span className="text-[10px] font-mono uppercase text-zinc-500 tracking-wider">
                   Stage 0{idx + 1}
                 </span>
-                <h3 className="text-lg font-medium text-zinc-100 mt-1">{stage.title}</h3>
-                <p className="text-xs font-medium text-pink-400/90 mt-1">{stage.tagline}</p>
-                <p className="text-xs text-zinc-400 mt-3 leading-relaxed">{stage.desc}</p>
+                <h3 className="text-lg font-medium text-zinc-100 mt-1">
+                  {stage.title}
+                </h3>
+                <p className="text-xs font-medium text-pink-400/90 mt-1">
+                  {stage.tagline}
+                </p>
+                <p className="text-xs text-zinc-400 mt-3 leading-relaxed">
+                  {stage.desc}
+                </p>
               </div>
 
               <div className="mt-6 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-[11px] text-zinc-500">
@@ -80,9 +86,9 @@ export const EvolutionSection: React.FC = () => {
                 <span className="text-zinc-600 font-mono">&rarr;</span>
               </div>
             </div>
-          )
+          );
         })}
       </div>
     </section>
-  )
-}
+  );
+};

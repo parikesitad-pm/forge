@@ -1,6 +1,6 @@
-import React from 'react'
-import { RegistrationForm } from '@/features/auth/components/RegistrationForm'
-import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas'
+import React from 'react';
+import { RegistrationForm } from '@/features/auth/components/RegistrationForm';
+import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas';
 
 export const RegisterPage: React.FC = () => {
   return (
@@ -10,5 +10,5 @@ export const RegisterPage: React.FC = () => {
         <RegistrationForm />
       </div>
     </div>
-  )
-}
+  );
+};
