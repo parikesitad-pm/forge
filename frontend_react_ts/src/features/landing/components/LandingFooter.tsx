@@ -9,8 +9,8 @@ export const LandingFooter: React.FC = () => {
 
         <div className="text-xs text-zinc-500 text-center sm:text-right font-mono">
           <p>Forge &middot; A Thinking Companion</p>
-          <p className="mt-1 text-[11px] text-zinc-600">
-            Copyright &copy; 2026 parikesitad-pm &middot; MIT License
+          <p className="mt-1 text-[11px] text-zinc-400">
+            crafted with &lt;3 by parikesitad-pm &copy; 2026 MODULA Project &middot; MIT License
           </p>
         </div>
       </div>

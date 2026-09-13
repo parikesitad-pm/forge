@@ -60,6 +60,14 @@ export const AppWorkspaceTemplate: React.FC<{ children: React.ReactNode }> = ({ 
       <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-6 flex flex-col">
         {children}
       </main>
+
+      {/* Subtle Workspace Footer */}
+      <footer className="border-t border-zinc-900 py-6 px-6 text-center text-[11px] text-zinc-600 font-mono">
+        <p>Forge &middot; A Thinking Companion</p>
+        <p className="mt-0.5 text-zinc-500">
+          crafted with &lt;3 by parikesitad-pm &copy; 2026 MODULA Project &middot; MIT License
+        </p>
+      </footer>
     </div>
   )
 }
