@@ -1,0 +1,163 @@
+[dotenv] Set [36mGOOGLE_API_KEY[0m, [36mGEMINI_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "active_storage_variant_records" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "fragments" DISABLE TRIGGER ALL;ALTER TABLE "observations" DISABLE TRIGGER ALL;ALTER TABLE "profiles" DISABLE TRIGGER ALL;ALTER TABLE "active_storage_blobs" DISABLE TRIGGER ALL;ALTER TABLE "active_storage_attachments" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mFixtures Load (3.0ms)[0m  [1m[31mDELETE FROM "fragments";
+DELETE FROM "observations";
+DELETE FROM "profiles";
+DELETE FROM "users";
+INSERT INTO "fragments" ("id", "content", "created_at", "updated_at", "user_id") VALUES (980190962, 'MyText', '2026-09-14 03:44:41.351700', '2026-09-14 03:44:41.351700', DEFAULT), (298486374, 'MyText', '2026-09-14 03:44:41.351700', '2026-09-14 03:44:41.351700', DEFAULT);
+INSERT INTO "observations" ("id", "fragment_id", "role", "content", "pinned", "created_at", "updated_at") VALUES (980190962, 980190962, 1, 'MyText', FALSE, '2026-09-14 03:44:41.355789', '2026-09-14 03:44:41.355789'), (298486374, 298486374, 1, 'MyText', FALSE, '2026-09-14 03:44:41.355789', '2026-09-14 03:44:41.355789');
+INSERT INTO "profiles" ("id", "user_name", "owl_name", "owl_style", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 'MyString', '2026-09-14 03:44:41.357775', '2026-09-14 03:44:41.357775'), (298486374, 'MyString', 'MyString', 'MyString', '2026-09-14 03:44:41.357775', '2026-09-14 03:44:41.357775');
+INSERT INTO "users" ("id", "email", "password_digest", "created_at", "updated_at", "username", "fullname", "bio") VALUES (980190962, 'MyString', 'MyString', '2026-09-14 03:44:41.361126', '2026-09-14 03:44:41.361126', DEFAULT, DEFAULT, DEFAULT), (298486374, 'MyString', 'MyString', '2026-09-14 03:44:41.361126', '2026-09-14 03:44:41.361126', DEFAULT, DEFAULT, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "active_storage_variant_records" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "fragments" ENABLE TRIGGER ALL;ALTER TABLE "observations" ENABLE TRIGGER ALL;ALTER TABLE "profiles" ENABLE TRIGGER ALL;ALTER TABLE "active_storage_blobs" ENABLE TRIGGER ALL;ALTER TABLE "active_storage_attachments" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.5ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_catalog.pg_constraint SET convalidated=false WHERE conname = ''%1$I'' AND connamespace::regnamespace = ''%2$I''::regnamespace; ALTER TABLE %2$I.%3$I VALIDATE CONSTRAINT %1$I;',
+    constraint_name,
+    table_schema,
+    table_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+SettingControllerTest: test_should_get_show
+-------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+HomeControllerTest: test_should_get_index
+-----------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/home/index" for 127.0.0.1 at 2026-09-14 03:44:41 +0700
+Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  Rendering layout layouts/public.html.erb
+  Rendering home/index.html.erb within layouts/public
+  Rendered home/index/_hero.html.erb (Duration: 33.3ms | GC: 28.2ms)
+  Rendered home/index/_cta.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_footer.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered home/index.html.erb within layouts/public (Duration: 35.2ms | GC: 28.2ms)
+  Rendered shared/_neural_background.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/public.html.erb (Duration: 49.2ms | GC: 34.4ms)
+Completed 200 OK in 75ms (Views: 52.5ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 35.2ms)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+[dotenv] Set [36mGOOGLE_API_KEY[0m, [36mGEMINI_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "active_storage_variant_records" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "fragments" DISABLE TRIGGER ALL;ALTER TABLE "observations" DISABLE TRIGGER ALL;ALTER TABLE "profiles" DISABLE TRIGGER ALL;ALTER TABLE "active_storage_blobs" DISABLE TRIGGER ALL;ALTER TABLE "active_storage_attachments" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mFixtures Load (2.9ms)[0m  [1m[31mDELETE FROM "fragments";
+DELETE FROM "observations";
+DELETE FROM "profiles";
+DELETE FROM "users";
+INSERT INTO "fragments" ("id", "content", "created_at", "updated_at", "user_id") VALUES (980190962, 'MyText', '2026-09-14 03:44:50.900165', '2026-09-14 03:44:50.900165', DEFAULT), (298486374, 'MyText', '2026-09-14 03:44:50.900165', '2026-09-14 03:44:50.900165', DEFAULT);
+INSERT INTO "observations" ("id", "fragment_id", "role", "content", "pinned", "created_at", "updated_at") VALUES (980190962, 980190962, 1, 'MyText', FALSE, '2026-09-14 03:44:50.922289', '2026-09-14 03:44:50.922289'), (298486374, 298486374, 1, 'MyText', FALSE, '2026-09-14 03:44:50.922289', '2026-09-14 03:44:50.922289');
+INSERT INTO "profiles" ("id", "user_name", "owl_name", "owl_style", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 'MyString', '2026-09-14 03:44:50.924305', '2026-09-14 03:44:50.924305'), (298486374, 'MyString', 'MyString', 'MyString', '2026-09-14 03:44:50.924305', '2026-09-14 03:44:50.924305');
+INSERT INTO "users" ("id", "email", "password_digest", "created_at", "updated_at", "username", "fullname", "bio") VALUES (980190962, 'MyString', 'MyString', '2026-09-14 03:44:50.927489', '2026-09-14 03:44:50.927489', DEFAULT, DEFAULT, DEFAULT), (298486374, 'MyString', 'MyString', '2026-09-14 03:44:50.927489', '2026-09-14 03:44:50.927489', DEFAULT, DEFAULT, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "active_storage_variant_records" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "fragments" ENABLE TRIGGER ALL;ALTER TABLE "observations" ENABLE TRIGGER ALL;ALTER TABLE "profiles" ENABLE TRIGGER ALL;ALTER TABLE "active_storage_blobs" ENABLE TRIGGER ALL;ALTER TABLE "active_storage_attachments" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (6.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.3ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_catalog.pg_constraint SET convalidated=false WHERE conname = ''%1$I'' AND connamespace::regnamespace = ''%2$I''::regnamespace; ALTER TABLE %2$I.%3$I VALIDATE CONSTRAINT %1$I;',
+    constraint_name,
+    table_schema,
+    table_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------
+HomeControllerTest: test_should_get_index
+-----------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/home/index" for 127.0.0.1 at 2026-09-14 03:44:51 +0700
+Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  Rendering layout layouts/public.html.erb
+  Rendering home/index.html.erb within layouts/public
+  Rendered home/index/_hero.html.erb (Duration: 4.6ms | GC: 0.0ms)
+  Rendered home/index/_cta.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered shared/_footer.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered home/index.html.erb within layouts/public (Duration: 6.4ms | GC: 0.0ms)
+  Rendered shared/_neural_background.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/public.html.erb (Duration: 13.5ms | GC: 0.0ms)
+Completed 200 OK in 26ms (Views: 15.5ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------------------------------
+SettingControllerTest: test_should_redirect_show_when_not_logged_in
+-------------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/settings" for 127.0.0.1 at 2026-09-14 03:44:51 +0700
+Processing by SettingsController#show as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+Redirected to http://www.example.com/signin
+Filter chain halted as :require_login rendered or redirected
+Completed 302 Found in 2ms (ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------------------------
+Api::V1::AuthControllerTest: test_register_new_user_and_login
+-------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started POST "/api/v1/auth/register" for 127.0.0.1 at 2026-09-14 03:44:51 +0700
+Processing by Api::V1::AuthController#register as JSON
+  Parameters: {"user" => {"username" => "tester_owl", "email" => "[FILTERED]", "password" => "[FILTERED]", "password_confirmation" => "[FILTERED]"}, "auth" => {"user" => {"username" => "tester_owl", "email" => "[FILTERED]", "password" => "[FILTERED]", "password_confirmation" => "[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."username" = $1 LIMIT $2[0m  [["username", "tester_owl"], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "created_at", "updated_at", "username", "fullname", "bio") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-09-14 03:44:51.130200"], ["updated_at", "2026-09-14 03:44:51.130200"], ["username", "tester_owl"], ["fullname", nil], ["bio", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Completed 201 Created in 18ms (Views: 0.2ms | ActiveRecord: 1.2ms (3 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 03:44:51 +0700
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 980190963], ["LIMIT", 1]]
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------------------------
+Api::V1::AuthControllerTest: test_check_username_availability
+-------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/api/v1/auth/check-username" for 127.0.0.1 at 2026-09-14 03:44:51 +0700
+Processing by Api::V1::AuthController#check_username as JSON
+  Parameters: {"username" => "new_thinker_99", "auth" => {"username" => "new_thinker_99"}}
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE (lower(username) = $1) LIMIT $2[0m  [[nil, "new_thinker_99"], ["LIMIT", 1]]
+Completed 200 OK in 1ms (Views: 0.1ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m

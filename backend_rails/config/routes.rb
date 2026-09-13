@@ -1,4 +1,43 @@
 Rails.application.routes.draw do
+  # Healthcheck
+  get "/up", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+
+  # API v1 namespace for modern frontend / clients
+  namespace :api do
+    namespace :v1 do
+      # Authentication
+      post   "/auth/register",       to: "auth#register"
+      post   "/auth/login",          to: "auth#login"
+      delete "/auth/logout",         to: "auth#logout"
+      get    "/auth/check-username", to: "auth#check_username"
+      get    "/me",                  to: "auth#me"
+
+      # Fragments & Seed
+      resources :fragments, only: [ :index, :show, :create, :destroy ] do
+        # Entries & Owl observations
+        resources :entries, only: [ :create ], controller: "observations"
+        post "owl/observe", to: "observations#observe"
+
+        # Sparks
+        resources :sparks, only: [ :index ]
+
+        # Growth synthesis
+        resource :growth, only: [ :show ], controller: "growth"
+      end
+
+      # Observations / Sparks actions
+      post   "/observations/:id/spark", to: "sparks#pin"
+      delete "/observations/:id/spark", to: "sparks#unpin"
+
+      # User settings
+      resource :settings, only: [ :show ] do
+        patch :profile, to: "settings#update_profile"
+        patch :password, to: "settings#update_password"
+      end
+    end
+  end
+
+  # Existing Rails HTML routes (preserved for backwards compatibility)
   get "home/index"
   root "home#index"
 
