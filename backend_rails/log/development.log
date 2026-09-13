@@ -22,3 +22,238 @@ Processing by Api::V1::AuthController#check_username as */*
 Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
 
 
+Started GET "/up" for 127.0.0.1 at 2026-09-14 04:00:07 +0700
+Started POST "/api/v1/auth/register" for 127.0.0.1 at 2026-09-14 04:00:12 +0700
+Processing by Api::V1::AuthController#register as */*
+  Parameters: {"user" => {"username" => "thinker_live", "email" => "[FILTERED]", "password" => "[FILTERED]", "password_confirmation" => "[FILTERED]"}, "auth" => {"user" => {"username" => "thinker_live", "email" => "[FILTERED]", "password" => "[FILTERED]", "password_confirmation" => "[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mUser Exists? (1.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."username" = 'thinker_live' LIMIT 1 /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = 'live@modula.local' LIMIT 1 /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mUser Create (0.4ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "created_at", "updated_at", "username", "fullname", "bio") VALUES ('live@modula.local', '$2a$12$wgp83bVOhFj7ssZjgBYxEujFDKvdfbARWK7QPrw4klNvSz9tm.1Hu', '2026-09-14 04:00:12.804043', '2026-09-14 04:00:12.804043', 'thinker_live', NULL, NULL) RETURNING "id" /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+Completed 201 Created in 267ms (Views: 0.4ms | ActiveRecord: 4.9ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/fragments" for 127.0.0.1 at 2026-09-14 04:00:12 +0700
+Processing by Api::V1::FragmentsController#create as */*
+  Parameters: {"fragment" => {"content" => "Maybe I am not losing focus, maybe I have too many things open."}}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1 /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:26:in 'Api::V1::FragmentsController#create'
+  [1m[36mFragment Create (1.2ms)[0m  [1m[32mINSERT INTO "fragments" ("content", "created_at", "updated_at", "user_id") VALUES ('Maybe I am not losing focus, maybe I have too many things open.', '2026-09-14 04:00:12.867506', '2026-09-14 04:00:12.867506', 2) RETURNING "id" /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:26:in 'Api::V1::FragmentsController#create'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:26:in 'Api::V1::FragmentsController#create'
+  [1m[36mObservation Load (0.4ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 2 ORDER BY "observations"."created_at" DESC LIMIT 6 /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/services/owl/gemini_adapter.rb:65:in 'Owl::GeminiAdapter#observation_prompt'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:29:in 'Api::V1::FragmentsController#create'
+  [1m[36mObservation Create (8.1ms)[0m  [1m[32mINSERT INTO "observations" ("fragment_id", "role", "content", "pinned", "created_at", "updated_at") VALUES (2, 0, 'You seem to be circling around a question that hasn''t fully named itself yet. What would be the honest next question to ask yourself?', NULL, '2026-09-14 04:00:13.307821', '2026-09-14 04:00:13.307821') RETURNING "id" /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:29:in 'Api::V1::FragmentsController#create'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:29:in 'Api::V1::FragmentsController#create'
+  [1m[36mObservation Load (0.3ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 2 ORDER BY "observations"."created_at" ASC /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:66:in 'Api::V1::FragmentsController#fragment_detail'
+Completed 201 Created in 489ms (Views: 0.3ms | ActiveRecord: 17.3ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/observations/1/spark" for 127.0.0.1 at 2026-09-14 04:00:17 +0700
+Processing by Api::V1::SparksController#pin as */*
+  Parameters: {"id" => "1", "spark" => {}}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1 /*action='pin',application='Forge',controller='sparks'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mObservation Load (0.4ms)[0m  [1m[34mSELECT "observations".* FROM "observations" INNER JOIN "fragments" ON "fragments"."id" = "observations"."fragment_id" WHERE "fragments"."user_id" = 2 AND "observations"."id" = 1 ORDER BY "observations"."id" ASC LIMIT 1 /*action='pin',application='Forge',controller='sparks'*/[0m
+  ↳ app/controllers/api/v1/sparks_controller.rb:33:in 'Api::V1::SparksController#find_user_observation'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='pin',application='Forge',controller='sparks'*/[0m
+  ↳ app/controllers/api/v1/sparks_controller.rb:7:in 'Api::V1::SparksController#pin'
+  [1m[36mObservation Update (3.7ms)[0m  [1m[33mUPDATE "observations" SET "pinned" = TRUE, "updated_at" = '2026-09-14 04:00:17.568327' WHERE "observations"."id" = 1 /*action='pin',application='Forge',controller='sparks'*/[0m
+  ↳ app/controllers/api/v1/sparks_controller.rb:7:in 'Api::V1::SparksController#pin'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT /*action='pin',application='Forge',controller='sparks'*/[0m
+  ↳ app/controllers/api/v1/sparks_controller.rb:7:in 'Api::V1::SparksController#pin'
+Completed 200 OK in 40ms (Views: 0.2ms | ActiveRecord: 5.6ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/fragments/2/growth" for 127.0.0.1 at 2026-09-14 04:00:20 +0700
+Processing by Api::V1::GrowthController#show as */*
+  Parameters: {"fragment_id" => "2"}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 2 LIMIT 1 /*action='show',application='Forge',controller='growth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mFragment Load (0.2ms)[0m  [1m[34mSELECT "fragments".* FROM "fragments" WHERE "fragments"."user_id" = 2 AND "fragments"."id" = 2 LIMIT 1 /*action='show',application='Forge',controller='growth'*/[0m
+  ↳ app/controllers/api/v1/growth_controller.rb:5:in 'Api::V1::GrowthController#show'
+  [1m[36mObservation Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "observations" WHERE "observations"."fragment_id" = 2 AND "observations"."pinned" = TRUE LIMIT 1 /*action='show',application='Forge',controller='growth'*/[0m
+  ↳ app/services/owl/growth_synthesizer.rb:11:in 'Owl::GrowthSynthesizer#call'
+  [1m[36mObservation Load (0.4ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 2 AND "observations"."pinned" = TRUE ORDER BY "observations"."created_at" ASC /*action='show',application='Forge',controller='growth'*/[0m
+  ↳ app/services/owl/growth_synthesizer.rb:52:in 'Enumerable#map'
+  [1m[36mObservation Load (0.4ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 2 ORDER BY "observations"."created_at" DESC LIMIT 8 /*action='show',application='Forge',controller='growth'*/[0m
+  ↳ app/services/owl/growth_synthesizer.rb:53:in 'Owl::GrowthSynthesizer#synthesize_with_ai'
+  [1m[36mObservation Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "observations" WHERE "observations"."fragment_id" = 2 AND "observations"."pinned" = TRUE /*action='show',application='Forge',controller='growth'*/[0m
+  ↳ app/services/owl/growth_synthesizer.rb:41:in 'Owl::GrowthSynthesizer#synthesize_fallback'
+  [1m[36mCACHE Observation Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "observations" WHERE "observations"."fragment_id" = 2 AND "observations"."pinned" = TRUE[0m
+  ↳ app/services/owl/growth_synthesizer.rb:42:in 'Owl::GrowthSynthesizer#synthesize_fallback'
+Completed 200 OK in 440ms (Views: 0.3ms | ActiveRecord: 2.2ms (7 queries, 1 cached) | GC: 21.1ms)
+
+
+[dotenv] Set [36mGOOGLE_API_KEY[0m, [36mGEMINI_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/up" for 127.0.0.1 at 2026-09-14 04:03:57 +0700
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:04:18 +0700
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+  [1m[36mUser Load (15.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 51ms (Views: 2.3ms | ActiveRecord: 15.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:04:18 +0700
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 2ms (Views: 0.2ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:08:32 +0700
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:08:32 +0700
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+  [1m[36mUser Load (26.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 73ms (Views: 1.5ms | ActiveRecord: 26.0ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mUser Load (53.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 76ms (Views: 0.2ms | ActiveRecord: 63.6ms (1 query, 0 cached) | GC: 3.9ms)
+
+
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:08:39 +0700
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:08:39 +0700
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+  [1m[36mUser Load (4.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+Completed 401 Unauthorized in 6ms (Views: 0.2ms | ActiveRecord: 4.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 18ms (Views: 0.2ms | ActiveRecord: 1.0ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/auth/check-username?username=owl" for 127.0.0.1 at 2026-09-14 04:09:12 +0700
+Processing by Api::V1::AuthController#check_username as JSON
+  Parameters: {"username" => "owl", "auth" => {}}
+  [1m[36mUser Exists? (2.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE (lower(username) = 'owl') LIMIT 1 /*action='check_username',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:55:in 'Api::V1::AuthController#check_username'
+Completed 200 OK in 7ms (Views: 0.2ms | ActiveRecord: 2.0ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:09:46 +0700
+Started GET "/api/v1/me" for 127.0.0.1 at 2026-09-14 04:09:46 +0700
+Processing by Api::V1::AuthController#me as JSON
+  Parameters: {"auth" => {}}
+Processing by Api::V1::AuthController#me as JSON
+  [1m[36mUser Load (3.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  Parameters: {"auth" => {}}
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 10ms (Views: 1.1ms | ActiveRecord: 3.8ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mUser Load (1.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1 /*action='me',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+Completed 401 Unauthorized in 7ms (Views: 0.8ms | ActiveRecord: 1.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/auth/check-username?username=owl" for 127.0.0.1 at 2026-09-14 04:09:51 +0700
+Processing by Api::V1::AuthController#check_username as JSON
+  Parameters: {"username" => "owl", "auth" => {}}
+  [1m[36mUser Exists? (1.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE (lower(username) = 'owl') LIMIT 1 /*action='check_username',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:55:in 'Api::V1::AuthController#check_username'
+Completed 200 OK in 15ms (Views: 0.2ms | ActiveRecord: 1.4ms (1 query, 0 cached) | GC: 4.5ms)
+
+
+Started POST "/api/v1/auth/register" for 127.0.0.1 at 2026-09-14 04:10:34 +0700
+Processing by Api::V1::AuthController#register as JSON
+  Parameters: {"user" => {"username" => "owl", "email" => "[FILTERED]", "password" => "[FILTERED]", "password_confirmation" => "[FILTERED]"}, "auth" => {"user" => {"username" => "owl", "email" => "[FILTERED]", "password" => "[FILTERED]", "password_confirmation" => "[FILTERED]"}}}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mUser Exists? (3.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."username" = 'owl' LIMIT 1 /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mUser Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = 'owl@forge.com' LIMIT 1 /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mUser Create (1.7ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "created_at", "updated_at", "username", "fullname", "bio") VALUES ('owl@forge.com', '$2a$12$k.0LcJJNv7GylPh.S8Fs2uRqKBBaZl.MpZLGVYZVwAx5jESOu7Mby', '2026-09-14 04:10:34.451264', '2026-09-14 04:10:34.451264', 'owl', NULL, NULL) RETURNING "id" /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mCOMMIT /*action='register',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:9:in 'Api::V1::AuthController#register'
+Completed 201 Created in 277ms (Views: 8.1ms | ActiveRecord: 6.9ms (3 queries, 0 cached) | GC: 10.9ms)
+
+
+Started GET "/api/v1/fragments" for 127.0.0.1 at 2026-09-14 04:10:34 +0700
+Processing by Api::V1::FragmentsController#index as JSON
+  Parameters: {"fragment" => {}}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='index',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mFragment Load (2.0ms)[0m  [1m[34mSELECT "fragments".* FROM "fragments" WHERE "fragments"."user_id" = 3 ORDER BY "fragments"."created_at" DESC /*action='index',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:9:in 'Enumerable#map'
+Completed 200 OK in 83ms (Views: 0.5ms | ActiveRecord: 2.8ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/fragments" for 127.0.0.1 at 2026-09-14 04:10:45 +0700
+Processing by Api::V1::FragmentsController#create as JSON
+  Parameters: {"fragment" => {"content" => "apa ya"}}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:26:in 'Api::V1::FragmentsController#create'
+  [1m[36mFragment Create (11.8ms)[0m  [1m[32mINSERT INTO "fragments" ("content", "created_at", "updated_at", "user_id") VALUES ('apa ya', '2026-09-14 04:10:45.428753', '2026-09-14 04:10:45.428753', 3) RETURNING "id" /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:26:in 'Api::V1::FragmentsController#create'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:26:in 'Api::V1::FragmentsController#create'
+  [1m[36mObservation Load (0.5ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 3 ORDER BY "observations"."created_at" DESC LIMIT 6 /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/services/owl/gemini_adapter.rb:65:in 'Owl::GeminiAdapter#observation_prompt'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:29:in 'Api::V1::FragmentsController#create'
+  [1m[36mObservation Create (12.5ms)[0m  [1m[32mINSERT INTO "observations" ("fragment_id", "role", "content", "pinned", "created_at", "updated_at") VALUES (3, 0, 'Interesting. What made you capture this thought right now? What feels most alive or unresolved about it?', NULL, '2026-09-14 04:10:45.912870', '2026-09-14 04:10:45.912870') RETURNING "id" /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:29:in 'Api::V1::FragmentsController#create'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:29:in 'Api::V1::FragmentsController#create'
+  [1m[36mObservation Load (0.3ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 3 ORDER BY "observations"."created_at" ASC /*action='create',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:66:in 'Api::V1::FragmentsController#fragment_detail'
+Completed 201 Created in 654ms (Views: 0.8ms | ActiveRecord: 30.7ms (5 queries, 0 cached) | GC: 192.3ms)
+
+
+Started GET "/api/v1/fragments" for 127.0.0.1 at 2026-09-14 04:10:46 +0700
+Processing by Api::V1::FragmentsController#index as JSON
+  Parameters: {"fragment" => {}}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='index',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mFragment Load (0.3ms)[0m  [1m[34mSELECT "fragments".* FROM "fragments" WHERE "fragments"."user_id" = 3 ORDER BY "fragments"."created_at" DESC /*action='index',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:9:in 'Enumerable#map'
+  [1m[36mObservation Load (7.1ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 3 /*action='index',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:9:in 'Enumerable#map'
+Completed 200 OK in 63ms (Views: 0.4ms | ActiveRecord: 7.8ms (3 queries, 0 cached) | GC: 5.7ms)
+
+
+Started GET "/api/v1/fragments/3" for 127.0.0.1 at 2026-09-14 04:10:46 +0700
+Processing by Api::V1::FragmentsController#show as JSON
+  Parameters: {"id" => "3", "fragment" => {}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 3 LIMIT 1 /*action='show',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/base_controller.rb:14:in 'Api::V1::BaseController#current_user'
+  [1m[36mFragment Load (0.4ms)[0m  [1m[34mSELECT "fragments".* FROM "fragments" WHERE "fragments"."user_id" = 3 AND "fragments"."id" = 3 LIMIT 1 /*action='show',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:17:in 'Api::V1::FragmentsController#show'
+  [1m[36mObservation Load (0.4ms)[0m  [1m[34mSELECT "observations".* FROM "observations" WHERE "observations"."fragment_id" = 3 ORDER BY "observations"."created_at" ASC /*action='show',application='Forge',controller='fragments'*/[0m
+  ↳ app/controllers/api/v1/fragments_controller.rb:66:in 'Api::V1::FragmentsController#fragment_detail'
+Completed 200 OK in 11ms (Views: 0.3ms | ActiveRecord: 1.0ms (3 queries, 0 cached) | GC: 0.0ms)
+
+

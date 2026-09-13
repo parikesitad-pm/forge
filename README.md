@@ -1,9 +1,9 @@
 # Forge by Modula Project
 
-> **Forge — A Thinking Companion**  
-> *"A thought doesn't need to be complete to be worth capturing."*  
-> *"Capture first. Understand later."*  
-> *"Owl observes. The thinker decides."*
+> **Forge — A Thinking Companion**
+> _"A thought doesn't need to be complete to be worth capturing."_
+> _"Capture first. Understand later."_
+> _"Owl observes. The thinker decides."_
 
 ---
 
@@ -23,26 +23,31 @@
 ## 🚀 Running Locally
 
 ### 1. Prerequisites
+
 - Ruby 4.0.5 (via `rbenv`)
 - PostgreSQL 18+
 - Node.js 22+ & npm
 
 ### 2. Backend Setup
+
 ```bash
 cd backend_rails
 bundle install
 bin/rails db:prepare
 bin/rails server -p 3000
 ```
+
 Backend API will be accessible on `http://localhost:3000`.
 
 ### 3. Frontend Setup
+
 ```bash
 cd frontend_react_ts
 npm install
 npm run dev
 ```
-Frontend application will be accessible on `http://localhost:5173`.  
+
+Frontend application will be accessible on `http://localhost:5173`.
 Vite automatically proxies `/api` calls to the Rails backend at `http://localhost:3000`.
 
 ---
@@ -61,12 +66,14 @@ Vite automatically proxies `/api` calls to the Rails backend at `http://localhos
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd backend_rails
 bin/rails test
 ```
 
 ### Frontend Tests & Typecheck
+
 ```bash
 cd frontend_react_ts
 npm test
