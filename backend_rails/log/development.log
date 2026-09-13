@@ -1,3 +1,24 @@
 [dotenv] Set [36mGOOGLE_API_KEY[0m, [36mGEMINI_API_KEY[0m
 [dotenv] Loaded [33m.env[0m
 [dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mGOOGLE_API_KEY[0m, [36mGEMINI_API_KEY[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/up" for 127.0.0.1 at 2026-09-14 03:58:58 +0700
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Forge'*/[0m
+Started GET "/api/v1/auth/check-username?username=parikesitad" for 127.0.0.1 at 2026-09-14 03:58:58 +0700
+Processing by Api::V1::AuthController#check_username as */*
+  Parameters: {"username" => "parikesitad"}
+  [1m[36mUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE (lower(username) = 'parikesitad') LIMIT 1 /*action='check_username',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:55:in 'Api::V1::AuthController#check_username'
+Completed 200 OK in 24ms (Views: 0.2ms | ActiveRecord: 3.8ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/api/v1/auth/check-username?username=parikesitad" for 127.0.0.1 at 2026-09-14 03:59:17 +0700
+Processing by Api::V1::AuthController#check_username as */*
+  Parameters: {"username" => "parikesitad"}
+  [1m[36mUser Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE (lower(username) = 'parikesitad') LIMIT 1 /*action='check_username',application='Forge',controller='auth'*/[0m
+  ↳ app/controllers/api/v1/auth_controller.rb:55:in 'Api::V1::AuthController#check_username'
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
