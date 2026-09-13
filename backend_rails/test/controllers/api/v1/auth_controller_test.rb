@@ -30,6 +30,21 @@ module Api
         assert_response :success
         me_json = response.parsed_body
         assert_equal "tester_owl", me_json.dig("data", "username")
+
+        # Test logout
+        delete api_v1_auth_logout_url, as: :json
+        assert_response :success
+
+        # After logout, /me should be unauthorized
+        get api_v1_me_url, as: :json
+        assert_response :unauthorized
+      end
+
+      test "check email availability" do
+        get api_v1_auth_check_email_url, params: { email: "completely_fresh_email@test.com" }, as: :json
+        assert_response :success
+        json = response.parsed_body
+        assert json["available"]
       end
     end
   end

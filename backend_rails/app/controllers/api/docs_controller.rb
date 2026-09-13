@@ -100,7 +100,7 @@ module Api
             <h1>Forge API Reference <span class="badge">OpenAPI 3.0</span></h1>
             <div style="display: flex; gap: 16px; align-items: center;">
               <a href="/docs" target="_blank">&larr; User Documentation</a>
-              <a href="/api/openapi.json" target="_blank">Raw JSON &nearr;</a>
+              <a href="/api/openapi.json" target="_blank">Raw JSON ↗</a>
             </div>
           </div>
           <div id="swagger-ui"></div>

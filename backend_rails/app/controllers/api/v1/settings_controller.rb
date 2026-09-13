@@ -31,7 +31,7 @@ module Api
       private
 
       def profile_params
-        params.require(:user).permit(:fullname, :username, :bio)
+        params.require(:user).permit(:fullname, :username, :email, :bio, :avatar)
       end
 
       def user_payload(user)
@@ -41,6 +41,7 @@ module Api
           email: user.email,
           fullname: user.fullname,
           bio: user.bio,
+          avatar_url: user.avatar.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.avatar, only_path: true) : nil,
           created_at: user.created_at
         }
       end

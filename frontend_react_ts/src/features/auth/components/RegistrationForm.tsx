@@ -24,6 +24,11 @@ export const RegistrationForm: React.FC = () => {
     available: boolean | null
     message?: string
   }>({ checking: false, available: null })
+  const [emailStatus, setEmailStatus] = useState<{
+    checking: boolean
+    available: boolean | null
+    message?: string
+  }>({ checking: false, available: null })
 
   const {
     register,
@@ -37,6 +42,8 @@ export const RegistrationForm: React.FC = () => {
 
   const watchedUsername = watch('username')
   const debouncedUsername = useDebounce(watchedUsername, 350)
+  const watchedEmail = watch('email')
+  const debouncedEmail = useDebounce(watchedEmail, 350)
   const watchedPassword = watch('password') || ''
   const watchedConfirmation = watch('password_confirmation') || ''
 
@@ -72,15 +79,53 @@ export const RegistrationForm: React.FC = () => {
     }
   }, [debouncedUsername])
 
+  // Debounced email check
+  useEffect(() => {
+    if (!debouncedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(debouncedEmail)) {
+      setEmailStatus({ checking: false, available: null })
+      return
+    }
+
+    let isMounted = true
+    setEmailStatus({ checking: true, available: null })
+
+    authApi
+      .checkEmail(debouncedEmail)
+      .then((res) => {
+        if (isMounted) {
+          setEmailStatus({
+            checking: false,
+            available: res.available,
+            message: res.message,
+          })
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setEmailStatus({ checking: false, available: null })
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [debouncedEmail])
+
   const onSubmit = async (data: RegisterFormData) => {
     setServerError(null)
     if (usernameStatus.available === false) {
       setServerError('Please choose an available username.')
       return
     }
+    if (emailStatus.available === false) {
+      setServerError('This email address is already registered.')
+      return
+    }
 
     try {
       await registerUser(data)
+      // Flag for new registration onboarding modal
+      sessionStorage.setItem('forge_show_onboarding', 'true')
       toast('Welcome to Forge. Your thinking space is ready.', 'success')
       navigate('/app')
     } catch (err: unknown) {
@@ -116,6 +161,18 @@ export const RegistrationForm: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block text-xs font-medium text-zinc-300 mb-1.5 pl-1">
+            Full Name / Thinker Alias
+          </label>
+          <Input
+            placeholder="Creative Thinker"
+            autoComplete="name"
+            error={errors.fullname?.message}
+            {...register('fullname')}
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-zinc-300 mb-1.5 pl-1">
             Thinker Handle (Username)
           </label>
           <div className="relative">
@@ -145,15 +202,32 @@ export const RegistrationForm: React.FC = () => {
 
         <div>
           <label className="block text-xs font-medium text-zinc-300 mb-1.5 pl-1">
-            Email
+            Email Address
           </label>
-          <Input
-            type="email"
-            placeholder="thinker@modula.local"
-            autoComplete="email"
-            error={errors.email?.message}
-            {...register('email')}
-          />
+          <div className="relative">
+            <Input
+              type="email"
+              placeholder="thinker@modula.local"
+              autoComplete="email"
+              error={errors.email?.message}
+              {...register('email')}
+            />
+            {watchedEmail && watchedEmail.includes('@') && (
+              <div className="absolute right-3 top-3 text-xs">
+                {emailStatus.checking ? (
+                  <span className="text-zinc-500 animate-pulse">checking...</span>
+                ) : emailStatus.available === true ? (
+                  <span className="text-emerald-400 flex items-center gap-1 font-medium">
+                    <Check className="w-3.5 h-3.5" /> available
+                  </span>
+                ) : emailStatus.available === false ? (
+                  <span className="text-rose-400 flex items-center gap-1">
+                    <X className="w-3.5 h-3.5" /> taken
+                  </span>
+                ) : null}
+              </div>
+            )}
+          </div>
         </div>
 
         <div>

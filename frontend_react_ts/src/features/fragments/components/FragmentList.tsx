@@ -4,6 +4,7 @@ import { Sparkles, MessageSquare, Trash2, ArrowUpRight } from 'lucide-react'
 import { useFragments, useDeleteFragment } from '../hooks/useFragments'
 import { useToast } from '@/app/providers/ToastProvider'
 import { Spinner } from '@/components/atoms/Spinner'
+import { FragmentListSkeleton } from '@/components/atoms/Skeleton'
 
 export const FragmentList: React.FC = () => {
   const { data: fragments, isLoading, isError } = useFragments()
@@ -25,9 +26,12 @@ export const FragmentList: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="py-12 flex flex-col items-center justify-center gap-3 text-zinc-500">
-        <Spinner size="md" />
-        <span className="text-xs font-mono">Gathering fragments...</span>
+      <div className="max-w-2xl mx-auto py-6">
+        <div className="flex items-center gap-2 mb-4 text-xs font-mono text-zinc-500">
+          <Spinner size="sm" />
+          <span>Synchronizing thinker fragments...</span>
+        </div>
+        <FragmentListSkeleton count={3} />
       </div>
     )
   }

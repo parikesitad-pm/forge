@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Debounced email availability check endpoint (`/api/v1/auth/check-email`) and fullname input field in `/register`.
+- Sequential 2-step post-registration onboarding modal ("Mau dipanggil siapa?" and creative interests).
+- Collapsible ChatGPT-style workspace sidebar (`AppSidebar`) with hoverable logo, New Fragment button, recent thought list, and thinker profile card.
+- Top workspace navigation bar with breadcrumb tracking (`Fragments / [Title]`) and 3-dots action menu (Delete, Archive, Move).
+- Avatar image upload with file preview and Active Storage multipart persistence in settings view.
+- Deliberate GitHub/Forge-style loading skeleton animations (`Skeleton.tsx`) for fragment lists and thought details.
+- ScrollSpy section tracking, static pinned sidebar, and breadcrumb header in `/docs`.
+
+### Changed
+
+- Re-architected `/app` workspace into ChatGPT-style layout with scrollable thought stream and bottom-fixed auto-expanding composer.
+- Attached compact micro-footer (`Forge · A Thinking Companion`) right below the chat composer.
+- Widened `/app/settings` container to `max-w-4xl` for spacious profile management.
+- Fixed landing footer and Swagger HTML typo `&nearr;` with clean unicode `↗`.
+- Fixed `/app` logout bug and unauthorized toasts by gating TanStack Query calls and invalidating session cookies.
+
+### Removed
+
+- Removed all Docs navigation links from inside the authenticated `/app` workspace.
+
 - Session-aware landing page navigation and hero CTAs with subtle skeleton hydration to eliminate visual flicker.
 - Direct "Continue thinking" routing via `/app/continue` destination resolver without leaking private fragment data into public markup.
 - Comprehensive `/docs` documentation site with desktop sidebar, mobile drawer, copyable code blocks, and deployment guides (Vercel, Railway, PostgreSQL).

@@ -1,7 +1,7 @@
 module Api
   module V1
     class AuthController < BaseController
-      skip_before_action :require_login, only: [ :register, :login, :logout, :me, :check_username ]
+      skip_before_action :require_login, only: [ :register, :login, :logout, :me, :check_username, :check_email ]
 
       def register
         user = User.new(user_params)
@@ -33,6 +33,7 @@ module Api
 
       def logout
         reset_session
+        cookies.delete(:_forge_session)
         render_success({}, "Signed out successfully.")
       end
 
@@ -60,6 +61,22 @@ module Api
         end
       end
 
+      def check_email
+        email = params[:email].to_s.strip.downcase
+
+        if email.blank? || !email.match?(URI::MailTo::EMAIL_REGEXP)
+          render json: { available: false, message: "Enter a valid email address" }
+          return
+        end
+
+        exists = User.where("lower(email) = ?", email).exists?
+        if exists
+          render json: { available: false, message: "Email is already registered" }
+        else
+          render json: { available: true, message: "Email is available" }
+        end
+      end
+
       private
 
       def user_params
@@ -80,6 +97,7 @@ module Api
           email: user.email,
           fullname: user.fullname,
           bio: user.bio,
+          avatar_url: user.avatar.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.avatar, only_path: true) : nil,
           created_at: user.created_at
         }
       end

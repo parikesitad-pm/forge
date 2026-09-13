@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       post   "/auth/login",          to: "auth#login"
       delete "/auth/logout",         to: "auth#logout"
       get    "/auth/check-username", to: "auth#check_username"
+      get    "/auth/check-email",    to: "auth#check_email"
       get    "/me",                  to: "auth#me"
 
       # Fragments & Seed

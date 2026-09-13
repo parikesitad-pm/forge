@@ -58,6 +58,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const logout = async () => {
+    queryClient.setQueryData(queryKeys.auth.me, null)
+    queryClient.removeQueries({ queryKey: ['fragments'] })
     try {
       await authApi.logout()
     } finally {

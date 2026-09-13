@@ -33,13 +33,13 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
                       onClick={() => onSelectSection(section.id)}
                       className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer flex items-center justify-between ${
                         isActive
-                          ? 'bg-pink-500/10 text-pink-400 font-medium'
+                          ? 'bg-pink-500/15 text-pink-300 font-semibold border-l-2 border-pink-400 pl-3'
                           : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                       }`}
                     >
                       <span>{section.title}</span>
                       {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-pink-400" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
                       )}
                     </button>
                   </li>

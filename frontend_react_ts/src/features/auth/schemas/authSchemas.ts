@@ -9,6 +9,10 @@ export type LoginFormData = z.infer<typeof loginSchema>
 
 export const registerSchema = z
   .object({
+    fullname: z
+      .string()
+      .min(1, 'Please enter your full name or nickname')
+      .max(60, 'Full name cannot exceed 60 characters'),
     username: z
       .string()
       .min(3, 'Username must be at least 3 characters')

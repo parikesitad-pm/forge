@@ -25,6 +25,34 @@ export const DocsPage: React.FC = () => {
     }
   }, [location]);
 
+  // ScrollSpy to track and highlight what is currently being read
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: '-80px 0px -65% 0px',
+        threshold: 0,
+      }
+    );
+
+    docsSections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleSelectSection = (id: string) => {
     setActiveSection(id);
     setMobileMenuOpen(false);
@@ -35,20 +63,34 @@ export const DocsPage: React.FC = () => {
     }
   };
 
+  const activeDoc = docsSections.find((s) => s.id === activeSection) || docsSections[0];
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
-      {/* Documentation Header */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-zinc-950/80 border-b border-zinc-800/60">
+      {/* Static / Fixed Header with Breadcrumb */}
+      <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-zinc-950/90 border-b border-zinc-800/80">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <BrandLogo size="sm" showSubBrand href="/" />
-            <span className="hidden sm:inline text-zinc-600">/</span>
-            <span className="hidden sm:inline text-xs font-mono text-pink-400 font-medium">
-              Docs
-            </span>
+          {/* Breadcrumb: [logo] docs / [yang lagi dibaca] */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <BrandLogo size="sm" showSubBrand={false} href="/" />
+            <span className="text-zinc-600">/</span>
+            <Link
+              to="/docs"
+              className="text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors shrink-0"
+            >
+              docs
+            </Link>
+            {activeDoc && (
+              <>
+                <span className="text-zinc-600">/</span>
+                <span className="text-xs font-mono text-pink-400 font-medium truncate max-w-[140px] sm:max-w-xs">
+                  {activeDoc.title}
+                </span>
+              </>
+            )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
             <a
               href="/api/docs"
               target="_blank"
@@ -102,10 +144,10 @@ export const DocsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Documentation Layout */}
+      {/* Documentation Layout with Static Desktop Sidebar */}
       <div className="max-w-7xl w-full mx-auto px-6 py-8 flex-1 flex gap-12">
-        {/* Desktop Sidebar */}
-        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto pr-4">
+        {/* Static Desktop Sidebar (pinned to top, does not scroll with document) */}
+        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-20 self-start h-[calc(100vh-6rem)] overflow-y-auto pr-4 scrollbar-thin">
           <DocsSidebar
             sections={docsSections}
             activeSection={activeSection}

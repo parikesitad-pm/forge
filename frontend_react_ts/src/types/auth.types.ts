@@ -4,10 +4,12 @@ export interface User {
   email: string
   fullname?: string | null
   bio?: string | null
+  avatar_url?: string | null
   created_at: string
 }
 
 export interface RegisterPayload {
+  fullname?: string
   username: string
   email: string
   password: string
@@ -20,6 +22,11 @@ export interface LoginPayload {
 }
 
 export interface CheckUsernameResponse {
+  available: boolean
+  message: string
+}
+
+export interface CheckEmailResponse {
   available: boolean
   message: string
 }

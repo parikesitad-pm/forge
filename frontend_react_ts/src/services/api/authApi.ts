@@ -1,5 +1,5 @@
 import { apiClient } from '../http/apiClient'
-import type { CheckUsernameResponse, LoginPayload, RegisterPayload, User } from '@/types/auth.types'
+import type { CheckEmailResponse, CheckUsernameResponse, LoginPayload, RegisterPayload, User } from '@/types/auth.types'
 
 export const authApi = {
   me: () => apiClient.get<User>('/api/v1/me'),
@@ -14,4 +14,7 @@ export const authApi = {
 
   checkUsername: (username: string) =>
     apiClient.get<CheckUsernameResponse>(`/api/v1/auth/check-username?username=${encodeURIComponent(username)}`),
+
+  checkEmail: (email: string) =>
+    apiClient.get<CheckEmailResponse>(`/api/v1/auth/check-email?email=${encodeURIComponent(email)}`),
 }

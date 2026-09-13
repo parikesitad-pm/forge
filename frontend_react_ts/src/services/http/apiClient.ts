@@ -17,9 +17,11 @@ export class ApiError extends Error {
 export async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`
 
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData
+
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
     Accept: 'application/json',
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     ...options.headers,
   }
 
@@ -54,19 +56,23 @@ export const apiClient = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: 'GET' }),
 
-  post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, {
+  post: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
+    const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
+    return request<T>(endpoint, {
       ...options,
       method: 'POST',
-      body: body ? JSON.stringify(body) : undefined,
-    }),
+      body: isFormData ? (body as FormData) : body ? JSON.stringify(body) : undefined,
+    })
+  },
 
-  patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, {
+  patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
+    const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
+    return request<T>(endpoint, {
       ...options,
       method: 'PATCH',
-      body: body ? JSON.stringify(body) : undefined,
-    }),
+      body: isFormData ? (body as FormData) : body ? JSON.stringify(body) : undefined,
+    })
+  },
 
   delete: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: 'DELETE' }),

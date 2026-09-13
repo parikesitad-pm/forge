@@ -20,6 +20,7 @@ describe('Auth Schemas', () => {
 
   it('validates a compliant registration payload', () => {
     const result = registerSchema.safeParse({
+      fullname: 'Creative Thinker',
       username: 'thinker_01',
       email: 'thinker@modula.local',
       password: 'StrongPassword1!',
@@ -30,6 +31,7 @@ describe('Auth Schemas', () => {
 
   it('rejects passwords that lack symbols or uppercase letters', () => {
     const result = registerSchema.safeParse({
+      fullname: 'Creative Thinker',
       username: 'thinker_01',
       email: 'thinker@modula.local',
       password: 'weakpassword',
@@ -40,6 +42,7 @@ describe('Auth Schemas', () => {
 
   it('rejects password confirmation mismatch', () => {
     const result = registerSchema.safeParse({
+      fullname: 'Creative Thinker',
       username: 'thinker_01',
       email: 'thinker@modula.local',
       password: 'StrongPassword1!',

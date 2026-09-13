@@ -16,8 +16,12 @@ export interface UpdatePasswordPayload {
 export const settingsApi = {
   getProfile: () => apiClient.get<User>('/api/v1/settings'),
 
-  updateProfile: (payload: UpdateProfilePayload) =>
-    apiClient.patch<User>('/api/v1/settings/profile', payload),
+  updateProfile: (payload: UpdateProfilePayload | FormData) => {
+    if (typeof FormData !== 'undefined' && payload instanceof FormData) {
+      return apiClient.patch<User>('/api/v1/settings/profile', payload)
+    }
+    return apiClient.patch<User>('/api/v1/settings/profile', { user: payload })
+  },
 
   updatePassword: (payload: UpdatePasswordPayload) =>
     apiClient.patch<User>('/api/v1/settings/password', payload),

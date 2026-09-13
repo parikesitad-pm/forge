@@ -53,7 +53,7 @@ export const LandingFooter: React.FC = () => {
                   rel="noopener noreferrer"
                   className="hover:text-zinc-100 transition-colors"
                 >
-                  API Reference &nearr;
+                  API Reference ↗
                 </a>
               </li>
             </ul>
@@ -72,7 +72,7 @@ export const LandingFooter: React.FC = () => {
                   rel="noopener noreferrer"
                   className="hover:text-zinc-100 transition-colors"
                 >
-                  GitHub &nearr;
+                  GitHub ↗
                 </a>
               </li>
             </ul>
