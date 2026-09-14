@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Plus,
@@ -12,6 +12,7 @@ import {
   Eye,
   TrendingUp,
   Archive,
+  ChevronsUpDown,
 } from 'lucide-react'
 import { BrandLogo } from '@/components/atoms/BrandLogo'
 import { useFragments } from '@/features/fragments/hooks/useFragments'
@@ -45,6 +46,30 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       return []
     }
   })
+
+  // Profile popover menu state
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const profileMenuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setIsProfileMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const thinkerSince = useMemo(() => {
+    if (!user?.created_at) return 'Thinker since 2026'
+    try {
+      const d = new Date(user.created_at)
+      return `Thinker since ${d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}`
+    } catch {
+      return 'Thinker since 2026'
+    }
+  }, [user?.created_at])
 
   const handleLogout = async () => {
     await logout()
@@ -226,59 +251,105 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         )}
       </div>
 
-      {/* 4. Fixed Bottom Section: Pinned User Profile (parikesit @username) */}
-      <div className="p-2 shrink-0">
-        <div
-          className={`flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900/30 hover:bg-zinc-900 transition-colors ${
+      {/* 4. Fixed Bottom Section: Pinned Thinker Profile with Popover */}
+      <div className="p-2 shrink-0 relative" ref={profileMenuRef}>
+        {/* Profile popover when clicked */}
+        {isProfileMenuOpen && (
+          <div
+            className={`absolute bottom-full mb-2 ${
+              isCollapsed ? 'left-2 w-56' : 'left-2 right-2'
+            } rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-bottom-2`}
+          >
+            <div className="flex items-center gap-2.5 p-2 pb-2.5 border-b border-zinc-800/80">
+              {user?.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full object-cover shrink-0 border border-zinc-700/60"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-pink-950/80 border border-pink-500/30 flex items-center justify-center text-xs font-mono text-pink-300 shrink-0">
+                  {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-zinc-100 truncate">
+                  {user?.fullname || user?.username || 'Thinker'}
+                </p>
+                <p className="text-[10px] font-mono text-zinc-400 truncate">
+                  @{user?.username || 'thinker'}
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-1 space-y-0.5">
+              <Link
+                to="/app/settings"
+                onClick={() => setIsProfileMenuOpen(false)}
+                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors"
+              >
+                <Settings className="w-4 h-4 text-zinc-400" />
+                <span>Settings</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProfileMenuOpen(false)
+                  handleLogout()
+                }}
+                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors text-left cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 text-rose-400" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Profile Trigger Button */}
+        <button
+          type="button"
+          onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+          className={`w-full flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900/30 hover:bg-zinc-900 transition-colors text-left cursor-pointer group ${
             isCollapsed ? 'justify-center p-2' : ''
           }`}
+          title={isCollapsed ? `@${user?.username}` : undefined}
+          aria-label="Thinker profile menu"
         >
           {user?.avatar_url ? (
             <img
               src={user.avatar_url}
               alt="Avatar"
-              className="w-7 h-7 rounded-full object-cover"
+              className="w-7 h-7 rounded-full object-cover shrink-0 border border-zinc-700/60"
               onError={(e) => {
-                // Fallback if image path fails
                 e.currentTarget.style.display = 'none'
               }}
             />
           ) : (
-            <div className="w-7 h-7 rounded-full bg-pink-950/80 flex items-center justify-center text-[11px] font-mono text-pink-300">
+            <div className="w-7 h-7 rounded-full bg-pink-950/80 border border-pink-500/30 flex items-center justify-center text-[11px] font-mono text-pink-300 shrink-0">
               {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
             </div>
           )}
 
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-zinc-200 truncate leading-none">
-                {user?.fullname || 'parikesit'}
+              <p className="text-xs font-mono font-medium text-zinc-200 truncate leading-none">
+                @{user?.username || 'thinker'}
               </p>
-              <p className="text-[10px] text-zinc-500 font-mono truncate mt-1">
-                @{user?.username || 'parikesitad-pm'}
+              <p className="text-[10px] text-zinc-500 font-sans truncate mt-1">
+                {thinkerSince}
               </p>
             </div>
           )}
 
           {!isCollapsed && (
-            <div className="flex items-center gap-0.5">
-              <Link
-                to="/app/settings"
-                className="p-1 text-zinc-500 hover:text-zinc-300 rounded transition-colors"
-                title="Settings"
-              >
-                <Settings className="w-3.5 h-3.5" />
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="p-1 text-zinc-500 hover:text-rose-400 rounded transition-colors cursor-pointer"
-                title="Sign Out"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <ChevronsUpDown className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
           )}
-        </div>
+        </button>
       </div>
     </aside>
   )

@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
+- Anti-flashbang inline pre-render script in `index.html` preventing white screen flash on page refresh by defaulting to dark mode.
+- Spark action toggle on every thought bubble (both thinker entries and owl reflections) with minimal icon and spark indicator.
+- Thinker profile popover anchored to bottom sidebar showing avatar, `@username`, "Thinker since [date]", Settings link, and Sign Out action.
+- "Thinker since" membership date badge and avatar file upload with instant preview and multipart persistence in `/app/settings`.
+- Display theme selection card (Dark, Light, System) in `/app/settings` connected to `ThemeProvider`.
+- Animated neural canvas background on `/docs` matching the public landing page aesthetic.
+- Functional thought migration workflow in `MoveToFragmentModal` transferring entries to the target fragment and auto-archiving the source.
+- Clear error status mapping in `apiClient.ts` diagnosing offline backend services and 405/404/502 states.
 - Comprehensive documentation across root `README.md`, `backend_rails/README.md`, and `frontend_react_ts/README.md` with live production deployment badges and links.
 - Multi-theme support (Dark, Light, and System device preference) with settings picker and persistent storage.
 - Vite proxy configuration for `/rails` to deliver Active Storage avatar assets directly in development.
@@ -26,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed redundant username and profile picture from top workspace header, consolidating account controls in the sidebar thinker popover.
+- Hardened `useReducedMotion` hook against headless test environments without `window.matchMedia`.
+- Fixed fragment archive and move actions on `/app/fragments/:id` to persist in storage and invalidate query caches.
 - Resolved login and register navigation race conditions via synchronous `sessionUser` state in `AuthProvider`.
 - Replaced generic "Thinker" and "Observer" labels with user's custom nickname and clean "Owl" branding.
 - Temporarily disabled "Observation" and "Growth" sidebar navigation items with a "Soon" badge.

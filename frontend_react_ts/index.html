@@ -21,6 +21,23 @@
       content="Capture first. Understand later. Owl observes. The thinker decides."
     />
     <meta property="og:image" content="/forge_logo.png" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('forge_theme') || 'dark';
+          var isDark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (t === 'light') {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          } else {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+            document.documentElement.style.colorScheme = 'dark';
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body class="bg-[#09090b] text-[#fafafa]">
     <div id="root"></div>

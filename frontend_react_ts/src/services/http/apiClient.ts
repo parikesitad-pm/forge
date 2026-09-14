@@ -41,7 +41,19 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
   }
 
   if (!response.ok) {
-    const errorMsg = json?.error || json?.message || `Request failed with status ${response.status}`
+    let errorMsg = json?.error || json?.message
+    if (!errorMsg) {
+      if (response.status === 405) {
+        errorMsg =
+          'Backend belum terhubung atau service offline (HTTP 405 Method Not Allowed). Pastikan backend Rails sudah aktif.'
+      } else if (response.status === 404) {
+        errorMsg = 'Layanan API tidak ditemukan (HTTP 404 Not Found).'
+      } else if (response.status === 502 || response.status === 503) {
+        errorMsg = 'Layanan backend sedang tidak tersedia atau restart (HTTP 502/503).'
+      } else {
+        errorMsg = `Permintaan gagal dengan status ${response.status}`
+      }
+    }
     throw new ApiError(errorMsg, response.status, json?.details)
   }
 

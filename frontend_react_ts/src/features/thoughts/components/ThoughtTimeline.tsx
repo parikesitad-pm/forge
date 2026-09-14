@@ -24,10 +24,10 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
     try {
       await navigator.clipboard.writeText(text)
       setCopiedId(id)
-      toast('Copied to clipboard', 'info')
+      toast('Tersalin ke clipboard', 'info')
       setTimeout(() => setCopiedId((prev) => (prev === id ? null : prev)), 2000)
     } catch {
-      toast('Failed to copy', 'error')
+      toast('Gagal menyalin', 'error')
     }
   }
 
@@ -49,60 +49,29 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
           minute: '2-digit',
         })
 
-        if (isUser) {
-          return (
-            <div
-              key={entry.id}
-              className="group relative p-4 rounded-2xl bg-zinc-900/40 hover:bg-zinc-900/60 transition-all"
-            >
-              {/* Header: Name and pinned indicator */}
-              <div className="flex items-center justify-between text-xs font-mono mb-1.5">
-                <span className="text-zinc-300 font-medium">{displayName}</span>
-              </div>
-
-              {/* Message Content */}
-              <p className="text-sm sm:text-base text-zinc-200 font-serif leading-relaxed whitespace-pre-wrap">
-                {entry.content}
-              </p>
-
-              {/* Hover Actions: Copy & Timestamp (ChatGPT style) */}
-              <div className="mt-2 pt-2 flex items-center justify-end gap-3 text-xs text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity duration-150 select-none">
-                <span className="text-[11px] font-mono">{timeString}</span>
-                <button
-                  type="button"
-                  onClick={() => handleCopy(entry.id, entry.content)}
-                  className="p-1 text-zinc-400 hover:text-zinc-100 rounded transition-colors cursor-pointer"
-                  title="Copy thought"
-                >
-                  {isCopied ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
-                  )}
-                </button>
-              </div>
-            </div>
-          )
-        }
-
-        // Owl Entry
         return (
           <div
             key={entry.id}
             className={`group relative p-4 rounded-2xl transition-all ${
               entry.pinned
-                ? 'bg-amber-950/15 shadow-sm shadow-amber-950/20'
-                : 'bg-zinc-950/60 hover:bg-zinc-950/90'
+                ? 'bg-amber-950/15 border border-amber-500/20 shadow-sm shadow-amber-950/20'
+                : isUser
+                ? 'bg-zinc-900/40 hover:bg-zinc-900/60 border border-transparent'
+                : 'bg-zinc-950/60 hover:bg-zinc-950/90 border border-transparent'
             }`}
           >
-            {/* Header: Owl Name and Spark badge */}
+            {/* Header: Author & Persistent Pinned Spark badge */}
             <div className="flex items-center justify-between text-xs font-mono mb-1.5">
-              <span className="flex items-center gap-1.5 text-pink-400 font-medium">
-                <Sparkles className="w-3.5 h-3.5" />
-                Owl
-              </span>
+              {isUser ? (
+                <span className="text-zinc-300 font-medium">{displayName}</span>
+              ) : (
+                <span className="flex items-center gap-1.5 text-pink-400 font-medium">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Owl
+                </span>
+              )}
 
-              {/* Persistent pinned spark icon indicator if kept */}
+              {/* Persistent pinned spark indicator */}
               {entry.pinned && (
                 <span className="text-[11px] font-mono text-amber-400 flex items-center gap-1">
                   ✦ Spark
@@ -110,13 +79,18 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
               )}
             </div>
 
-            {/* Owl Content */}
-            <p className="text-sm sm:text-base text-zinc-200 font-serif leading-relaxed italic whitespace-pre-wrap">
-              &ldquo;{entry.content}&rdquo;
+            {/* Message Content */}
+            <p
+              className={`text-sm sm:text-base text-zinc-200 font-serif leading-relaxed whitespace-pre-wrap ${
+                !isUser ? 'italic' : ''
+              }`}
+            >
+              {!isUser ? `\u201C${entry.content}\u201D` : entry.content}
             </p>
 
-            {/* Hover Actions: Keep as Spark, Copy, Timestamp */}
+            {/* Hover Actions: Spark icon button, Copy, Timestamp */}
             <div className="mt-2 pt-2 flex items-center justify-between text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-150 select-none">
+              {/* Spark button: available on every thought */}
               <button
                 type="button"
                 onClick={() => onToggleSpark(entry.id, entry.pinned)}
@@ -125,10 +99,14 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
                     ? 'text-amber-300 bg-amber-500/20 hover:bg-amber-500/30'
                     : 'text-zinc-400 hover:text-amber-300 bg-zinc-850 hover:bg-zinc-800'
                 }`}
-                title={entry.pinned ? 'Release spark' : 'Keep as spark'}
+                title={entry.pinned ? 'Lepaskan spark' : 'Jadikan spark'}
               >
-                <Sparkles className={`w-3 h-3 ${entry.pinned ? 'text-amber-400 fill-amber-400' : ''}`} />
-                <span>{entry.pinned ? 'Kept as Spark ✦' : 'Keep as Spark'}</span>
+                <Sparkles
+                  className={`w-3.5 h-3.5 ${
+                    entry.pinned ? 'text-amber-400 fill-amber-400' : ''
+                  }`}
+                />
+                <span className="font-mono text-[11px]">Spark</span>
               </button>
 
               <div className="flex items-center gap-2.5 text-zinc-500">

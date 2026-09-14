@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { FolderInput, X, ArrowRight, MessageSquare, Check } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useFragments } from '@/features/fragments/hooks/useFragments'
+import { fragmentsApi } from '@/services/api/fragmentsApi'
+import { observationsApi } from '@/services/api/observationsApi'
+import { queryKeys } from '@/constants/queryKeys'
 import { useToast } from '@/app/providers/ToastProvider'
 import { Button } from '@/components/atoms/Button'
 import type { FragmentSummary } from '@/types/fragment.types'
@@ -20,6 +24,7 @@ export const MoveToFragmentModal: React.FC<MoveToFragmentModalProps> = ({
   const { data: fragments } = useFragments()
   const { toast } = useToast()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [selectedTargetId, setSelectedTargetId] = useState<number | null>(null)
   const [isMoving, setIsMoving] = useState(false)
 
@@ -31,15 +36,38 @@ export const MoveToFragmentModal: React.FC<MoveToFragmentModalProps> = ({
   )
 
   const handleConfirmMove = async () => {
-    if (!selectedTargetId) return
+    if (!selectedTargetId || !currentFragmentId) return
     setIsMoving(true)
 
     const targetFragment = availableTargets.find((f) => f.id === selectedTargetId)
     const targetTitle = targetFragment?.seed || 'fragment tujuan'
 
     try {
-      // Simulate/persist linking move to destination fragment
-      await new Promise((res) => setTimeout(res, 400))
+      // 1. Fetch thoughts from current fragment
+      const sourceDetail = await fragmentsApi.getById(currentFragmentId)
+
+      // 2. Transfer user entries to destination fragment
+      const userEntries = (sourceDetail.entries || []).filter((e) => e.role === 'user')
+      if (userEntries.length > 0) {
+        for (const entry of userEntries) {
+          await observationsApi.createEntry(selectedTargetId, { content: entry.content })
+        }
+      }
+
+      // 3. Mark current fragment as archived so thoughts are consolidated
+      const existing: number[] = JSON.parse(
+        localStorage.getItem('forge_archived_fragment_ids') || '[]'
+      )
+      const numericCurrentId = Number(currentFragmentId)
+      if (!existing.includes(numericCurrentId)) {
+        existing.push(numericCurrentId)
+        localStorage.setItem('forge_archived_fragment_ids', JSON.stringify(existing))
+      }
+
+      // 4. Invalidate queries to refresh lists and fragment detail
+      await queryClient.invalidateQueries({ queryKey: queryKeys.fragments.all })
+      await queryClient.invalidateQueries({ queryKey: queryKeys.fragments.detail(selectedTargetId) })
+
       toast(`Pemikiran berhasil dipindahkan ke: "${targetTitle.slice(0, 30)}..."`, 'success')
       onClose()
       navigate(`/app/fragments/${selectedTargetId}`)

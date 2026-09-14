@@ -6,6 +6,7 @@ import { Button } from '@/components/atoms/Button';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { docsSections } from '@/features/docs/data/docsContent';
 import { DocsSidebar } from '@/features/docs/components/DocsSidebar';
+import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas';
 
 export const DocsPage: React.FC = () => {
   const { authStatus } = useAuth();
@@ -89,7 +90,10 @@ export const DocsPage: React.FC = () => {
     docsSections.find((s) => s.id === activeSection) || docsSections[0];
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans relative overflow-x-clip">
+      {/* Animated neural canvas background */}
+      <NeuralCanvas className="opacity-25 fixed inset-0 pointer-events-none z-0" />
+
       {/* Sticky Top Header with Breadcrumb and Reading Progress Bar */}
       <header
         className={`sticky top-0 z-40 w-full backdrop-blur-md border-b border-zinc-900/80 transition-all duration-300 ease-out ${

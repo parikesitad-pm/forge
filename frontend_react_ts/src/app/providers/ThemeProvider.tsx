@@ -14,7 +14,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    return (localStorage.getItem('forge_theme') as Theme) || 'system';
+    return (localStorage.getItem('forge_theme') as Theme) || 'dark';
   });
 
   const [systemIsDark, setSystemIsDark] = useState(() => {

@@ -73,11 +73,21 @@ export const FragmentDetailPage: React.FC = () => {
   }
 
   const handleArchive = () => {
-    toast('Fragment diarsipkan ke arsip pemikiran.', 'success')
-  }
-
-  const handleMove = () => {
-    toast('Fragment dipindahkan ke topik pilihan.', 'success')
+    if (!id) return
+    try {
+      const existing: number[] = JSON.parse(
+        localStorage.getItem('forge_archived_fragment_ids') || '[]'
+      )
+      const numericId = Number(id)
+      if (!existing.includes(numericId)) {
+        existing.push(numericId)
+        localStorage.setItem('forge_archived_fragment_ids', JSON.stringify(existing))
+      }
+      toast('Fragment berhasil dipindahkan ke Archive.', 'success')
+      navigate('/app')
+    } catch {
+      toast('Gagal mengarsipkan fragment', 'error')
+    }
   }
 
   if (isLoading) {
@@ -113,7 +123,6 @@ export const FragmentDetailPage: React.FC = () => {
       fragmentId={fragment.id}
       onDelete={handleDelete}
       onArchive={handleArchive}
-      onMove={handleMove}
     >
       <div className="flex-1 flex flex-col h-full justify-between">
         {/* Scrollable Conversation Content Area */}

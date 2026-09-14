@@ -7,12 +7,9 @@ import {
   Trash2,
   ChevronRight,
   PanelLeft,
-  Settings,
-  LogOut,
 } from 'lucide-react'
 import { AppSidebar } from '@/components/organisms/AppSidebar'
 import { MoveToFragmentModal } from '@/components/organisms/MoveToFragmentModal'
-import { useAuth } from '@/app/providers/AuthProvider'
 import { useToast } from '@/app/providers/ToastProvider'
 import { useFragments, useDeleteFragment } from '@/features/fragments/hooks/useFragments'
 
@@ -35,7 +32,6 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
   onArchive,
   onMove,
 }) => {
-  const { user, logout } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
   const location = useLocation()
@@ -53,10 +49,6 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
   // 3-dots action menu state
   const [isActionsOpen, setIsActionsOpen] = useState(false)
   const actionsRef = useRef<HTMLDivElement>(null)
-
-  // Account menu state
-  const [isAccountOpen, setIsAccountOpen] = useState(false)
-  const accountRef = useRef<HTMLDivElement>(null)
 
   // Move to fragment modal state
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false)
@@ -79,20 +71,10 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
       if (actionsRef.current && !actionsRef.current.contains(target)) {
         setIsActionsOpen(false)
       }
-      if (accountRef.current && !accountRef.current.contains(target)) {
-        setIsAccountOpen(false)
-      }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
-
-  const handleLogout = async () => {
-    setIsAccountOpen(false)
-    await logout()
-    toast('Signed out.', 'info')
-    navigate('/')
-  }
 
   const handleDeleteFragment = async () => {
     setIsActionsOpen(false)
@@ -224,7 +206,7 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
             </nav>
           </div>
 
-          {/* Right Header Actions: 3-dots Menu & Profile Popover */}
+          {/* Right Header Actions: 3-dots Menu for Fragment Actions */}
           <div className="flex items-center gap-2 shrink-0">
             {/* 3-dots Menu for Fragment Actions */}
             <div className="relative" ref={actionsRef}>
@@ -272,63 +254,6 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
                   >
                     <Trash2 className="w-4 h-4" />
                     <span>Delete Fragment</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Quick Profile Dropdown */}
-            <div className="relative" ref={accountRef}>
-              <button
-                onClick={() => setIsAccountOpen((prev) => !prev)}
-                className="flex items-center gap-2 p-1 pl-2 pr-1 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-900 transition-colors text-xs font-mono cursor-pointer"
-                aria-label="User menu"
-              >
-                <span className="hidden sm:inline truncate max-w-[100px]">
-                  {user?.fullname || user?.username || 'Thinker'}
-                </span>
-                {user?.avatar_url ? (
-                  <img
-                    src={user.avatar_url}
-                    alt="Avatar"
-                    className="w-6 h-6 rounded-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none'
-                    }}
-                  />
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-pink-950/80 flex items-center justify-center text-[10px] font-mono text-pink-300">
-                    {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </button>
-
-              {isAccountOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl py-1.5 z-50 animate-in fade-in slide-in-from-top-1">
-                  <div className="px-3 py-2 border-b border-zinc-800/80 mb-1">
-                    <p className="text-xs font-medium text-zinc-200 truncate">
-                      {user?.fullname || user?.username}
-                    </p>
-                    <p className="text-[10px] font-mono text-zinc-400 truncate">{user?.email}</p>
-                  </div>
-
-                  <Link
-                    to="/app/settings"
-                    onClick={() => setIsAccountOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors"
-                  >
-                    <Settings className="w-4 h-4 text-zinc-400" />
-                    <span>Settings</span>
-                  </Link>
-
-                  <div className="my-1 border-t border-zinc-800" />
-
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors text-left cursor-pointer"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Sign Out</span>
                   </button>
                 </div>
               )}
