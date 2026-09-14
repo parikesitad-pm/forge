@@ -8,7 +8,10 @@ export function useReducedMotion(): boolean {
   );
 
   useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    if (
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    ) {
       return;
     }
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');

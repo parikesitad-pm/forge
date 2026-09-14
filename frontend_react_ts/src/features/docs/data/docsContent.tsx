@@ -210,7 +210,7 @@ export const docsSections: DocSection[] = [
             <div className="text-pink-400 pl-4">
               &darr; REST API with Credentials &amp; Cookies
             </div>
-            <div>Rails 8.0.5 Backend on Railway (backend_rails)</div>
+            <div>Rails 8.0.5 Backend (Local / Railway Coming Soon)</div>
             <div className="text-pink-400 pl-4">&darr; Internal Network</div>
             <div className="flex gap-8">
               <span>&bull; PostgreSQL (Railway Managed)</span>
@@ -650,9 +650,16 @@ bin/rails test`}
         </div>
 
         <div className="space-y-3">
-          <h3 className="text-base font-serif font-medium text-zinc-200">
-            2. Backend on Railway
+          <h3 className="text-base font-serif font-medium text-zinc-200 flex items-center gap-2">
+            <span>2. Backend on Railway</span>
+            <span className="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-300 border border-amber-500/20 font-sans">
+              Coming Soon / Paused
+            </span>
           </h3>
+          <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 font-sans leading-relaxed">
+            <strong>Status Notice:</strong> Cloud backend deployment on Railway is currently <em>Disabled / Coming Soon</em> due to an expired token. The full platform runs locally with{' '}
+            <code className="text-pink-400 font-mono">bin/rails server -p 3000</code>.
+          </div>
           <p className="text-xs text-zinc-400 leading-relaxed font-sans">
             Deploy the Rails backend to Railway using the included Dockerfile
             and railway manifest:

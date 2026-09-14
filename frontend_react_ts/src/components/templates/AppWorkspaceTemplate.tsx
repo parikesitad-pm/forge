@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   MoreHorizontal,
   Archive,
@@ -7,20 +7,23 @@ import {
   Trash2,
   ChevronRight,
   PanelLeft,
-} from 'lucide-react'
-import { AppSidebar } from '@/components/organisms/AppSidebar'
-import { MoveToFragmentModal } from '@/components/organisms/MoveToFragmentModal'
-import { useToast } from '@/app/providers/ToastProvider'
-import { useFragments, useDeleteFragment } from '@/features/fragments/hooks/useFragments'
+} from 'lucide-react';
+import { AppSidebar } from '@/components/organisms/AppSidebar';
+import { MoveToFragmentModal } from '@/components/organisms/MoveToFragmentModal';
+import { useToast } from '@/app/providers/ToastProvider';
+import {
+  useFragments,
+  useDeleteFragment,
+} from '@/features/fragments/hooks/useFragments';
 
 interface AppWorkspaceTemplateProps {
-  children: React.ReactNode
-  breadcrumbTitle?: string
-  breadcrumbRoot?: { label: string; href: string }
-  fragmentId?: number | string
-  onDelete?: () => void
-  onArchive?: () => void
-  onMove?: () => void
+  children: React.ReactNode;
+  breadcrumbTitle?: string;
+  breadcrumbRoot?: { label: string; href: string };
+  fragmentId?: number | string;
+  onDelete?: () => void;
+  onArchive?: () => void;
+  onMove?: () => void;
 }
 
 export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
@@ -32,120 +35,125 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
   onArchive,
   onMove,
 }) => {
-  const { toast } = useToast()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { data: allFragments } = useFragments()
-  const { mutateAsync: deleteFragmentMutate } = useDeleteFragment()
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { data: allFragments } = useFragments();
+  const { mutateAsync: deleteFragmentMutate } = useDeleteFragment();
 
   // Sidebar collapse state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
-    return localStorage.getItem('forge_sidebar_collapsed') === 'true'
-  })
+    return localStorage.getItem('forge_sidebar_collapsed') === 'true';
+  });
 
   // Scroll state for header shrink animation
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // 3-dots action menu state
-  const [isActionsOpen, setIsActionsOpen] = useState(false)
-  const actionsRef = useRef<HTMLDivElement>(null)
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   // Move to fragment modal state
-  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false)
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
 
   // Archive view toggle
-  const [isArchiveView, setIsArchiveView] = useState(false)
+  const [isArchiveView, setIsArchiveView] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed((prev) => {
-      const next = !prev
-      localStorage.setItem('forge_sidebar_collapsed', String(next))
-      return next
-    })
-  }
+      const next = !prev;
+      localStorage.setItem('forge_sidebar_collapsed', String(next));
+      return next;
+    });
+  };
 
   // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node
+      const target = event.target as Node;
       if (actionsRef.current && !actionsRef.current.contains(target)) {
-        setIsActionsOpen(false)
+        setIsActionsOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleDeleteFragment = async () => {
-    setIsActionsOpen(false)
+    setIsActionsOpen(false);
     if (onDelete) {
-      onDelete()
-      return
+      onDelete();
+      return;
     }
 
     if (fragmentId) {
-      if (window.confirm('Release this thought fragment? This cannot be undone.')) {
+      if (
+        window.confirm('Release this thought fragment? This cannot be undone.')
+      ) {
         try {
-          await deleteFragmentMutate(fragmentId)
-          toast('Fragment released.', 'success')
-          navigate('/app')
+          await deleteFragmentMutate(fragmentId);
+          toast('Fragment released.', 'success');
+          navigate('/app');
         } catch {
-          toast('Failed to release fragment.', 'error')
+          toast('Failed to release fragment.', 'error');
         }
       }
     } else {
-      toast('No active fragment selected.', 'info')
+      toast('No active fragment selected.', 'info');
     }
-  }
+  };
 
   const handleArchiveFragment = () => {
-    setIsActionsOpen(false)
+    setIsActionsOpen(false);
     if (onArchive) {
-      onArchive()
-      return
+      onArchive();
+      return;
     }
 
     if (fragmentId) {
       try {
         const existing: number[] = JSON.parse(
           localStorage.getItem('forge_archived_fragment_ids') || '[]'
-        )
-        const numericId = Number(fragmentId)
+        );
+        const numericId = Number(fragmentId);
         if (!existing.includes(numericId)) {
-          existing.push(numericId)
-          localStorage.setItem('forge_archived_fragment_ids', JSON.stringify(existing))
+          existing.push(numericId);
+          localStorage.setItem(
+            'forge_archived_fragment_ids',
+            JSON.stringify(existing)
+          );
         }
-        toast('Fragment dipindahkan ke Archive.', 'success')
-        navigate('/app')
+        toast('Fragment dipindahkan ke Archive.', 'success');
+        navigate('/app');
       } catch {
-        toast('Gagal mengarsipkan fragment', 'error')
+        toast('Gagal mengarsipkan fragment', 'error');
       }
     } else {
-      toast('Fragment diarsipkan.', 'success')
+      toast('Fragment diarsipkan.', 'success');
     }
-  }
+  };
 
   const handleOpenMove = () => {
-    setIsActionsOpen(false)
+    setIsActionsOpen(false);
     if (onMove) {
-      onMove()
-      return
+      onMove();
+      return;
     }
-    setIsMoveModalOpen(true)
-  }
+    setIsMoveModalOpen(true);
+  };
 
   // Check if there are other fragments to move to
   const otherFragments = (allFragments || []).filter(
     (f) => String(f.id) !== String(fragmentId)
-  )
-  const canMoveFragment = fragmentId && otherFragments.length > 0
+  );
+  const canMoveFragment = fragmentId && otherFragments.length > 0;
 
   // Breadcrumb display
-  const isSettingsPage = location.pathname.startsWith('/app/settings')
-  const defaultTitle = isSettingsPage ? 'Thinker Profile' : undefined
-  const displayTitle = breadcrumbTitle || defaultTitle
-  const rootLabel = isSettingsPage ? 'Settings' : breadcrumbRoot.label
-  const rootHref = isSettingsPage ? '/app/settings' : breadcrumbRoot.href
+  const isSettingsPage = location.pathname.startsWith('/app/settings');
+  const defaultTitle = isSettingsPage ? 'Thinker Profile' : undefined;
+  const displayTitle = breadcrumbTitle || defaultTitle;
+  const rootLabel = isSettingsPage ? 'Settings' : breadcrumbRoot.label;
+  const rootHref = isSettingsPage ? '/app/settings' : breadcrumbRoot.href;
 
   return (
     <div className="h-screen w-screen bg-zinc-950 text-zinc-100 flex overflow-hidden font-sans">
@@ -187,7 +195,10 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
             )}
 
             {/* Breadcrumbs Navigation */}
-            <nav className="flex items-center gap-1.5 text-xs font-mono min-w-0 truncate" aria-label="Breadcrumb">
+            <nav
+              className="flex items-center gap-1.5 text-xs font-mono min-w-0 truncate"
+              aria-label="Breadcrumb"
+            >
               <Link
                 to={rootHref}
                 className="text-zinc-400 hover:text-zinc-200 transition-colors shrink-0"
@@ -264,7 +275,7 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
         {/* Scrollable Main Content Area with scroll detection */}
         <div
           onScroll={(e) => {
-            setIsScrolled(e.currentTarget.scrollTop > 20)
+            setIsScrolled(e.currentTarget.scrollTop > 20);
           }}
           className="flex-1 overflow-y-auto flex flex-col scrollbar-thin"
         >
@@ -272,5 +283,5 @@ export const AppWorkspaceTemplate: React.FC<AppWorkspaceTemplateProps> = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

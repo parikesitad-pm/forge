@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Plus,
   PanelLeftClose,
@@ -13,17 +13,17 @@ import {
   TrendingUp,
   Archive,
   ChevronsUpDown,
-} from 'lucide-react'
-import { BrandLogo } from '@/components/atoms/BrandLogo'
-import { useFragments } from '@/features/fragments/hooks/useFragments'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { useToast } from '@/app/providers/ToastProvider'
+} from 'lucide-react';
+import { BrandLogo } from '@/components/atoms/BrandLogo';
+import { useFragments } from '@/features/fragments/hooks/useFragments';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useToast } from '@/app/providers/ToastProvider';
 
 interface AppSidebarProps {
-  isCollapsed: boolean
-  onToggleCollapse: () => void
-  isArchiveView?: boolean
-  onToggleArchiveView?: (active: boolean) => void
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+  isArchiveView?: boolean;
+  onToggleArchiveView?: (active: boolean) => void;
 }
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
@@ -32,56 +32,61 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   isArchiveView = false,
   onToggleArchiveView,
 }) => {
-  const { data: fragments } = useFragments()
-  const { user, logout } = useAuth()
-  const { toast } = useToast()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const { data: fragments } = useFragments();
+  const { user, logout } = useAuth();
+  const { toast } = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Archived fragment IDs stored in localStorage
   const [archivedIds] = useState<number[]>(() => {
     try {
-      return JSON.parse(localStorage.getItem('forge_archived_fragment_ids') || '[]')
+      return JSON.parse(
+        localStorage.getItem('forge_archived_fragment_ids') || '[]'
+      );
     } catch {
-      return []
+      return [];
     }
-  })
+  });
 
   // Profile popover menu state
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-  const profileMenuRef = useRef<HTMLDivElement>(null)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
-        setIsProfileMenuOpen(false)
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(e.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const thinkerSince = useMemo(() => {
-    if (!user?.created_at) return 'Thinker since 2026'
+    if (!user?.created_at) return 'Thinker since 2026';
     try {
-      const d = new Date(user.created_at)
-      return `Thinker since ${d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}`
+      const d = new Date(user.created_at);
+      return `Thinker since ${d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}`;
     } catch {
-      return 'Thinker since 2026'
+      return 'Thinker since 2026';
     }
-  }, [user?.created_at])
+  }, [user?.created_at]);
 
   const handleLogout = async () => {
-    await logout()
-    toast('Signed out.', 'info')
-    navigate('/')
-  }
+    await logout();
+    toast('Signed out.', 'info');
+    navigate('/');
+  };
 
   // Filter fragments by archive status
   const visibleFragments = (fragments || []).filter((f) => {
-    const isArchived = archivedIds.includes(f.id)
-    return isArchiveView ? isArchived : !isArchived
-  })
+    const isArchived = archivedIds.includes(f.id);
+    return isArchiveView ? isArchived : !isArchived;
+  });
 
   return (
     <aside
@@ -93,7 +98,11 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       <div className="h-14 px-3.5 flex items-center justify-between">
         {!isCollapsed ? (
           <div className="flex items-center gap-2 group cursor-pointer w-full">
-            <Link to="/app" className="flex items-center gap-2" title="Forge Workspace">
+            <Link
+              to="/app"
+              className="flex items-center gap-2"
+              title="Forge Workspace"
+            >
               <BrandLogo size="sm" showSubBrand={false} />
             </Link>
             <button
@@ -212,43 +221,44 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           </div>
         )}
 
-        {visibleFragments.length > 0 ? (
-          visibleFragments.map((frag) => {
-            const isActive = location.pathname === `/app/fragments/${frag.id}`
-            return (
-              <Link
-                key={frag.id}
-                to={`/app/fragments/${frag.id}`}
-                className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs transition-colors group relative ${
-                  isActive
-                    ? 'bg-zinc-900 text-zinc-100 font-medium'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40'
-                } ${isCollapsed ? 'justify-center px-0' : ''}`}
-                title={frag.seed}
-              >
-                <MessageSquare
-                  className={`w-3.5 h-3.5 shrink-0 ${
-                    isActive ? 'text-pink-400' : 'text-zinc-500 group-hover:text-zinc-400'
-                  }`}
-                />
-                {!isCollapsed && (
-                  <span className="truncate flex-1 font-serif text-[12px] leading-snug">
-                    {frag.seed}
-                  </span>
-                )}
-                {!isCollapsed && frag.sparks_count > 0 && (
-                  <Sparkles className="w-3 h-3 text-amber-400/80 shrink-0" />
-                )}
-              </Link>
-            )
-          })
-        ) : (
-          !isCollapsed && (
-            <div className="px-3 py-6 text-center text-zinc-600 text-xs font-serif italic">
-              {isArchiveView ? 'No archived fragments.' : 'No thoughts yet.'}
-            </div>
-          )
-        )}
+        {visibleFragments.length > 0
+          ? visibleFragments.map((frag) => {
+              const isActive =
+                location.pathname === `/app/fragments/${frag.id}`;
+              return (
+                <Link
+                  key={frag.id}
+                  to={`/app/fragments/${frag.id}`}
+                  className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs transition-colors group relative ${
+                    isActive
+                      ? 'bg-zinc-900 text-zinc-100 font-medium'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/40'
+                  } ${isCollapsed ? 'justify-center px-0' : ''}`}
+                  title={frag.seed}
+                >
+                  <MessageSquare
+                    className={`w-3.5 h-3.5 shrink-0 ${
+                      isActive
+                        ? 'text-pink-400'
+                        : 'text-zinc-500 group-hover:text-zinc-400'
+                    }`}
+                  />
+                  {!isCollapsed && (
+                    <span className="truncate flex-1 font-serif text-[12px] leading-snug">
+                      {frag.seed}
+                    </span>
+                  )}
+                  {!isCollapsed && frag.sparks_count > 0 && (
+                    <Sparkles className="w-3 h-3 text-amber-400/80 shrink-0" />
+                  )}
+                </Link>
+              );
+            })
+          : !isCollapsed && (
+              <div className="px-3 py-6 text-center text-zinc-600 text-xs font-serif italic">
+                {isArchiveView ? 'No archived fragments.' : 'No thoughts yet.'}
+              </div>
+            )}
       </div>
 
       {/* 4. Fixed Bottom Section: Pinned Thinker Profile with Popover */}
@@ -267,12 +277,14 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   alt="Avatar"
                   className="w-8 h-8 rounded-full object-cover shrink-0 border border-zinc-700/60"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none'
+                    e.currentTarget.style.display = 'none';
                   }}
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-pink-950/80 border border-pink-500/30 flex items-center justify-center text-xs font-mono text-pink-300 shrink-0">
-                  {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
+                  {(user?.fullname || user?.username || 'P')
+                    .charAt(0)
+                    .toUpperCase()}
                 </div>
               )}
               <div className="min-w-0 flex-1">
@@ -298,8 +310,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  setIsProfileMenuOpen(false)
-                  handleLogout()
+                  setIsProfileMenuOpen(false);
+                  handleLogout();
                 }}
                 className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors text-left cursor-pointer"
               >
@@ -326,12 +338,14 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               alt="Avatar"
               className="w-7 h-7 rounded-full object-cover shrink-0 border border-zinc-700/60"
               onError={(e) => {
-                e.currentTarget.style.display = 'none'
+                e.currentTarget.style.display = 'none';
               }}
             />
           ) : (
             <div className="w-7 h-7 rounded-full bg-pink-950/80 border border-pink-500/30 flex items-center justify-center text-[11px] font-mono text-pink-300 shrink-0">
-              {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
+              {(user?.fullname || user?.username || 'P')
+                .charAt(0)
+                .toUpperCase()}
             </div>
           )}
 
@@ -352,5 +366,5 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         </button>
       </div>
     </aside>
-  )
-}
+  );
+};

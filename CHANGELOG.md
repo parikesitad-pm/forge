@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Paused Railway backend deployment due to expired token, marking cloud backend as Coming Soon / Disabled across documentation, READMEs, auth pages, and client error diagnostics.
 - Removed redundant username and profile picture from top workspace header, consolidating account controls in the sidebar thinker popover.
 - Hardened `useReducedMotion` hook against headless test environments without `window.matchMedia`.
 - Fixed fragment archive and move actions on `/app/fragments/:id` to persist in storage and invalidate query caches.

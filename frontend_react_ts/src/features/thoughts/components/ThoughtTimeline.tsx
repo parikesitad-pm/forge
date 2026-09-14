@@ -1,53 +1,56 @@
-import React, { useState } from 'react'
-import { Sparkles, Copy, Check } from 'lucide-react'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { useToast } from '@/app/providers/ToastProvider'
-import type { ObservationEntry } from '@/types/fragment.types'
+import React, { useState } from 'react';
+import { Sparkles, Copy, Check } from 'lucide-react';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useToast } from '@/app/providers/ToastProvider';
+import type { ObservationEntry } from '@/types/fragment.types';
 
 interface ThoughtTimelineProps {
-  entries: ObservationEntry[]
-  onToggleSpark: (id: number, currentlyPinned: boolean) => void
-  isSparkPending?: boolean
+  entries: ObservationEntry[];
+  onToggleSpark: (id: number, currentlyPinned: boolean) => void;
+  isSparkPending?: boolean;
 }
 
 export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
   entries,
   onToggleSpark,
 }) => {
-  const { user } = useAuth()
-  const { toast } = useToast()
-  const [copiedId, setCopiedId] = useState<number | null>(null)
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  const displayName = user?.fullname || user?.username || 'You'
+  const displayName = user?.fullname || user?.username || 'You';
 
   const handleCopy = async (id: number, text: string) => {
     try {
-      await navigator.clipboard.writeText(text)
-      setCopiedId(id)
-      toast('Tersalin ke clipboard', 'info')
-      setTimeout(() => setCopiedId((prev) => (prev === id ? null : prev)), 2000)
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      toast('Tersalin ke clipboard', 'info');
+      setTimeout(
+        () => setCopiedId((prev) => (prev === id ? null : prev)),
+        2000
+      );
     } catch {
-      toast('Gagal menyalin', 'error')
+      toast('Gagal menyalin', 'error');
     }
-  }
+  };
 
   if (entries.length === 0) {
     return (
       <div className="py-12 text-center text-xs text-zinc-500 font-serif italic">
         Continue the thought below to begin exploring...
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-4 pb-20">
       {entries.map((entry) => {
-        const isUser = entry.role === 'user'
-        const isCopied = copiedId === entry.id
+        const isUser = entry.role === 'user';
+        const isCopied = copiedId === entry.id;
         const timeString = new Date(entry.created_at).toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
-        })
+        });
 
         return (
           <div
@@ -56,8 +59,8 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
               entry.pinned
                 ? 'bg-amber-950/15 border border-amber-500/20 shadow-sm shadow-amber-950/20'
                 : isUser
-                ? 'bg-zinc-900/40 hover:bg-zinc-900/60 border border-transparent'
-                : 'bg-zinc-950/60 hover:bg-zinc-950/90 border border-transparent'
+                  ? 'bg-zinc-900/40 hover:bg-zinc-900/60 border border-transparent'
+                  : 'bg-zinc-950/60 hover:bg-zinc-950/90 border border-transparent'
             }`}
           >
             {/* Header: Author & Persistent Pinned Spark badge */}
@@ -126,8 +129,8 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
               </div>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};

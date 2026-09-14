@@ -150,6 +150,10 @@ export const RegistrationForm: React.FC = () => {
         <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
           Create a private space for unfinished thoughts.
         </p>
+        <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-800/70 border border-zinc-700/50 text-[11px] text-zinc-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
+          <span>Cloud Backend: <strong className="text-zinc-300 font-normal">Coming Soon</strong> (Token Expired)</span>
+        </div>
       </div>
 
       {serverError && (

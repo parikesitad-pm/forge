@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useRef, useMemo } from 'react';
 import {
   Upload,
   User as UserIcon,
@@ -8,131 +8,138 @@ import {
   Sparkles,
   KeyRound,
   Check,
-} from 'lucide-react'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { useTheme, type Theme } from '@/app/providers/ThemeProvider'
-import { useToast } from '@/app/providers/ToastProvider'
-import { settingsApi } from '@/services/api/settingsApi'
-import { Button } from '@/components/atoms/Button'
-import { Input } from '@/components/atoms/Input'
+} from 'lucide-react';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useTheme, type Theme } from '@/app/providers/ThemeProvider';
+import { useToast } from '@/app/providers/ToastProvider';
+import { settingsApi } from '@/services/api/settingsApi';
+import { Button } from '@/components/atoms/Button';
+import { Input } from '@/components/atoms/Input';
 
 export const SettingsView: React.FC = () => {
-  const { user, refetchUser } = useAuth()
-  const { theme, setTheme } = useTheme()
-  const { toast } = useToast()
+  const { user, refetchUser } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
 
   // Profile fields state
-  const [fullname, setFullname] = useState(user?.fullname || '')
-  const [username, setUsername] = useState(user?.username || '')
-  const [bio, setBio] = useState(user?.bio || '')
-  const [isSavingProfile, setIsSavingProfile] = useState(false)
+  const [fullname, setFullname] = useState(user?.fullname || '');
+  const [username, setUsername] = useState(user?.username || '');
+  const [bio, setBio] = useState(user?.bio || '');
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   // Avatar upload state
-  const [avatarFile, setAvatarFile] = useState<File | null>(null)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Password fields state
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [isSavingPassword, setIsSavingPassword] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isSavingPassword, setIsSavingPassword] = useState(false);
 
   // Formatted Thinker Since
   const thinkerSince = useMemo(() => {
-    if (!user?.created_at) return 'Thinker since 2026'
+    if (!user?.created_at) return 'Thinker since 2026';
     try {
-      const d = new Date(user.created_at)
+      const d = new Date(user.created_at);
       return `Thinker since ${d.toLocaleDateString(undefined, {
         month: 'long',
         year: 'numeric',
-      })}`
+      })}`;
     } catch {
-      return 'Thinker since 2026'
+      return 'Thinker since 2026';
     }
-  }, [user?.created_at])
+  }, [user?.created_at]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      toast('File avatar maksimal 5MB', 'error')
-      return
+      toast('File avatar maksimal 5MB', 'error');
+      return;
     }
 
-    setAvatarFile(file)
-    const reader = new FileReader()
+    setAvatarFile(file);
+    const reader = new FileReader();
     reader.onloadend = () => {
-      setAvatarPreview(reader.result as string)
-    }
-    reader.readAsDataURL(file)
-  }
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleUploadAvatar = async () => {
-    if (!avatarFile) return
+    if (!avatarFile) return;
 
-    setIsUploadingAvatar(true)
+    setIsUploadingAvatar(true);
     try {
-      const formData = new FormData()
-      formData.append('user[avatar]', avatarFile)
+      const formData = new FormData();
+      formData.append('user[avatar]', avatarFile);
 
-      await settingsApi.updateProfile(formData)
-      await refetchUser()
-      setAvatarFile(null)
-      setAvatarPreview(null)
-      toast('Avatar berhasil diperbarui.', 'success')
+      await settingsApi.updateProfile(formData);
+      await refetchUser();
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      toast('Avatar berhasil diperbarui.', 'success');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal mengunggah avatar'
-      toast(msg, 'error')
+      const msg =
+        err instanceof Error ? err.message : 'Gagal mengunggah avatar';
+      toast(msg, 'error');
     } finally {
-      setIsUploadingAvatar(false)
+      setIsUploadingAvatar(false);
     }
-  }
+  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSavingProfile(true)
+    e.preventDefault();
+    setIsSavingProfile(true);
     try {
-      await settingsApi.updateProfile({ fullname, username, bio })
-      await refetchUser()
-      toast('Profil berhasil disimpan.', 'success')
+      await settingsApi.updateProfile({ fullname, username, bio });
+      await refetchUser();
+      toast('Profil berhasil disimpan.', 'success');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal menyimpan profil'
-      toast(msg, 'error')
+      const msg = err instanceof Error ? err.message : 'Gagal menyimpan profil';
+      toast(msg, 'error');
     } finally {
-      setIsSavingProfile(false)
+      setIsSavingProfile(false);
     }
-  }
+  };
 
   const handleSavePassword = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newPassword !== confirmPassword) {
-      toast('Konfirmasi password tidak cocok', 'error')
-      return
+      toast('Konfirmasi password tidak cocok', 'error');
+      return;
     }
 
-    setIsSavingPassword(true)
+    setIsSavingPassword(true);
     try {
       await settingsApi.updatePassword({
         current_password: currentPassword,
         password: newPassword,
         password_confirmation: confirmPassword,
-      })
-      toast('Password berhasil diperbarui.', 'success')
-      setCurrentPassword('')
-      setNewPassword('')
-      setConfirmPassword('')
+      });
+      toast('Password berhasil diperbarui.', 'success');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal memperbarui password'
-      toast(msg, 'error')
+      const msg =
+        err instanceof Error ? err.message : 'Gagal memperbarui password';
+      toast(msg, 'error');
     } finally {
-      setIsSavingPassword(false)
+      setIsSavingPassword(false);
     }
-  }
+  };
 
-  const themeOptions: { id: Theme; label: string; desc: string; icon: React.ReactNode }[] = [
+  const themeOptions: {
+    id: Theme;
+    label: string;
+    desc: string;
+    icon: React.ReactNode;
+  }[] = [
     {
       id: 'dark',
       label: 'Dark Theme',
@@ -151,9 +158,9 @@ export const SettingsView: React.FC = () => {
       desc: 'Sync automatically with OS',
       icon: <Laptop className="w-4 h-4 text-zinc-400" />,
     },
-  ]
+  ];
 
-  const currentDisplayAvatar = avatarPreview || user?.avatar_url
+  const currentDisplayAvatar = avatarPreview || user?.avatar_url;
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4 space-y-10">
@@ -189,7 +196,9 @@ export const SettingsView: React.FC = () => {
               />
             ) : (
               <div className="w-20 h-20 rounded-full bg-pink-950/80 border-2 border-pink-500/40 flex items-center justify-center text-xl font-mono text-pink-300 shadow-lg">
-                {(user?.fullname || user?.username || 'P').charAt(0).toUpperCase()}
+                {(user?.fullname || user?.username || 'P')
+                  .charAt(0)
+                  .toUpperCase()}
               </div>
             )}
 
@@ -251,19 +260,20 @@ export const SettingsView: React.FC = () => {
           Display Theme
         </h2>
         <p className="text-xs text-zinc-400">
-          Pilih tema tampilan favorit kamu. Mode dark aktif secara default tanpa efek flashbang saat refresh.
+          Pilih tema tampilan favorit kamu. Mode dark aktif secara default tanpa
+          efek flashbang saat refresh.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
           {themeOptions.map((opt) => {
-            const isSelected = theme === opt.id
+            const isSelected = theme === opt.id;
             return (
               <button
                 key={opt.id}
                 type="button"
                 onClick={() => {
-                  setTheme(opt.id)
-                  toast(`Tema diubah ke ${opt.label}`, 'info')
+                  setTheme(opt.id);
+                  toast(`Tema diubah ke ${opt.label}`, 'info');
                 }}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                   isSelected
@@ -278,13 +288,15 @@ export const SettingsView: React.FC = () => {
                   {isSelected && <Check className="w-4 h-4 text-pink-400" />}
                 </div>
                 <div>
-                  <p className={`text-xs font-medium ${isSelected ? 'text-zinc-100' : 'text-zinc-300'}`}>
+                  <p
+                    className={`text-xs font-medium ${isSelected ? 'text-zinc-100' : 'text-zinc-300'}`}
+                  >
                     {opt.label}
                   </p>
                   <p className="text-[10px] text-zinc-500 mt-0.5">{opt.desc}</p>
                 </div>
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -415,5 +427,5 @@ export const SettingsView: React.FC = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};

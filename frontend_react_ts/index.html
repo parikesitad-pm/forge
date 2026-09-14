@@ -25,7 +25,10 @@
       (function () {
         try {
           var t = localStorage.getItem('forge_theme') || 'dark';
-          var isDark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var isDark =
+            t === 'dark' ||
+            (t === 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
           if (t === 'light') {
             document.documentElement.classList.add('light');
             document.documentElement.classList.remove('dark');

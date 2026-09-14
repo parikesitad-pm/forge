@@ -39,8 +39,10 @@ bin/rails test
 ---
 
 ## 🚢 Production & Deployment
-
+ 
 Containerized via `Dockerfile` and configured for Railway with `railway.json`. Healthcheck endpoint is available at `/up`.
+
+> **Status:** Cloud deployment on Railway is currently **Coming Soon / Disabled** due to an expired token. The platform runs completely locally via `bin/rails server -b 0.0.0.0 -p 3000`.
 
 ---
 

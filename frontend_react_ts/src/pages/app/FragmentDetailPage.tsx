@@ -1,94 +1,111 @@
-import React, { useRef, useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
-import { AppWorkspaceTemplate } from '@/components/templates/AppWorkspaceTemplate'
-import { useFragment, useDeleteFragment } from '@/features/fragments/hooks/useFragments'
+import React, { useRef, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { AppWorkspaceTemplate } from '@/components/templates/AppWorkspaceTemplate';
+import {
+  useFragment,
+  useDeleteFragment,
+} from '@/features/fragments/hooks/useFragments';
 import {
   useAddThought,
   useObserveFragment,
   useToggleSpark,
-} from '@/features/thoughts/hooks/useThoughtTimeline'
-import { SeedHeader } from '@/features/thoughts/components/SeedHeader'
-import { ThoughtTimeline } from '@/features/thoughts/components/ThoughtTimeline'
-import { ThoughtComposer } from '@/features/thoughts/components/ThoughtComposer'
-import { OwlThinkingState } from '@/features/owl/components/OwlThinkingState'
-import { SparkPanel } from '@/features/sparks/components/SparkPanel'
-import { GrowthPanel } from '@/features/growth/components/GrowthPanel'
-import { Spinner } from '@/components/atoms/Spinner'
-import { ThoughtDetailSkeleton } from '@/components/atoms/Skeleton'
-import { useToast } from '@/app/providers/ToastProvider'
+} from '@/features/thoughts/hooks/useThoughtTimeline';
+import { SeedHeader } from '@/features/thoughts/components/SeedHeader';
+import { ThoughtTimeline } from '@/features/thoughts/components/ThoughtTimeline';
+import { ThoughtComposer } from '@/features/thoughts/components/ThoughtComposer';
+import { OwlThinkingState } from '@/features/owl/components/OwlThinkingState';
+import { SparkPanel } from '@/features/sparks/components/SparkPanel';
+import { GrowthPanel } from '@/features/growth/components/GrowthPanel';
+import { Spinner } from '@/components/atoms/Spinner';
+import { ThoughtDetailSkeleton } from '@/components/atoms/Skeleton';
+import { useToast } from '@/app/providers/ToastProvider';
 
 export const FragmentDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const { data: fragment, isLoading, isError } = useFragment(id)
-  const { mutateAsync: addThought, isPending: isAddingThought } = useAddThought(id || '')
-  const { mutateAsync: triggerObserve, isPending: isObserving } = useObserveFragment(id || '')
-  const { mutate: toggleSpark } = useToggleSpark(id || '')
-  const { mutateAsync: deleteFragment } = useDeleteFragment()
-  const { toast } = useToast()
-  const timelineEndRef = useRef<HTMLDivElement>(null)
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { data: fragment, isLoading, isError } = useFragment(id);
+  const { mutateAsync: addThought, isPending: isAddingThought } = useAddThought(
+    id || ''
+  );
+  const { mutateAsync: triggerObserve, isPending: isObserving } =
+    useObserveFragment(id || '');
+  const { mutate: toggleSpark } = useToggleSpark(id || '');
+  const { mutateAsync: deleteFragment } = useDeleteFragment();
+  const { toast } = useToast();
+  const timelineEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom of thoughts when new entries arrive
   useEffect(() => {
     if (fragment?.entries?.length) {
-      timelineEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      timelineEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [fragment?.entries?.length, isObserving])
+  }, [fragment?.entries?.length, isObserving]);
 
   const handleAddThought = async (content: string) => {
-    if (!id) return
+    if (!id) return;
     try {
-      await addThought(content)
+      await addThought(content);
       triggerObserve().catch(() => {
         // Fallback handled in service
-      })
+      });
     } catch {
-      toast('Failed to record thought', 'error')
+      toast('Failed to record thought', 'error');
     }
-  }
+  };
 
-  const handleToggleSpark = (observationId: number, currentlyPinned: boolean) => {
+  const handleToggleSpark = (
+    observationId: number,
+    currentlyPinned: boolean
+  ) => {
     toggleSpark(
       { observationId, currentlyPinned },
       {
         onSuccess: () => {
-          toast(currentlyPinned ? 'Spark released.' : 'Kept as Spark. ✦', 'success')
+          toast(
+            currentlyPinned ? 'Spark released.' : 'Kept as Spark. ✦',
+            'success'
+          );
         },
       }
-    )
-  }
+    );
+  };
 
   const handleDelete = async () => {
-    if (!id) return
-    if (window.confirm('Release this thought fragment? This cannot be undone.')) {
+    if (!id) return;
+    if (
+      window.confirm('Release this thought fragment? This cannot be undone.')
+    ) {
       try {
-        await deleteFragment(id)
-        toast('Fragment released.', 'success')
-        navigate('/app')
+        await deleteFragment(id);
+        toast('Fragment released.', 'success');
+        navigate('/app');
       } catch {
-        toast('Failed to release fragment.', 'error')
+        toast('Failed to release fragment.', 'error');
       }
     }
-  }
+  };
 
   const handleArchive = () => {
-    if (!id) return
+    if (!id) return;
     try {
       const existing: number[] = JSON.parse(
         localStorage.getItem('forge_archived_fragment_ids') || '[]'
-      )
-      const numericId = Number(id)
+      );
+      const numericId = Number(id);
       if (!existing.includes(numericId)) {
-        existing.push(numericId)
-        localStorage.setItem('forge_archived_fragment_ids', JSON.stringify(existing))
+        existing.push(numericId);
+        localStorage.setItem(
+          'forge_archived_fragment_ids',
+          JSON.stringify(existing)
+        );
       }
-      toast('Fragment berhasil dipindahkan ke Archive.', 'success')
-      navigate('/app')
+      toast('Fragment berhasil dipindahkan ke Archive.', 'success');
+      navigate('/app');
     } catch {
-      toast('Gagal mengarsipkan fragment', 'error')
+      toast('Gagal mengarsipkan fragment', 'error');
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -101,20 +118,25 @@ export const FragmentDetailPage: React.FC = () => {
           <ThoughtDetailSkeleton />
         </div>
       </AppWorkspaceTemplate>
-    )
+    );
   }
 
   if (isError || !fragment) {
     return (
       <AppWorkspaceTemplate breadcrumbTitle="Not Found">
         <div className="py-20 text-center space-y-4 px-4">
-          <p className="text-sm text-zinc-400 font-serif">Fragment not found or has been released.</p>
-          <Link to="/app" className="inline-flex items-center gap-1.5 text-xs text-pink-400 hover:underline font-mono">
+          <p className="text-sm text-zinc-400 font-serif">
+            Fragment not found or has been released.
+          </p>
+          <Link
+            to="/app"
+            className="inline-flex items-center gap-1.5 text-xs text-pink-400 hover:underline font-mono"
+          >
             <ArrowLeft className="w-3 h-3" /> Return to thinking workspace
           </Link>
         </div>
       </AppWorkspaceTemplate>
-    )
+    );
   }
 
   return (
@@ -169,5 +191,5 @@ export const FragmentDetailPage: React.FC = () => {
         </div>
       </div>
     </AppWorkspaceTemplate>
-  )
-}
+  );
+};
