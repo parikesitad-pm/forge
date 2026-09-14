@@ -1,59 +1,64 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { Sprout, Sparkles, ArrowLeft, Globe } from 'lucide-react'
-import { BrandLogo } from '@/components/atoms/BrandLogo'
-import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas'
-import { Spinner } from '@/components/atoms/Spinner'
-import { fragmentsApi } from '@/services/api/fragmentsApi'
-import type { SharedFragmentDetail } from '@/types/fragment.types'
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Sprout, Sparkles, ArrowLeft, Globe } from 'lucide-react';
+import { BrandLogo } from '@/components/atoms/BrandLogo';
+import { NeuralCanvas } from '@/features/landing/components/NeuralCanvas';
+import { Spinner } from '@/components/atoms/Spinner';
+import { fragmentsApi } from '@/services/api/fragmentsApi';
+import type { SharedFragmentDetail } from '@/types/fragment.types';
 
 export const SharedFragmentPage: React.FC = () => {
-  const { username, shareSlug } = useParams<{ username: string; shareSlug: string }>()
-  const [data, setData] = useState<SharedFragmentDetail | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { username, shareSlug } = useParams<{
+    username: string;
+    shareSlug: string;
+  }>();
+  const [data, setData] = useState<SharedFragmentDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!username || !shareSlug) {
-      setError('Invalid link')
-      setIsLoading(false)
-      return
+      setError('Invalid link');
+      setIsLoading(false);
+      return;
     }
 
-    let isMounted = true
-    setIsLoading(true)
-    setError(null)
+    let isMounted = true;
+    setIsLoading(true);
+    setError(null);
 
     fragmentsApi
       .getShared(username, shareSlug)
       .then((res) => {
-        if (isMounted) setData(res)
+        if (isMounted) setData(res);
       })
       .catch((err: unknown) => {
         if (isMounted) {
           const msg =
             err instanceof Error
               ? err.message
-              : 'This shared fragment is private or has been revoked.'
-          setError(msg)
+              : 'This shared fragment is private or has been revoked.';
+          setError(msg);
         }
       })
       .finally(() => {
-        if (isMounted) setIsLoading(false)
-      })
+        if (isMounted) setIsLoading(false);
+      });
 
     return () => {
-      isMounted = false
-    }
-  }, [username, shareSlug])
+      isMounted = false;
+    };
+  }, [username, shareSlug]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center justify-center gap-3">
         <Spinner size="lg" />
-        <span className="text-xs font-mono text-zinc-500">Opening shared thought...</span>
+        <span className="text-xs font-mono text-zinc-500">
+          Opening shared thought...
+        </span>
       </div>
-    )
+    );
   }
 
   if (error || !data) {
@@ -62,9 +67,12 @@ export const SharedFragmentPage: React.FC = () => {
         <NeuralCanvas className="opacity-20 fixed inset-0 pointer-events-none" />
         <div className="relative z-10 max-w-md space-y-4 p-8 rounded-2xl bg-zinc-900/70 border border-zinc-800 shadow-2xl backdrop-blur-md">
           <BrandLogo size="md" showSubBrand className="mx-auto mb-2" />
-          <h1 className="text-lg font-serif text-zinc-200">Shared Fragment Unavailable</h1>
+          <h1 className="text-lg font-serif text-zinc-200">
+            Shared Fragment Unavailable
+          </h1>
           <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-            {error || 'This link may have expired, been revoked, or made private by its author.'}
+            {error ||
+              'This link may have expired, been revoked, or made private by its author.'}
           </p>
           <div className="pt-2">
             <Link
@@ -76,11 +84,12 @@ export const SharedFragmentPage: React.FC = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const authorName = data.author?.calling_name || data.author?.username || 'Thinker'
-  const authorUsername = data.author?.username || 'thinker'
+  const authorName =
+    data.author?.calling_name || data.author?.username || 'Thinker';
+  const authorUsername = data.author?.username || 'thinker';
 
   return (
     <div className="relative min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between selection:bg-pink-500/30">
@@ -90,7 +99,9 @@ export const SharedFragmentPage: React.FC = () => {
       <header className="relative z-10 sticky top-0 h-14 px-4 sm:px-8 flex items-center justify-between border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-md">
         <Link to="/" className="flex items-center gap-2.5">
           <BrandLogo size="sm" showSubBrand={false} asLink={false} />
-          <span className="font-serif font-medium text-sm text-zinc-200">Forge</span>
+          <span className="font-serif font-medium text-sm text-zinc-200">
+            Forge
+          </span>
         </Link>
 
         <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
@@ -127,24 +138,27 @@ export const SharedFragmentPage: React.FC = () => {
               {data.title}
             </p>
           )}
-        </div>
 
-        {/* Kept Sparks (if any) */}
-        {data.sparks && data.sparks.length > 0 && (
-          <div className="p-4 rounded-2xl bg-amber-950/20 border border-amber-500/25 space-y-2">
-            <div className="flex items-center gap-1.5 text-xs font-mono text-amber-400 font-medium">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Kept Sparks</span>
+          {/* Active Sparks attached directly beneath the seed */}
+          {data.sparks && data.sparks.length > 0 && (
+            <div className="mt-3 pt-2.5 border-t border-zinc-800/60 space-y-2">
+              <div className="flex items-center gap-1.5 text-[11px] font-mono text-amber-400 font-medium">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Active Sparks ({data.sparks.length})</span>
+              </div>
+              <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1 scrollbar-thin">
+                {data.sparks.map((s) => (
+                  <p
+                    key={s.id}
+                    className="text-xs text-amber-200/90 font-serif italic py-1 px-2.5 rounded-lg bg-zinc-900/60 border-l-2 border-amber-400/80"
+                  >
+                    ✦ &ldquo;{s.content}&rdquo;
+                  </p>
+                ))}
+              </div>
             </div>
-            <div className="space-y-1.5">
-              {data.sparks.map((s) => (
-                <p key={s.id} className="text-xs text-amber-200/90 font-serif italic">
-                  ✦ &ldquo;{s.content}&rdquo;
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Thought Evolution Timeline */}
         <div className="space-y-3 pb-8">
@@ -153,11 +167,14 @@ export const SharedFragmentPage: React.FC = () => {
           </div>
 
           {data.entries.map((entry) => {
-            const isUser = entry.role === 'user'
-            const timeString = new Date(entry.created_at).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            })
+            const isUser = entry.role === 'user';
+            const timeString = new Date(entry.created_at).toLocaleTimeString(
+              [],
+              {
+                hour: '2-digit',
+                minute: '2-digit',
+              }
+            );
 
             return (
               <div
@@ -172,14 +189,18 @@ export const SharedFragmentPage: React.FC = () => {
               >
                 <div className="flex items-center justify-between text-[11px] font-mono mb-1.5">
                   {isUser ? (
-                    <span className="text-zinc-300 font-medium">{authorName}</span>
+                    <span className="text-zinc-300 font-medium">
+                      {authorName}
+                    </span>
                   ) : (
                     <span className="flex items-center gap-1 text-pink-400 font-medium">
                       <Sparkles className="w-3 h-3" />
                       Owl
                     </span>
                   )}
-                  <span className="text-zinc-500 text-[10px]">{timeString}</span>
+                  <span className="text-zinc-500 text-[10px]">
+                    {timeString}
+                  </span>
                 </div>
 
                 <p
@@ -190,7 +211,7 @@ export const SharedFragmentPage: React.FC = () => {
                   {!isUser ? `\u201C${entry.content}\u201D` : entry.content}
                 </p>
               </div>
-            )
+            );
           })}
         </div>
       </main>
@@ -208,5 +229,5 @@ export const SharedFragmentPage: React.FC = () => {
         </p>
       </footer>
     </div>
-  )
-}
+  );
+};
