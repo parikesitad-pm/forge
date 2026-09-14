@@ -5,6 +5,7 @@ import { ArrowRight, Compass } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { useAuth } from '@/app/providers/AuthProvider'
+import { isProductionAuthReady } from '@/lib/deployment'
 
 export const LandingHero: React.FC = () => {
   const { authStatus } = useAuth()
@@ -68,11 +69,19 @@ export const LandingHero: React.FC = () => {
           </>
         ) : (
           <>
-            <Link to="/register">
-              <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/20">
-                Start Thinking <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
+            {isProductionAuthReady() ? (
+              <Link to="/register">
+                <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/20">
+                  Start Thinking <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/faq#deployment">
+                <Button variant="primary" size="lg" className="px-8 shadow-lg shadow-pink-600/20" title="Cloud backend paused · Click to see deployment guide">
+                  Coming Soon <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+            )}
             <a href="#how-it-works">
               <Button variant="secondary" size="lg" className="px-6">
                 <Compass className="w-4 h-4 mr-1 text-zinc-400" /> See how Forge works

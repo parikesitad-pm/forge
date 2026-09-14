@@ -8,6 +8,8 @@ import { FragmentDetailPage } from '@/pages/app/FragmentDetailPage'
 import { SettingsPage } from '@/pages/app/SettingsPage'
 import { ContinueThinkingPage } from '@/pages/app/ContinueThinkingPage'
 import { DocsPage } from '@/pages/docs/DocsPage'
+import { FaqPage } from '@/pages/public/FaqPage'
+import { SharedFragmentPage } from '@/pages/public/SharedFragmentPage'
 import { useAuth } from './providers/AuthProvider'
 import { Spinner } from '@/components/atoms/Spinner'
 
@@ -52,6 +54,18 @@ export const router = createBrowserRouter([
   {
     path: '/docs',
     element: <DocsPage />,
+  },
+  {
+    path: '/faq',
+    element: <FaqPage />,
+  },
+  {
+    path: '/share/:username/:shareSlug',
+    element: <SharedFragmentPage />,
+  },
+  {
+    path: '/share/@:username/:shareSlug',
+    element: <SharedFragmentPage />,
   },
   {
     path: '/login',

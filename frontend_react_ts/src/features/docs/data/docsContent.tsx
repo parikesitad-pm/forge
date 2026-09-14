@@ -657,8 +657,13 @@ bin/rails test`}
             </span>
           </h3>
           <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 font-sans leading-relaxed">
-            <strong>Status Notice:</strong> Cloud backend deployment on Railway is currently <em>Disabled / Coming Soon</em> due to an expired token. The full platform runs locally with{' '}
-            <code className="text-pink-400 font-mono">bin/rails server -p 3000</code>.
+            <strong>Status Notice:</strong> Cloud backend deployment on Railway
+            is currently <em>Disabled / Coming Soon</em> due to an expired
+            token. The full platform runs locally with{' '}
+            <code className="text-pink-400 font-mono">
+              bin/rails server -p 3000
+            </code>
+            .
           </div>
           <p className="text-xs text-zinc-400 leading-relaxed font-sans">
             Deploy the Rails backend to Railway using the included Dockerfile

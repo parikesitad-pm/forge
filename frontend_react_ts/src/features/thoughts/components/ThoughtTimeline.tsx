@@ -18,7 +18,12 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
   const { toast } = useToast();
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  const displayName = user?.fullname || user?.username || 'You';
+  const displayName =
+    user?.calling_name ||
+    user?.preferred_name ||
+    user?.fullname ||
+    user?.username ||
+    'You';
 
   const handleCopy = async (id: number, text: string) => {
     try {
@@ -43,7 +48,7 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
   }
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-3 pb-20">
       {entries.map((entry) => {
         const isUser = entry.role === 'user';
         const isCopied = copiedId === entry.id;
@@ -55,7 +60,7 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
         return (
           <div
             key={entry.id}
-            className={`group relative p-4 rounded-2xl transition-all ${
+            className={`group relative p-3 sm:p-3.5 rounded-2xl transition-all ${
               entry.pinned
                 ? 'bg-amber-950/15 border border-amber-500/20 shadow-sm shadow-amber-950/20'
                 : isUser
@@ -64,19 +69,19 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
             }`}
           >
             {/* Header: Author & Persistent Pinned Spark badge */}
-            <div className="flex items-center justify-between text-xs font-mono mb-1.5">
+            <div className="flex items-center justify-between text-[11px] font-mono mb-1">
               {isUser ? (
                 <span className="text-zinc-300 font-medium">{displayName}</span>
               ) : (
-                <span className="flex items-center gap-1.5 text-pink-400 font-medium">
-                  <Sparkles className="w-3.5 h-3.5" />
+                <span className="flex items-center gap-1 text-pink-400 font-medium">
+                  <Sparkles className="w-3 h-3" />
                   Owl
                 </span>
               )}
 
               {/* Persistent pinned spark indicator */}
               {entry.pinned && (
-                <span className="text-[11px] font-mono text-amber-400 flex items-center gap-1">
+                <span className="text-[10px] font-mono text-amber-400 flex items-center gap-1">
                   ✦ Spark
                 </span>
               )}
@@ -84,8 +89,8 @@ export const ThoughtTimeline: React.FC<ThoughtTimelineProps> = ({
 
             {/* Message Content */}
             <p
-              className={`text-sm sm:text-base text-zinc-200 font-serif leading-relaxed whitespace-pre-wrap ${
-                !isUser ? 'italic' : ''
+              className={`text-[13px] sm:text-[14px] text-zinc-200 font-serif leading-relaxed whitespace-pre-wrap ${
+                !isUser ? 'italic text-zinc-300' : ''
               }`}
             >
               {!isUser ? `\u201C${entry.content}\u201D` : entry.content}

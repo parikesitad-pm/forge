@@ -20,7 +20,7 @@ Forge is an editorial thinking companion designed for non-linear thought develop
 ## 🔗 Live Deployments & Links
 
 - **Production Web App:** [https://frontendreactts.vercel.app](https://frontendreactts.vercel.app)
-- **Cloud Backend (Railway):** *Coming Soon / Temporarily Disabled (Token Expired)* — run locally with `bin/rails server -p 3000`
+- **Cloud Backend (Railway):** _Coming Soon / Temporarily Disabled (Token Expired)_ — run locally with `bin/rails server -p 3000`
 - **GitHub Repository:** [https://github.com/parikesitad-pm/forge](https://github.com/parikesitad-pm/forge)
 - **Interactive Documentation:** Reachable in-app at [`/docs`](https://frontendreactts.vercel.app/docs)
 - **OpenAPI 3.0 Explorer:** Available at `/api/docs` on the Rails backend
@@ -107,7 +107,7 @@ npm run build
 ## ☁️ Deployment Architecture
 
 - **Frontend (Vercel):** Deployed as a single-page application (SPA) with automatic SPA routing rewrites and edge caching at [frontendreactts.vercel.app](https://frontendreactts.vercel.app).
-- **Backend (Railway):** *Coming Soon / Temporarily Disabled (Token Expired)*. Containerized Docker manifest (`railway.json`) and `/up` healthcheck are prepared. Full backend capability is run locally via `bin/rails server -p 3000`.
+- **Backend (Railway):** _Coming Soon / Temporarily Disabled (Token Expired)_. Containerized Docker manifest (`railway.json`) and `/up` healthcheck are prepared. Full backend capability is run locally via `bin/rails server -p 3000`.
 
 ---
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_25_090533) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_14_141001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -47,6 +47,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_090533) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.string "title"
+    t.datetime "archived_at"
+    t.string "share_token"
+    t.string "share_slug"
+    t.datetime "shared_at"
+    t.index ["archived_at"], name: "index_fragments_on_archived_at"
+    t.index ["share_token"], name: "index_fragments_on_share_token", unique: true
     t.index ["user_id"], name: "index_fragments_on_user_id"
   end
 
@@ -68,6 +75,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_090533) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_memories", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.text "content", null: false
+    t.string "source", default: "explicit", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "title"], name: "index_user_memories_on_user_id_and_title"
+    t.index ["user_id"], name: "index_user_memories_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -76,10 +94,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_25_090533) do
     t.string "username"
     t.string "fullname"
     t.text "bio"
+    t.string "preferred_name"
+    t.date "date_of_birth"
+    t.jsonb "interests", default: []
+    t.text "owl_instructions"
+    t.boolean "use_memory", default: true
+    t.jsonb "seen_journey_milestones", default: []
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "fragments", "users"
   add_foreign_key "observations", "fragments"
+  add_foreign_key "user_memories", "users"
 end

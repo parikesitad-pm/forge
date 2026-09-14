@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { BrandLogo } from '@/components/atoms/BrandLogo'
 import { Button } from '@/components/atoms/Button'
 import { useAuth } from '@/app/providers/AuthProvider'
+import { isProductionAuthReady } from '@/lib/deployment'
 
 export const LandingNavbar: React.FC = () => {
   const { authStatus } = useAuth()
@@ -19,6 +20,9 @@ export const LandingNavbar: React.FC = () => {
           <a href="#philosophy" className="hover:text-zinc-100 transition-colors">
             Philosophy
           </a>
+          <Link to="/faq" className="hover:text-zinc-100 transition-colors">
+            FAQ
+          </Link>
           <Link to="/docs" className="hover:text-zinc-100 transition-colors">
             Documentation
           </Link>
@@ -36,7 +40,7 @@ export const LandingNavbar: React.FC = () => {
                 Continue thinking
               </Button>
             </Link>
-          ) : (
+          ) : isProductionAuthReady() ? (
             <div className="flex items-center gap-3">
               <Link to="/login">
                 <Button variant="ghost" size="sm">
@@ -46,6 +50,14 @@ export const LandingNavbar: React.FC = () => {
               <Link to="/register">
                 <Button variant="primary" size="sm">
                   Start Thinking
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to="/faq#deployment">
+                <Button variant="primary" size="sm" className="text-xs">
+                  Coming Soon
                 </Button>
               </Link>
             </div>

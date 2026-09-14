@@ -19,6 +19,17 @@ Rails.application.routes.draw do
 
       # Fragments & Seed
       resources :fragments, only: [ :index, :show, :create, :destroy ] do
+        collection do
+          get :archived
+        end
+        member do
+          patch :rename
+          patch :archive
+          patch :restore
+          post  :share
+          delete :share, to: "fragments#revoke_share"
+        end
+
         # Entries & Owl observations
         resources :entries, only: [ :create ], controller: "observations"
         post "owl/observe", to: "observations#observe"
@@ -30,14 +41,26 @@ Rails.application.routes.draw do
         resource :growth, only: [ :show ], controller: "growth"
       end
 
+      # Public shared fragment read-only view
+      get "/share/:username/:share_slug", to: "shared_fragments#show"
+
+      # User memories (transparent contextual memory)
+      resources :memories, controller: "user_memories", only: [ :index, :create, :update, :destroy ] do
+        collection do
+          patch :toggle
+        end
+      end
+
       # Observations / Sparks actions
       post   "/observations/:id/spark", to: "sparks#pin"
       delete "/observations/:id/spark", to: "sparks#unpin"
 
       # User settings
       resource :settings, only: [ :show ] do
-        patch :profile, to: "settings#update_profile"
-        patch :password, to: "settings#update_password"
+        patch  :profile,           to: "settings#update_profile"
+        patch  :password,          to: "settings#update_password"
+        post   :journey_milestone, to: "settings#record_journey_milestone"
+        delete :account,           to: "settings#destroy_account"
       end
     end
   end

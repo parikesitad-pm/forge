@@ -47,6 +47,11 @@ export const LandingFooter: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/faq" className="hover:text-zinc-100 transition-colors">
+                  FAQ & Deployment
+                </Link>
+              </li>
+              <li>
                 <a
                   href="/api/docs"
                   target="_blank"

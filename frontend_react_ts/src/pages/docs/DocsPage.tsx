@@ -15,18 +15,34 @@ export const DocsPage: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
+  const [showSwaggerNotice, setShowSwaggerNotice] = useState(false);
 
-  // Handle hash scrolling on mount or hash change
+  const isLocal =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '0.0.0.0');
+
+  // Stale scroll restoration fix & reset scroll to (0, 0) unless hash present
   useEffect(() => {
+    if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
     const hash = window.location.hash.replace('#', '');
     if (hash && docsSections.some((s) => s.id === hash)) {
       setActiveSection(hash);
-      const el = document.getElementById(hash);
-      if (el && typeof el.scrollIntoView === 'function') {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
+      const timer = setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el && typeof el.scrollIntoView === 'function') {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      setActiveSection('overview');
     }
-  }, [location]);
+  }, [location.pathname]);
 
   // Robust ScrollSpy and reading progress tracking
   useEffect(() => {
@@ -48,7 +64,7 @@ export const DocsPage: React.FC = () => {
       // If user reaches near the bottom of document, activate the last section
       if (
         window.innerHeight + scrollY >=
-        document.documentElement.scrollHeight - 60
+        document.documentElement.scrollHeight - 80
       ) {
         if (docsSections.length > 0) {
           setActiveSection(docsSections[docsSections.length - 1].id);
@@ -62,7 +78,7 @@ export const DocsPage: React.FC = () => {
         const el = document.getElementById(section.id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 160) {
+          if (rect.top <= 200) {
             currentId = section.id;
           }
         }
@@ -86,11 +102,20 @@ export const DocsPage: React.FC = () => {
     }
   };
 
+  const handleSwaggerClick = (e: React.MouseEvent) => {
+    if (isLocal) {
+      window.open('http://localhost:3000/api/docs', '_blank');
+    } else {
+      e.preventDefault();
+      setShowSwaggerNotice(true);
+    }
+  };
+
   const activeDoc =
     docsSections.find((s) => s.id === activeSection) || docsSections[0];
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans relative overflow-x-clip">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans relative">
       {/* Animated neural canvas background */}
       <NeuralCanvas className="opacity-25 fixed inset-0 pointer-events-none z-0" />
 
@@ -128,10 +153,10 @@ export const DocsPage: React.FC = () => {
 
           <div className="flex items-center gap-3 shrink-0">
             <a
-              href="/api/docs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors hidden md:flex items-center gap-1 font-mono"
+              href={isLocal ? 'http://localhost:3000/api/docs' : '#swagger'}
+              onClick={handleSwaggerClick}
+              className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors hidden md:flex items-center gap-1 font-mono cursor-pointer"
+              title="Open Swagger API documentation"
             >
               <span>Swagger API</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -192,7 +217,7 @@ export const DocsPage: React.FC = () => {
       {/* Documentation Layout with Sticky Desktop Sidebar */}
       <div className="max-w-7xl w-full mx-auto px-6 py-8 flex-1 flex gap-12">
         {/* Sticky Desktop Sidebar: pinned to top below header, scrolls internally with scrollbar */}
-        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-3 scrollbar-thin">
+        <aside className="hidden md:block w-64 flex-shrink-0 sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-3 scrollbar-thin">
           <DocsSidebar
             sections={docsSections}
             activeSection={activeSection}
@@ -214,6 +239,68 @@ export const DocsPage: React.FC = () => {
           ))}
         </main>
       </div>
+
+      {/* Swagger UI Modal Notice for Hosted Environments */}
+      {showSwaggerNotice && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in"
+        >
+          <div className="relative max-w-md w-full bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-800/80">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-pink-500/10 rounded-xl text-pink-400">
+                  <ArrowUpRight className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-medium text-zinc-100">API Documentation</h3>
+                  <p className="text-[11px] font-mono text-zinc-500">Interactive Swagger UI</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowSwaggerNotice(false)}
+                className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded-lg hover:bg-zinc-900 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-300 leading-relaxed font-sans">
+              The interactive Swagger UI runs with the backend server. In local development, it is served directly at{' '}
+              <code className="text-pink-400 font-mono text-[11px] bg-zinc-900 px-1.5 py-0.5 rounded">http://localhost:3000/api/docs</code>.
+            </p>
+
+            <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/60 space-y-2 text-xs">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+                Local Backend Instructions:
+              </span>
+              <ol className="list-decimal list-inside space-y-1 text-zinc-300 font-mono text-[11px]">
+                <li>cd backend_rails</li>
+                <li>bundle exec rails s -b 0.0.0.0 -p 3000</li>
+                <li>Open http://localhost:3000/api/docs</li>
+              </ol>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Link
+                to="/faq#api-docs"
+                onClick={() => setShowSwaggerNotice(false)}
+                className="px-4 py-2 rounded-xl text-xs text-pink-400 hover:text-pink-300 font-medium transition-colors"
+              >
+                View in FAQ
+              </Link>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setShowSwaggerNotice(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-zinc-900 py-8 px-6 text-center text-xs text-zinc-500 font-mono">

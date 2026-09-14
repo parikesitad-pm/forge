@@ -11,7 +11,18 @@ export function useFragments() {
     queryKey: queryKeys.fragments.all,
     queryFn: () => fragmentsApi.getAll(),
     enabled: isAuthenticated,
-    staleTime: 1000 * 60, // 1 minute
+    staleTime: 1000 * 30, // 30 seconds
+  })
+}
+
+export function useArchivedFragments() {
+  const { isAuthenticated } = useAuth()
+
+  return useQuery({
+    queryKey: ['fragments', 'archived'],
+    queryFn: () => fragmentsApi.getArchived(),
+    enabled: isAuthenticated,
+    staleTime: 1000 * 30,
   })
 }
 
@@ -36,6 +47,67 @@ export function useCreateFragment() {
   })
 }
 
+export function useRenameFragment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, title }: { id: number | string; title: string }) =>
+      fragmentsApi.rename(id, title),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.detail(data.id) })
+    },
+  })
+}
+
+export function useArchiveFragment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number | string) => fragmentsApi.archive(id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.all })
+      queryClient.invalidateQueries({ queryKey: ['fragments', 'archived'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.detail(data.id) })
+    },
+  })
+}
+
+export function useRestoreFragment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number | string) => fragmentsApi.restore(id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.all })
+      queryClient.invalidateQueries({ queryKey: ['fragments', 'archived'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.detail(data.id) })
+    },
+  })
+}
+
+export function useShareFragment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number | string) => fragmentsApi.share(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.detail(id) })
+    },
+  })
+}
+
+export function useRevokeShareFragment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number | string) => fragmentsApi.revokeShare(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.fragments.detail(id) })
+    },
+  })
+}
+
 export function useDeleteFragment() {
   const queryClient = useQueryClient()
 
@@ -43,6 +115,7 @@ export function useDeleteFragment() {
     mutationFn: (id: number | string) => fragmentsApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.fragments.all })
+      queryClient.invalidateQueries({ queryKey: ['fragments', 'archived'] })
     },
   })
 }

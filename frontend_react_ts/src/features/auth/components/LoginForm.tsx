@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
-import { loginSchema, type LoginFormData } from '../schemas/authSchemas'
-import { useAuth } from '@/app/providers/AuthProvider'
-import { useToast } from '@/app/providers/ToastProvider'
-import { Button } from '@/components/atoms/Button'
-import { Input } from '@/components/atoms/Input'
-import { BrandLogo } from '@/components/atoms/BrandLogo'
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
+import { loginSchema, type LoginFormData } from '../schemas/authSchemas';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useToast } from '@/app/providers/ToastProvider';
+import { Button } from '@/components/atoms/Button';
+import { Input } from '@/components/atoms/Input';
+import { BrandLogo } from '@/components/atoms/BrandLogo';
 
 export const LoginForm: React.FC = () => {
-  const { login } = useAuth()
-  const { toast } = useToast()
-  const navigate = useNavigate()
-  const [showPassword, setShowPassword] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
+  const { login } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -23,19 +23,19 @@ export const LoginForm: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   const onSubmit = async (data: LoginFormData) => {
-    setServerError(null)
+    setServerError(null);
     try {
-      await login(data)
-      toast('Welcome back to your thinking space.', 'success')
-      navigate('/app', { replace: true })
+      await login(data);
+      toast('Welcome back to your thinking space.', 'success');
+      navigate('/app', { replace: true });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Invalid credentials'
-      setServerError(msg)
+      const msg = err instanceof Error ? err.message : 'Invalid credentials';
+      setServerError(msg);
     }
-  }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto p-8 rounded-2xl bg-zinc-900/70 border border-zinc-800 shadow-2xl backdrop-blur-xl">
@@ -47,7 +47,11 @@ export const LoginForm: React.FC = () => {
         </p>
         <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-800/70 border border-zinc-700/50 text-[11px] text-zinc-400">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
-          <span>Cloud Backend: <strong className="text-zinc-300 font-normal">Coming Soon</strong> (Token Expired)</span>
+          <span>
+            Cloud Backend:{' '}
+            <strong className="text-zinc-300 font-normal">Coming Soon</strong>{' '}
+            (Token Expired)
+          </span>
         </div>
       </div>
 
@@ -88,12 +92,22 @@ export const LoginForm: React.FC = () => {
               className="absolute right-3 top-3 text-zinc-500 hover:text-zinc-300 transition-colors"
               tabIndex={-1}
             >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
             </button>
           </div>
         </div>
 
-        <Button type="submit" variant="primary" size="lg" isLoading={isSubmitting} className="w-full mt-2">
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          isLoading={isSubmitting}
+          className="w-full mt-2"
+        >
           Enter Thinking Workspace
         </Button>
       </form>
@@ -101,11 +115,14 @@ export const LoginForm: React.FC = () => {
       <div className="mt-8 pt-6 border-t border-zinc-800/80 text-center">
         <p className="text-xs text-zinc-400">
           First time here?{' '}
-          <Link to="/register" className="text-pink-400 hover:text-pink-300 font-medium transition-colors">
+          <Link
+            to="/register"
+            className="text-pink-400 hover:text-pink-300 font-medium transition-colors"
+          >
             Plant your first seed
           </Link>
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

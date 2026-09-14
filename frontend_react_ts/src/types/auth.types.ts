@@ -3,6 +3,17 @@ export interface User {
   username: string
   email: string
   fullname?: string | null
+  preferred_name?: string | null
+  calling_name?: string
+  display_calling_name?: string
+  date_of_birth?: string | null
+  derived_age?: number | null
+  birthday_today?: boolean
+  interests?: string[]
+  owl_instructions?: string | null
+  use_memory?: boolean
+  seen_journey_milestones?: string[]
+  initials?: string
   bio?: string | null
   avatar_url?: string | null
   created_at: string

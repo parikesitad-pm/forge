@@ -7,28 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Anti-flashbang inline pre-render script in `index.html` preventing white screen flash on page refresh by defaulting to dark mode.
-- Spark action toggle on every thought bubble (both thinker entries and owl reflections) with minimal icon and spark indicator.
-- Thinker profile popover anchored to bottom sidebar showing avatar, `@username`, "Thinker since [date]", Settings link, and Sign Out action.
-- "Thinker since" membership date badge and avatar file upload with instant preview and multipart persistence in `/app/settings`.
-- Display theme selection card (Dark, Light, System) in `/app/settings` connected to `ThemeProvider`.
-- Animated neural canvas background on `/docs` matching the public landing page aesthetic.
-- Functional thought migration workflow in `MoveToFragmentModal` transferring entries to the target fragment and auto-archiving the source.
-- Clear error status mapping in `apiClient.ts` diagnosing offline backend services and 405/404/502 states.
-- Comprehensive documentation across root `README.md`, `backend_rails/README.md`, and `frontend_react_ts/README.md` with live production deployment badges and links.
-- Multi-theme support (Dark, Light, and System device preference) with settings picker and persistent storage.
-- Vite proxy configuration for `/rails` to deliver Active Storage avatar assets directly in development.
-- Slim ChatGPT-style thought bubbles with hover-triggered actions (Keep as Spark, Copy to clipboard, and timestamp).
-- Animated shrinking header on scroll across `/app`, fragment workspace, and `/docs`.
-- Modal `MoveToFragmentModal` allowing thinkers to move and link thoughts between existing fragments.
-- Sidebar Archive view for managing archived thought fragments.
-- Debounced email availability check endpoint (`/api/v1/auth/check-email`) and fullname input field in `/register`.
-- Sequential 2-step post-registration onboarding modal ("Mau dipanggil siapa?" and creative interests).
-- Collapsible ChatGPT-style workspace sidebar (`AppSidebar`) with hoverable logo, New Fragment button, recent thought list, and thinker profile card.
-- Top workspace navigation bar with breadcrumb tracking (`Fragments / [Title]`) and 3-dots action menu (Delete, Archive, Move).
-- Avatar image upload with file preview and Active Storage multipart persistence in settings view.
-- Deliberate GitHub/Forge-style loading skeleton animations (`Skeleton.tsx`) for fragment lists and thought details.
-- ScrollSpy section tracking, static pinned sidebar, and breadcrumb header in `/docs`.
+### Added
+- **Public Fragment Sharing**: Public read-only fragment view at `/share/@:username/:share_slug` with opaque 8-character random token suffix (`generate_share_link!` and `revoke_share_link!`), sticky seed anchor, kept sparks, and ambient branding.
+- **Settings Modal Rebuild**: ChatGPT/Claude-style responsive dialog with tabs (Account with avatar upload and Date of Birth picker/derived age; Personalization with preferred calling name and creative interests; Transparent Memory manager; Owl Instructions; Security with password updates and permanent "DELETE" account confirmation dialog).
+- **Transparent Memory Manager**: Opt-in user memory system (`user_memories` table, CRUD endpoints, and `use_memory` toggle) storing explicit thinker memories without silent AI inference.
+- **Forge Reflections Engine (`ForgeMomentOverlay`)**: Celebrates user journey milestones (3mo seed pulse, 6mo fragments gather + owl, 9mo fade to spark, 1yr dim + banner + soft confetti, 18mo bridging, 2yr constellation) and separate Birthday moment, with Birthday priority scheduling, typing guards, reduced-motion support, and server-side milestone persistence.
+- **Dedicated FAQ Page (`/faq`)**: Comprehensive answers across 30+ questions explaining Seeds, Sparks, Growth, Owl nature, open-minded creative thought handling, public sharing, memory privacy, local Swagger, and deployment status.
+- **Display Title Separation**: Distinct `title` attribute for Fragment display names, ensuring Seed (`content`) remains immutable when renaming.
+- **Swagger Fallback Modal**: Accessible guide in `/docs` directing thinkers to the local Rails OpenAPI endpoint (`http://localhost:3000/api/docs`) and `/faq#api-docs` when running on cloud preview.
+
+### Changed
+- **Gemini Adapter Upgrade**: Upgraded Owl adapter from unavailable `gemini-2.5-flash` to `gemini-3.6-flash` with 2048 token allowance for thinking/reasoning outputs.
+- **Open-Minded Owl Prompting**: Empowered Owl to understand lyrics, songs, stories, code architectures, technical thoughts, and business plans without forcing psychological self-reflection.
+- **Fragment Workspace Refinements**: Made SeedHeader compact and sticky at top of workspace; reduced timeline font sizes for greater density; moved "All thoughts" icon immediately before the `•••` action menu.
+- **Database Archive Isolation**: Archived fragments are stored via database `archived_at` timestamps and strictly excluded from all normal queries, sidebars, search, and counts, accessible only in the Archive view with Restore and permanent Delete actions.
+- **Docs Page Scrolling & Sticky Fix**: Removed parent `overflow-x: clip` blocking CSS `position: sticky` on header and sidebar; added `history.scrollRestoration = 'manual'` and instant scroll reset to `(0, 0)` unless a valid hash is provided.
+- **Deployment-Aware Landing CTAs**: Landing page action buttons display `Coming Soon` on hosted preview when cloud backend is paused, without affecting local development.
+
+### Removed
+- **"Move to" Fragment Flow**: Completely removed `MoveToFragmentModal` and all Move actions across the workspace and API.
 
 ### Changed
 
